@@ -105,16 +105,6 @@ function getAllTags(from,to) {
             $(".loader_container").show();
         },
         success: function(data) {
-            console.log(data, "a");
-
-            var root = `<option value=' '>Select</option>`;
-            var option = ``;
-
-            data.forEach(element => {
-                option += `<option value="`+element.name+`">`+element.name+`</option>`;
-            });
-            $("#tag_dropdown").html(root+ option);
-            
 
             $("#counts").text(data.length);
             $('#tag_table').DataTable().destroy();
@@ -160,11 +150,6 @@ function getAllTags(from,to) {
                     cell.innerHTML = i + 1;
                 });
             }).draw();
-
-
-            $("#tag_dropdown").on('change', function () {
-                tbl.column(2).search($(this).val()).draw();
-            });
 
         },
         complete:function(data) {

@@ -20,6 +20,8 @@ class CreateCommentsTable extends Migration
             $table->string("comment")->nullable();
             $table->string("post_id")->nullable();
             $table->integer("status")->default('0');
+            $table->integer("is_deleted")->default('0');
+            $table->integer("deleted_by")->nullable();
             $table->timestamps();
         });
     }

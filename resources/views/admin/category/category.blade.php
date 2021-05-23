@@ -40,14 +40,6 @@
         </div>
       </div>
     </div>
-    <div class="dropdowns">
-      <div class="form-group form-group-default form-group-default-select2">
-        <label class="">Category</label>
-        <select class="full-width select2-hidden-accessible" id="category_dropdown" data-placeholder="Select Category" data-init-plugin="select2" tabindex="-1" aria-hidden="true">
-        </select>
-      </div>
-    </div>
-
   </div>
 
 </div>

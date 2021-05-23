@@ -18,6 +18,8 @@ class CreateCategoriesTable extends Migration
             $table->string("name")->nullable();
             $table->string("slug")->nullable();
             $table->mediumText('description')->nullable();
+            $table->integer("is_deleted")->default('0');
+            $table->integer("deleted_by")->nullable();
             $table->timestamps();
         });
     }

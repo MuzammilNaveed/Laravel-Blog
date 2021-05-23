@@ -29,6 +29,8 @@ class CreateUsersTable extends Migration
             $table->string('instafram')->nullable();
             $table->string('twitter')->nullable();
             $table->string('profile_pic')->nullable();
+            $table->integer("is_deleted")->default('0');
+            $table->integer("deleted_by")->nullable();
             $table->timestamps();
         });
     }

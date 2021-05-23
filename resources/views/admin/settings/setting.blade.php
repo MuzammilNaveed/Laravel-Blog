@@ -204,18 +204,18 @@
 
                 <div class="tab-pane slide-left" id="slide4">
                     <div class="col-md-12">
-                        <form>
+                        <form id="settingForm" method="POST" action="{{url('save_setting')}}" enctype="multipart/form-data" >
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default">
                                         <label class="small text-muted">Website Name <span class="text-danger">*</span> </label>
-                                        <input name="name" type="text" class="form-control input-sm" placeholder="Website Name">
+                                        <input name="site_name" type="text" class="form-control input-sm" placeholder="Website Name">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default">
                                         <label class="small text-muted">Website URL <span class="text-danger">*</span> </label>
-                                        <input name="name" type="text" class="form-control input-sm" placeholder="Website URL">
+                                        <input name="site_url" type="text" class="form-control input-sm" placeholder="Website URL">
                                     </div>
                                 </div>
                             </div>
@@ -223,42 +223,43 @@
                                 <div class="col-md-12">
                                     <div class="form-group form-group-default">
                                         <label class="small text-muted">Meta Keyword <span class="text-danger">*</span> </label>
-                                        <input name="name" type="text" class="form-control input-sm" placeholder="Website Meta Keywords">
+                                        <input name="site_keyword" type="text" class="form-control input-sm" placeholder="Website Meta Keywords">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                <div class="form-group form-group-default">
-                                    <label>Website Meta Description</label>
-                                    <textarea cols="30" rows="10" name="description" type="text" class="form-control" style="resize:none;height:80px" placeholder="Website Meta Description"></textarea>
-                                </div>
+                                    <div class="form-group form-group-default mb-0">
+                                        <label>Website Meta Description</label>
+                                        <textarea cols="30" rows="10" name="site_description" type="text" class="form-control" style="resize:none;height:80px" placeholder="Website Meta Description"></textarea>
+                                    </div>
+                                    <span class="small text-muted"> <i>Meta Description not more than 160 Characters</i> </span>
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row mt-3">
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="image" class="small font-weight-bold text-dark">Website Logo</label>
-                                        <input type="file" class="form-control dropify" name="image" data-height="120">
+                                        <input type="file" class="form-control dropify" name="site_logo" data-height="120">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="image" class="small font-weight-bold text-dark">Website Favicon</label>
-                                        <input type="file" class="form-control dropify" name="image" data-height="120">
+                                        <input type="file" class="form-control dropify" name="site_favicon" data-height="120">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="image" class="small font-weight-bold text-dark">Dashboard Logo</label>
-                                        <input type="file" class="form-control dropify" name="image" data-height="120">
+                                        <input type="file" class="form-control dropify" name="dashboard_logo" data-height="120">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="image" class="small font-weight-bold text-dark">Dashboard Favicon Logo</label>
-                                        <input type="file" class="form-control dropify" name="image" data-height="120">
+                                        <input type="file" class="form-control dropify" name="dashboard_favicon" data-height="120">
                                     </div>
                                 </div>
                             </div>
@@ -283,8 +284,7 @@
                             </div>
 
                             
-
-                            <button type="submit" id="saveBtn" onclick="saveSystemDateAndTime()" class="btn btn-success">Save</button>
+                            <button type="submit" id="saveBtn" class="btn btn-success">Save</button>
                             <button style="display:none" id="processing" class="btn btn-success" type="button" disabled><i class="fas fa-circle-notch fa-spin"></i> Processing</button>
                         </form>
                     </div>

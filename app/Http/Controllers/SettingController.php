@@ -27,8 +27,12 @@ class SettingController extends Controller
         }else{
             return "not";
         }
+        
+    }
 
+    public function saveSetting(Request $request) {
 
+        return $request->all();
 
     }
 

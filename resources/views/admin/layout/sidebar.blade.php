@@ -1,85 +1,53 @@
+<?php
+
+$menus = Session('menus');
+
+$active_sub_menu = Request::segment(1) == "manage_categories" 
+  || Request::segment(1) == "manage_tags" 
+  || Request::segment(1) == "manage_post"
+  || Request::segment(1) == "add_post"
+  || Request::segment(1) == "edit_post" ? "open active" : "-";
+
+?>
+
 <div class="sidebar-menu">
-      <ul class="menu-items">
-        <li class="m-t-20 ">
-          <a href="{{route('dashboard.index')}}" class="detailed">
-            <span class="title"> Dashboard</span>
+  <ul class="menu-items">
+
+    @foreach(Session('menus') as $menu )
+
+    @if($menu->route != "NULL")
+    @if($menu->is_active == 1)
+    <li>
+          <a href="{{ route($menu->route) }}">
+            <span class="title">{{$menu->title}}</span>
           </a>
-          <span class="icon-thumbnail"><i class="pg-icon">home</i></span>
+          <span class="icon-thumbnail"> <?php echo $menu->menu_icon; ?> </span>
         </li>
+    @endif
+    @else
+    <li class="{{$active_sub_menu}}">
+      @if($menu->is_active == 1)
+        <a href="javascript:;"><span class="title"> {{$menu->title}} </span>
+        <span class=" arrow"></span></a>
+        <span class="icon-thumbnail"> <?php echo $menu->menu_icon; ?> </span>
+
+      @php $sub_menus = $menu->sub_menu; @endphp
+      <ul class="sub-menu">
+        @foreach($sub_menus as $sub_menu)
+        @if($sub_menu->is_active == 1)
         <li>
-          <a href="javascript:;"><span class="title">Blog</span>
-            <span class=" arrow"></span></a>
-          <span class="icon-thumbnail"><i class="pg-icon">calendar</i></span>
-          <ul class="sub-menu">
-            <li class="">
-              <a href="{{route('category.index')}}">Category</a>
-              <span class="icon-thumbnail"><i class="pg-icon">c</i></span>
-            </li>
-            <li class="">
-              <a href="{{route('tag.index')}}">Tags</a>
-              <span class="icon-thumbnail"><i class="pg-icon">l</i></span>
-            </li>
-            <li class="">
-              <a href="{{route('post.index')}}">Post</a>
-              <span class="icon-thumbnail"><i class="pg-icon">m</i></span>
-            </li>
-          </ul>
+            <a href="{{ route($sub_menu->route) }}"> {{$sub_menu->title}} </a>
+            <span class="icon-thumbnail"> <?php echo $sub_menu->menu_icon; ?> </span>
         </li>
-
-        <li class="">
-          <a href="{{route('comments.index')}}">
-            <span class="title">Comments</span>
-          </a>
-          <span class="icon-thumbnail"><i class="pg-icon">brush</i></span>
-        </li>
-
-        <li class="">
-          <a href="{{route('role.index')}}">
-            <span class="title">Role</span>
-          </a>
-          <span class="icon-thumbnail"><i class="pg-icon">brush</i></span>
-        </li>
-
-
-        <li class="">
-          <a href="{{route('feature.index')}}">
-            <span class="title">Feature Access</span>
-          </a>
-          <span class="icon-thumbnail"><i class="pg-icon">brush</i></span>
-        </li>
-
-        <li class="">
-          <a href="{{route('user.index')}}">
-            <span class="title">Users</span>
-          </a>
-          <span class="icon-thumbnail"><i class="pg-icon">brush</i></span>
-        </li>
-
-
-        <li>
-          <a href="javascript:;"><span class="title">Pages</span>
-            <span class=" arrow"></span></a>
-          <span class="icon-thumbnail"><i class="pg-icon">calendar</i></span>
-          <ul class="sub-menu">
-            <li class="">
-              <a href="">Contact Us</a>
-              <span class="icon-thumbnail"><i class="pg-icon">c</i></span>
-            </li>
-            <li class="">
-              <a href="">About Us</a>
-              <span class="icon-thumbnail"><i class="pg-icon">l</i></span>
-            </li>
-          </ul>
-        </li>
-
-        <li class="">
-          <a href="{{route('setting.index')}}">
-            <span class="title">Settings</span>
-          </a>
-          <span class="icon-thumbnail"><i class="pg-icon">brush</i></span>
-        </li>
-
-
+        @endif
+        @endforeach
       </ul>
-      <div class="clearfix"></div>
-    </div>
+      @endif
+    </li>
+    @endif
+
+    @endforeach
+
+  </ul>
+  <div class="clearfix"></div>
+</div>

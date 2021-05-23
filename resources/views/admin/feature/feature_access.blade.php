@@ -167,14 +167,14 @@
                   <input type="text" name="title" id="edit_title" class="form-control input-sm" placeholder="Menu Title">
               </div>
 
-              <div class="form-group form-group-default" id="ed_route-title">
+              <div class="form-group form-group-default bg-light" id="ed_route-title">
                   <label>Route</label>
-                  <input type="text" id="edit_route" class="form-control input-sm" placeholder="Menu Route">
+                  <input type="text" id="edit_route" disabled class="form-control input-sm" placeholder="Menu Route">
               </div>
 
-              <div class="form-group form-group-default">
+              <div class="form-group form-group-default bg-light">
                   <label>Sequence</label>
-                  <input type="number" name="sequence" id="edit_sequence" class="form-control input-sm" placeholder="Menu Sequence">
+                  <input type="number" name="sequence" disabled id="edit_sequence" class="form-control input-sm" placeholder="Menu Sequence">
               </div>
 
               <div class="form-group form-group-default">
@@ -182,9 +182,9 @@
                   <input type="text" name="icon" id="edit_icon" class="form-control input-sm" placeholder="Menu Icon">
               </div>
 
-              <div class="form-group form-group-default form-group-default-select2">
+              <div class="form-group form-group-default form-group-default-select2 bg-light">
                   <label class="text-muted" style="z-index:9999">Parent menu</label>
-                  <select class="full-width select2-hidden-accessible" name="parent_id" id="edit_parent_id" data-placeholder="Select Parent Menu" data-init-plugin="select2" tabindex="-1" aria-hidden="true">
+                  <select class="full-width select2-hidden-accessible" disabled name="parent_id" id="edit_parent_id" data-placeholder="Select Parent Menu" data-init-plugin="select2" tabindex="-1" aria-hidden="true">
                   </select>
               </div>
 

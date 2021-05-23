@@ -23,6 +23,8 @@ class CreateFeaturesTable extends Migration
             $table->string('role_id')->nullable();
             $table->integer('feature_type')->nullable();
             $table->string('menu_icon')->nullable();
+            $table->integer("is_deleted")->default('0');
+            $table->integer("deleted_by")->nullable();
             $table->timestamps();
         });
     }

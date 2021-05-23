@@ -66,7 +66,6 @@ Route::group(['middleware' => ['auth']], function() {
         return view('admin.tags.tag');
     })->name('tag.index');
 
-
     // posts crud
     Route::resource('posts', postsControllers::class);
     Route::get('/add_post', [postsControllers::class, 'addPostPage'])->name('add_post.index');
@@ -102,6 +101,7 @@ Route::group(['middleware' => ['auth']], function() {
     // settings
     Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');
     Route::post('/change_password', [SettingController::class, 'changePassword']);
+    Route::post('/save_setting', [SettingController::class, 'saveSetting']);
 
 
     // feature

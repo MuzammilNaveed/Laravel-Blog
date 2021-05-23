@@ -110,14 +110,6 @@ function getAllCategories(from,to) {
             $("#from_date").text(from);
             $("#to_date").text(to);
 
-            var root = `<option value=' '>Select</option>`;
-            var option = ``;
-
-            data.forEach(element => {
-                option += `<option value="`+element.name+`">`+element.name+`</option>`;
-            });
-            $("#category_dropdown").html(root+ option);
-
             $('#showRecord').DataTable().destroy();
             $.fn.dataTable.ext.errMode = 'none';
             var tbl = $('#showRecord').DataTable({
@@ -162,10 +154,6 @@ function getAllCategories(from,to) {
                 });
             }).draw();
 
-
-            $("#category_dropdown").on('change', function () {
-                tbl.column(2).search($(this).val()).draw();
-            });
         },
         complete:function(data) {
             $(".loader_container").hide();
