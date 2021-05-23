@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\Post;
 use Illuminate\Support\Str;
 
 class categoryController extends Controller
@@ -41,13 +42,24 @@ class categoryController extends Controller
         ]);
     }
     public function destroy($id) {
-        $category = Category::find($id);
-        $category->delete();
-        return response()->json([
-            'message' => 'Category Deleted Successfully.',
-            'status' => 200,
-            'success' => true
-        ]);
+        
+        $post = Post::where("cat_id",$id)->count();
+
+        if($post > 0) {
+            return response()->json([
+                'message' => 'Depended Category Cannot be Deleted',
+                'status' => 500,
+                'success' => false
+            ]);
+        }else{
+            Category::find($id)->delete();
+            return response()->json([
+                'message' => 'Category Deleted Successfully.',
+                'status' => 200,
+                'success' => true
+            ]);
+        }
+
     }
 
 

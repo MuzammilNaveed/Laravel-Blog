@@ -2,6 +2,25 @@
 @section('page_title','Setting')
 @section('container')
 
+<style>
+    .tag {
+        width: fit-content !important;
+    }
+
+    .bootstrap-tagsinput {
+        display: flex !important;
+        margin-top: 5px !important;
+        box-shadow: none !important;
+    }
+
+    .label-info {
+        background-color: #6d5eac !important;
+    }
+    #videoUpload-1 {
+        display:none !important;
+    }
+</style>
+
 <div class="row mt-3">
     <div class="col-md-4">
         <div class="card p-3">
@@ -221,9 +240,11 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div class="form-group form-group-default">
+                                    
+                                    <div class="form-group form-group-default required">
                                         <label class="small text-muted">Meta Keyword <span class="text-danger">*</span> </label>
-                                        <input name="site_keyword" value="{{$setting->site_keywords}}" type="text" class="form-control input-sm" placeholder="Website Meta Keywords">
+                                        <input class="tagsinput custom-tag-input" type="text" style="display: none;">
+                                        <div class="bootstrap-tagsinput" style="display:flex !important"> <input name="site_keyword" id="site_keywords" size="2" value="{{$setting->site_keywords}}" type="text" class=""></div>
                                     </div>
                                 </div>
                             </div>
@@ -302,6 +323,8 @@
 @section('scripts')
 <script src="{{asset('admin/js/settings.js')}}"></script>
 <script>
+
+    $("#site_keywords").tagsinput('items')
     $('.dropify').dropify({
         messages: {
             'default': 'Upload Image',

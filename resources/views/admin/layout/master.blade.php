@@ -27,48 +27,55 @@
   <link href="{{asset('admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css')}}" rel="stylesheet" type="text/css" media="screen">
   <link href="{{asset('admin/assets/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css')}}" rel="stylesheet" type="text/css" media="screen">
   <link href="{{asset('admin/assets/plugins/bootstrap-timepicker/bootstrap-timepicker.min.css')}}" rel="stylesheet" type="text/css" media="screen">
-  
+
   <link class="main-stylesheet" href="{{asset('admin/assets/css/style.css')}}" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css" integrity="sha512-EZSUkJWTjzDlspOoPSpUFR0o0Xy7jdzW//6qhUkoZ9c4StFkVsp9fbbd0O06p9ELS3H486m4wmrCELjza4JEog==" crossorigin="anonymous" />
   <style>
-    .loader_container{
-			width:100%;
-			height:100%;
-			background-color:#fff;
-			opacity:0.9;
-			position:absolute;
-			top:0px;right:0px;
-			display:flex;
-			align-items:center;
-			justify-content:center;
-			z-index:1;
-		}
-		.loader {
-			width:50px;
-			height:50px;
-			border:3px solid;
-			color:#111;
-			border-radius:50%;
-			border-top-color:transparent;
-			animation:loader 0.8s linear infinite;
-		}
-		@keyframes loader {
-			25%{
-			color:#37b0e9;
-			}
-			50%{
-			color:#6d5eac;
-			}
-			75%{
-			color:#37b0e9;
-			}
-			100%{
-			color:#6d5eac;
-			}
-			to{
-			transform:rotate(360deg);
-			}
-		}
+    .loader_container {
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      opacity: 0.9;
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+    }
+
+    .loader {
+      width: 50px;
+      height: 50px;
+      border: 3px solid;
+      color: #111;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: loader 0.8s linear infinite;
+    }
+
+    @keyframes loader {
+      25% {
+        color: #37b0e9;
+      }
+
+      50% {
+        color: #6d5eac;
+      }
+
+      75% {
+        color: #37b0e9;
+      }
+
+      100% {
+        color: #6d5eac;
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
   </style>
 </head>
 
@@ -83,7 +90,7 @@
         </button>
       </div>
     </div>
-    
+
     @include('admin.layout.sidebar')
 
   </nav>
@@ -183,8 +190,18 @@
   <script src="{{asset('admin/assets/plugins/bootstrap-typehead/typeahead.jquery.min.js')}}"></script>
   <script src="{{asset('admin/assets/plugins/handlebars/handlebars-v4.0.5.js')}}"></script>
   <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+  <script>
+    var notyf = new Notyf({
+      duration: 2000,
+      position: {
+        x: 'right',
+        y: 'top',
+      },
+    });
+  </script>
 
   @section('scripts')
   @show
 </body>
+
 </html>

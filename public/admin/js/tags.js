@@ -30,7 +30,10 @@ $(document).ready(function() {
                         }, 1000);
                         $("#save").show();
                         $("#process").hide();
-                        getAllTags();
+                        let date = new Date();
+                        let from = moment(date).startOf('month').format('YYYY-MM-DD');
+                        let to = moment(date).endOf('month').format('YYYY-MM-DD');
+                        getAllTags(from,to);
                     } else {
                         notyf.error(data.message);
                     }
@@ -69,7 +72,10 @@ $(document).ready(function() {
                         }, 1000);
                         $("#save_up").show();
                         $("#process_up").hide();
-                        getAllTags();
+                        let date = new Date();
+                        let from = moment(date).startOf('month').format('YYYY-MM-DD');
+                        let to = moment(date).endOf('month').format('YYYY-MM-DD');
+                        getAllTags(from,to);
                     } else {
                         notyf.error(data.message);
                     }
@@ -172,17 +178,47 @@ function viewRecord(id,name) {
 
 
 function deleteRecord(id) {
-    $.ajax({
-        type: "DELETE",
-        url: "tags/" + id,
-        success: function(data) {
-            notyf.success(data.message);
-            getAllTags();
-        },
-        error: function(e) {
-            console.log(e);
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          
+        $.ajax({
+            type: "DELETE",
+            url: "tags/" + id,
+            success: function(data) {
+    
+                if ((data.status == 200) & (data.success == true)) {
+                    let date = new Date();
+                    let from = moment(date).startOf('month').format('YYYY-MM-DD');
+                    let to = moment(date).endOf('month').format('YYYY-MM-DD');
+                    getAllTags(from,to);
+                    Swal.fire(
+                        'Deleted!',
+                        data.message,
+                        'success'
+                    )
+                } else {
+                    Swal.fire(
+                        'Cancelled!',
+                        data.message,
+                        'error'
+                    )
+                }
+    
+            },
+            error: function(e) {
+                console.log(e);
+            }
+        });
         }
-    });
+      })
 }
 
 function filterData(value) {

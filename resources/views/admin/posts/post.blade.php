@@ -2,7 +2,7 @@
 @section('page_title','Manage Categories')
 @section('container')
 
-    <div class="d-md-flex">
+    <div class="d-md-flex mt-2">
     <div class="custom-control custom-radio ml-0 ml-md-3">
       <input type="radio" onclick="filterData('current_month')" class="custom-control-input" id="current_month" name="radio-stacked" checked>
       <label class="custom-control-label" for="current_month">Current Month</label>

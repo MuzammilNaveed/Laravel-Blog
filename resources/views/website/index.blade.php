@@ -191,7 +191,6 @@
             $(".search_div").slideToggle();
         });
 
-
         // dark mode
         let darkMode = localStorage.getItem("darkMode");
         const darkModeToggle = document.querySelector("#dark-mode-btn");

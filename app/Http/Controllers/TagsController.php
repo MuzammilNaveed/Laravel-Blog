@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Tags;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class TagsController extends Controller
 {
     public function index(Request $request) {
-        return Tags::whereBetween('created_at', [$request->from, $request->to])->get();
+        return Tags::whereBetween('created_at', [$request->from, $request->to])->where("is_deleted",0)->get();
     }
 
     public function store(Request $request) {
@@ -39,12 +41,26 @@ class TagsController extends Controller
     }
 
     public function destroy($id) {
-        $tag = Tags::find($id);
-        $tag->delete();
-        return response()->json([
-            'message' => 'Tag Deleted Successfully.',
-            'status' => 200,
-            'success' => true
-        ]);
+
+        $post_tags = DB::table("post_tags")->where("tag_id",$id)->count();
+
+        if($post_tags > 0) {
+            return response()->json([
+                'message' => 'Depended Tag Cannot be Deleted',
+                'status' => 500,
+                'success' => false
+            ]);
+        }else{
+            $tag = Tags::find($id);
+            $tag->is_deleted = 1;
+            $tag->deleted_by = Auth::user()->id;
+            $tag->save();
+            return response()->json([
+                'message' => 'Tag Deleted Successfully.',
+                'status' => 200,
+                'success' => true
+            ]);
+        }        
     }
+
 }
