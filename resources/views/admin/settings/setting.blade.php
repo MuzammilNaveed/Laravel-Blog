@@ -209,13 +209,13 @@
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default">
                                         <label class="small text-muted">Website Name <span class="text-danger">*</span> </label>
-                                        <input name="site_name" type="text" class="form-control input-sm" placeholder="Website Name">
+                                        <input name="site_name" value="{{$setting->site_name}}" type="text" class="form-control input-sm" placeholder="Website Name">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default">
                                         <label class="small text-muted">Website URL <span class="text-danger">*</span> </label>
-                                        <input name="site_url" type="text" class="form-control input-sm" placeholder="Website URL">
+                                        <input name="site_url" value="{{$setting->site_url}}" type="text" class="form-control input-sm" placeholder="Website URL">
                                     </div>
                                 </div>
                             </div>
@@ -223,15 +223,15 @@
                                 <div class="col-md-12">
                                     <div class="form-group form-group-default">
                                         <label class="small text-muted">Meta Keyword <span class="text-danger">*</span> </label>
-                                        <input name="site_keyword" type="text" class="form-control input-sm" placeholder="Website Meta Keywords">
+                                        <input name="site_keyword" value="{{$setting->site_keywords}}" type="text" class="form-control input-sm" placeholder="Website Meta Keywords">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group form-group-default mb-0">
-                                        <label>Website Meta Description</label>
-                                        <textarea cols="30" rows="10" name="site_description" type="text" class="form-control" style="resize:none;height:80px" placeholder="Website Meta Description"></textarea>
+                                        <label class="small text-muted">Website Meta Description</label>
+                                        <textarea cols="30" rows="10" name="site_description" type="text" class="form-control" style="resize:none;height:80px" placeholder="Website Meta Description">{{$setting->site_description}}</textarea>
                                     </div>
                                     <span class="small text-muted"> <i>Meta Description not more than 160 Characters</i> </span>
                                 </div>
@@ -241,25 +241,25 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="image" class="small font-weight-bold text-dark">Website Logo</label>
-                                        <input type="file" class="form-control dropify" name="site_logo" data-height="120">
+                                        <input type="file" class="form-control dropify" name="site_logo" data-height="120" data-default-file="{{asset('settings')}}/{{$setting->site_logo}}">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="image" class="small font-weight-bold text-dark">Website Favicon</label>
-                                        <input type="file" class="form-control dropify" name="site_favicon" data-height="120">
+                                        <input type="file" class="form-control dropify" name="site_favicon" data-height="120" data-default-file="{{asset('settings')}}/{{$setting->site_favicon}}">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="image" class="small font-weight-bold text-dark">Dashboard Logo</label>
-                                        <input type="file" class="form-control dropify" name="dashboard_logo" data-height="120">
+                                        <input type="file" class="form-control dropify" name="dashboard_logo" data-height="120" data-default-file="{{asset('settings')}}/{{$setting->dashboard_logo}}">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="image" class="small font-weight-bold text-dark">Dashboard Favicon Logo</label>
-                                        <input type="file" class="form-control dropify" name="dashboard_favicon" data-height="120">
+                                        <input type="file" class="form-control dropify" name="dashboard_favicon" data-height="120" data-default-file="{{asset('settings')}}/{{$setting->dashboard_favicon}}">
                                     </div>
                                 </div>
                             </div>
@@ -267,19 +267,19 @@
                             <div class="row">
                                 <div class="form-group form-group-default">
                                     <label class="small text-muted">FaceBook</label>
-                                    <input name="facebook" type="text"  class="form-control input-sm" placeholder="Website Facebook Link">
+                                    <input name="facebook" value="{{$setting->facebook}}"  type="text"  class="form-control input-sm" placeholder="Website Facebook Link">
                                 </div>
                                 <div class="form-group form-group-default">
                                     <label class="small text-muted">Linkedin</label>
-                                    <input name="linkedin" type="text"  class="form-control input-sm" placeholder="Website Linkedin Link">
+                                    <input name="linkedin" value="{{$setting->linkedin}}" type="text"  class="form-control input-sm" placeholder="Website Linkedin Link">
                                 </div>
                                 <div class="form-group form-group-default">
                                     <label class="small text-muted">Instagram</label>
-                                    <input name="instagram" type="text" class="form-control input-sm" placeholder="Website Linkedin Link">
+                                    <input name="instagram" value="{{$setting->instagram}}" type="text" class="form-control input-sm" placeholder="Website Linkedin Link">
                                 </div>
                                 <div class="form-group form-group-default">
                                     <label class="small text-muted">Twitter</label>
-                                    <input name="twitter" type="text" class="form-control input-sm" placeholder="Website Linkedin Link">
+                                    <input name="twitter" value="{{$setting->twitter}}" type="text" class="form-control input-sm" placeholder="Website Linkedin Link">
                                 </div>
                             </div>
 
