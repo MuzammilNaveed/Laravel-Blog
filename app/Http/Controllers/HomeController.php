@@ -34,8 +34,9 @@ class HomeController extends Controller
         if (Auth::user()) {
             return redirect()->intended('/dashboard');
         } else {
-            $posts = Post::all();
-            return view("website.index", compact('posts'));
+            $posts = Post::inRandomOrder()->limit(2)->get();
+            $singleheader = Post::inRandomOrder()->limit(1)->get();
+            return view("website.index", compact('posts','singleheader'));
         }
     }
 

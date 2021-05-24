@@ -10,7 +10,7 @@
     <meta name="author" content="">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <script src="https://kit.fontawesome.com/5fcfcbf541.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{{asset('website/custom.css').'?ver='.rand()}}">
+    <!-- <link rel="stylesheet" href="{{asset('website/custom.css').'?ver='.rand()}}"> -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet">
@@ -20,6 +20,10 @@
 <style>
     .dropdown:hover>.dropdown-menu {
         display: block;
+    }
+    .img {
+        width: 100%;
+        height: 100%;
     }
 </style>
 <body>
@@ -79,6 +83,44 @@
             </div>
 
         </div>
+    </div>
+
+
+
+    <div class="container mt-3">
+
+
+
+        <div class="row">
+            <div class="col-md-7 col-lg-7 col-sm-12">
+            @foreach($singleheader as $post) 
+                    @if($post->section == 1)
+                <div class="header_post mt-2" style="position:relative">
+                    <img src="{{asset('images')}}/{{$post->image}}" style='height:420px; width: 100%; object-fit: cover' class="img-fluid" alt="">
+                    <div class="header_content" style="position:absolute; bottom:4px;left:10px" class="img-fluid">
+                        <span class="badge bg-dark text-white pt-1 pr-3 pl-3 pb-1">Category</span>
+                        <h5 class="bg-dark text-white p-2 mt-2">{{$post->title}}</h5>
+                        <p class="small text-white"><i class="far fa-calendar-alt"></i> {{$post->created_at}} </p>
+                    </div>
+                </div>
+                @endif
+                @endforeach
+            </div>
+            <div class="col-md-5 col-lg-5 col-sm-3">
+                @foreach($posts as $post) 
+                    @if($post->section == 1)
+                    <div class="header_post mt-2" style="position:relative">
+                        <img src="{{asset('images')}}/{{$post->image}}" style='height:205px; width: 100%; object-fit: cover' class="img-fluid" alt="">
+                        <div class="header_content" style="position:absolute; bottom:4px;left:10px;">
+                            <span class="badge bg-dark text-white pt-1 pr-3 pl-3 pb-1">Category</span>
+                            <h5 class="bg-dark text-white p-2 mt-2"> {{$post->title}} </h5>
+                            <p class="small text-white"><i class="far fa-calendar-alt"></i> {{$post->created_at}} </p>
+                        </div>
+                    </div>
+                    @endif
+                @endforeach
+            </div>
+        </div>
 
     </div>
 
@@ -86,43 +128,11 @@
 
 
 
-    <div class="container mt-4">
-
-        <!-- header -->
-        <div class="row" style="min-height:450px;">
-
-            <div class="col-md-8" style="min-height:450px; height:450px;">
-                <div class="header_post">
-                    <div class="header_img">
-                        <img src="{{asset('images/246563585.jpg')}}" style="width:100%; height:auto" class="img-fluid" alt="">
-                    </div>
-                    <div class="header_content">
-                        <span class="badge bg-dark text-white pt-1 pr-3 pl-3 pb-1">Category</span>
-                        <h1 class="bg-dark text-white p-2 mt-2">Bootstrapping, managing product-led growth and knowing when to fundraise</h1>
-                        <p class="small text-white"><i class="far fa-calendar-alt"></i> 13th Jan, 2010</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4" style="min-height:450px; height:450px;">
-            @foreach($posts as $post) 
-                @if($post->section == 1)
-                <a href="{{url('post')}}/{{$post->slug}}">
-                    <div class="headers_content">
-                        <span class="badge bg-dark text-white pt-1 pr-3 pl-3 pb-1">Category</span>
-                        <h1>{{$post->title}}</h1>
-                        <p class="small text-dark"><i class="far fa-calendar-alt"></i> {{$post->created_at}}</p>
-                    </div>
-                </a>
-                <hr>
-                @endif
-            @endforeach
-            </div>
-
-        </div>
 
 
 
 
+    <div class="container" style="margin-top: 200px;">
 
         <!-- all project -->
         <div class="d-flex justify-content-between mt-3">

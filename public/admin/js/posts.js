@@ -36,7 +36,7 @@ function getAllPosts(from,to) {
                     },
                     {
                       "render": function(data, type, full, meta) {
-                        let img = `<img src="/images/`+full.image+`" style="width:250px;height:60px" class="img-fluid rounded">`;
+                        let img = `<img src="/images/`+full.image+`" style="width:100%;height:auto" class="img-fluid rounded">`;
                         return img;
                       }
                     },
