@@ -95,6 +95,7 @@
             <div class="col-md-7 col-lg-7 col-sm-12">
             @foreach($singleheader as $post) 
                     @if($post->section == 1)
+                    <a href="{{url('post')}}/{{$post->slug}}">
                 <div class="header_post mt-2" style="position:relative">
                     <img src="{{asset('images')}}/{{$post->image}}" style='height:420px; width: 100%; object-fit: cover' class="img-fluid" alt="">
                     <div class="header_content" style="position:absolute; bottom:4px;left:10px" class="img-fluid">
@@ -103,12 +104,14 @@
                         <p class="small text-white"><i class="far fa-calendar-alt"></i> {{$post->created_at}} </p>
                     </div>
                 </div>
+                </a>
                 @endif
                 @endforeach
             </div>
             <div class="col-md-5 col-lg-5 col-sm-3">
                 @foreach($posts as $post) 
                     @if($post->section == 1)
+                    <a href="{{url('post')}}/{{$post->slug}}">
                     <div class="header_post mt-2" style="position:relative">
                         <img src="{{asset('images')}}/{{$post->image}}" style='height:205px; width: 100%; object-fit: cover' class="img-fluid" alt="">
                         <div class="header_content" style="position:absolute; bottom:4px;left:10px;">
@@ -117,6 +120,7 @@
                             <p class="small text-white"><i class="far fa-calendar-alt"></i> {{$post->created_at}} </p>
                         </div>
                     </div>
+                    </a>
                     @endif
                 @endforeach
             </div>
