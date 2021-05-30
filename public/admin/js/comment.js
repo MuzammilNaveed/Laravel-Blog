@@ -51,7 +51,7 @@ function getAllComments() {
                 },
                 {
                     "render": function (data, type, full, meta) {
-                        return `<a href="#">`+full.post.title+`</a>`;
+                        return `<a href="`+view_post+`/`+full.post.id+`">`+full.post.title+`</a>`;
                     }
                 },
                 {

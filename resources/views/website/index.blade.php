@@ -68,7 +68,7 @@
   </div>
 </nav>
 
-    <div class="search_div w-100" style="height:240px; display:none; background:#fff; box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);position:absolute;z-index:10" >
+    <header class="search_div w-100" style="height:240px; display:none; background:#fff; box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);position:absolute;z-index:10" >
 
         <div class="container pt-3">
             <div class="input-group mb-3">
@@ -83,7 +83,7 @@
             </div>
 
         </div>
-    </div>
+    </header>
 
 
 

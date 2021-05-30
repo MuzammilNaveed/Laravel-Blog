@@ -56,7 +56,11 @@ $(document).ready(function() {
             cache: false,
             processData: false,
             success: function(data) {
-                console.log(data);
+                if ((data.status == 200) & (data.success == true)) {
+                    notyf.success(data.message);
+                } else {
+                    notyf.error(data.message);
+                }
             },
             error: function(e) {
                 console.log(e)

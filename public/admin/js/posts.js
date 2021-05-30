@@ -36,20 +36,16 @@ function getAllPosts(from,to) {
                     },
                     {
                       "render": function(data, type, full, meta) {
-                        let img = `<img src="/images/`+full.image+`" style="width:100%;height:auto" class="img-fluid rounded">`;
+                        let img = `<img src="/images/`+full.image+`" width="80" height="50" class="shadow-sm rounded">`;
                         return img;
                       }
                     },
                     {
                         "render": function(data, type, full, meta) {
-                            return moment(full.created_at).format(
-                                "DD-MM-YYYY h:m:s"
-                            );
-                        }
-                    },
-                    {
-                        "render": function(data, type, full, meta) {
-                            let link = `<a href="edit_post/`+full.id+`">`+full.title+`</a>`;
+                            let link = `<div class="mt-2">
+                                <a style="font-size:1rem" data-toggle="tooltip" data-placement="top" title="`+full.title+`" href="edit_post/`+full.id+`">`+full.title.substr(0,40) + '...' +`</a>
+                                    <br> date: <span class="small text-muted text-dark">`+moment(full.created_at).format("DD-MM-YYYY h:m:s")+`</span>
+                                </div>`;
                             return link;
                         }
                     },
@@ -80,6 +76,21 @@ function getAllPosts(from,to) {
                       }
                     },
                     {
+                        "className" : "text-left",
+                        "render": function(data, type, full, meta) {
+                            let check = `<i class="fas fa-check text-success"></i>`;
+                            let cancel = `<i class="fas fa-times text-danger"></i>`;
+                          return `
+                            <ul class="small seo pl-0" style="list-style:none">
+                                <li >`+(full.meta_title !=null ? check + ' Meta Title' : cancel+ ' Meta Title')+`</li>
+                                <li >`+(full.meta_author !=null ? check + ' Meta Author Name ': cancel+ ' Meta Author Name ')+`</li>
+                                <li >`+(full.meta_description !=null ? check + ' Meta Description': cancel+ ' Meta Description')+` </li>
+                                <li >`+(full.meta_tags !=null ? check + ' Meta Tags': cancel + ' Meta Tags')+` </li>
+                            </ul>
+                          `;
+                      }
+                    },
+                    {
                         "render": function(data, type, full, meta) {
                           return `
                           <div class="custom-control custom-switch">
@@ -94,10 +105,12 @@ function getAllPosts(from,to) {
                         "render": function(data, type, full, meta) {
                             return (
                                 ` <div class="d-flex justify-content-center">
-                          <a href="edit_post/`+full.id+`" onclick="viewRecord(`+ full.id +`, '` + full.name +`')" type="button" class="btn btn-primary card_shadow round" title="Edit"><i class="fas fa-pen"></i></a>
-                          <button onclick="deleteRecord(`+ full.id + `)" type="button" class="btn btn-danger ml-2 card_shadow round" title="Delete">
-                          <i class="fas fa-trash"></i></button>
-                      </div>`
+                                    <a data-toggle="tooltip" data-placement="top" title="view post" href="`+view_post+`/`+full.id+`"class="btn btn-info text-white ml-2 card_shadow round">
+                                    <i class="far fa-eye"></i></a>
+                                    <a href="edit_post/`+full.id+`" onclick="viewRecord(`+ full.id +`, '` + full.name +`')" type="button" class="btn btn-primary card_shadow round ml-2" data-toggle="tooltip" data-placement="top" title="edit post"><i class="fas fa-pen"></i></a>
+                                    <button data-toggle="tooltip" data-placement="top" title="delete post" onclick="deleteRecord(`+ full.id + `)" type="button" class="btn btn-danger text-white ml-2 card_shadow round">
+                                    <i class="fas fa-trash"></i></button>
+                                </div>`
                             );
                         }
                     }
@@ -117,6 +130,7 @@ function getAllPosts(from,to) {
         },
         complete: function(data) {
             $(".loader_container").hide();
+            $('[data-toggle="tooltip"]').tooltip();
         },
         error: function(e) {
             console.log(e);
@@ -140,8 +154,8 @@ function filterData(value) {
             $("#date_range_filter").attr("style", "display:none !important");
             break;
         case "all_time":
-            let to_date = moment(today, "YYYY-MM-DD").format("YYYY-MM-DD");
-            getAllPosts('2000-01-01',to_date)
+            let to_date = moment(today).format("YYYY-MM-DD");
+            getAllPosts('2000-01-01',to_date);
             $("#date_range_filter").attr("style", "display:none !important");
             break;
         case "date_range":

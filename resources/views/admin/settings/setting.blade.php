@@ -240,7 +240,6 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
-                                    
                                     <div class="form-group form-group-default required">
                                         <label class="small text-muted">Meta Keyword <span class="text-danger">*</span> </label>
                                         <input class="tagsinput custom-tag-input" type="text" style="display: none;">

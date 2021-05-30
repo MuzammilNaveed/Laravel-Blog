@@ -137,10 +137,7 @@ function getAllUsers() {
                     },
                     {
                         render: function(data, type, full, meta) {
-                            let img =
-                                `<img src="/users/` +
-                                full.profile_pic +
-                                `" style="width:80px;height:50px" class="img-fluid rounded">`;
+                            let img =`<img src="/users/`+ full.profile_pic +`" width="80" height="50" class="shadow-sm rounded">`;
                             return img;
                         }
                     },

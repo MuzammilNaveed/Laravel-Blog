@@ -71,7 +71,9 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/add_post', [postsControllers::class, 'addPostPage'])->name('add_post.index');
     Route::get('/edit_post/{id}', [postsControllers::class, 'editPostPage']);
     Route::get('/active_post/{id}', [postsControllers::class, 'activePost']);
+    Route::get('/view_post/{id}', [postsControllers::class, 'viewPost']);
     Route::post('/update_post', [postsControllers::class, 'updatePost']);
+
 
     Route::post('/upload_post_imgs', [postsControllers::class, 'uploadPostImages']);
     Route::post('/delete_post_imgs', [postsControllers::class, 'deletePostImages']);

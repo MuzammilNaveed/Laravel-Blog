@@ -76,9 +76,11 @@
         transform: rotate(360deg);
       }
     }
+    table th, table td{
+        white-space: nowrap !important;
+    }
   </style>
 </head>
-
 <body class="fixed-header windows desktop js-focus-visible pace-done menu-pin">
 
   <nav class="page-sidebar" data-pages="sidebar">
@@ -101,30 +103,28 @@
         menu</a>
       <div class="">
         <div class="brand inline  m-l-10 ">
-          <img src="{{asset('admin/assets/img/logo.png')}}" alt="logo" data-src="{{asset('admin/assets/img/logo.png')}}" data-src-retina="{{asset('admin/assets/img/logo_2x.png')}}" width="78" height="22">
+          <img src="{{asset('admin/assets/img/logo.png')}}" alt="logo"  width="78" height="22">
         </div>
-        <span class="ml-3"> local date and time display</span>
-
+        <span class="ml-3 font-weight-bold" id="showDateTime"></span>
+        
       </div>
       <div class="d-flex align-items-center">
         <div class="dropdown pull-right d-lg-block d-none">
           <button class="profile-dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="profile dropdown">
             <span class="thumbnail-wrapper d32 circular inline">
-              <img src="{{asset('admin/assets/img/profiles/avatar.jpg')}}" alt="" data-src="{{asset('admin/assets/img/profiles/avatar.jpg')}}" data-src-retina="{{asset('admin/assets/img/profiles/avatar_small2x.jpg')}}" width="32" height="32">
+              <img src="{{asset('users')}}/{{Auth::user()->profile_pic}}" width="32" height="32">
             </span>
           </button>
           <div class="dropdown-menu dropdown-menu-right profile-dropdown" role="menu">
             <a href="#" class="dropdown-item"><span>Signed in as <br /><b>{{Auth::user()->name}}</b></span></a>
             <div class="dropdown-divider"></div>
-            <a href="{{route('setting.index')}}" class="dropdown-item">Settings</a>
-            <a href="{{route('logout.user')}}" class="dropdown-item text-danger">Logout</a>
-            <div class="dropdown-divider"></div>
-            <span class="dropdown-item fs-12 hint-text">Last edited by David<br />on Friday at 5:27PM</span>
+            <a href="{{route('setting.index')}}" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+            <a href="{{route('logout.user')}}" class="dropdown-item text-danger"><i class="fas fa-power-off"></i> Logout</a>
+            
           </div>
         </div>
       </div>
     </div>
-
 
 
     <!-- main content -->
@@ -137,24 +137,10 @@
         </div>
       </div>
 
-      <!-- <div class=" container-fluid footer">
-        <div class="copyright sm-text-center">
-          <p class="small-text no-margin pull-left sm-pull-reset">
-            ©2014-2020 All Rights Reserved. Pages® and/or its subsidiaries or affiliates are registered trademark of Revox Ltd.
-            <span class="hint-text m-l-15">Pages v05.23 20201105.r.190</span>
-          </p>
-          <p class="small no-margin pull-right sm-pull-reset">
-            Hand-crafted <span class="hint-text">&amp; made with Love</span>
-          </p>
-          <div class="clearfix"></div>
-        </div>
-      </div> -->
-
     </div>
 
   </div>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <!-- <script src="{{asset('admin/assets/plugins/jquery/jquery-3.2.1.min.js')}}" type="text/javascript"></script> -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="{{asset('admin/assets/plugins/pace/pace.min.js')}}" type="text/javascript"></script>
   <script src="{{asset('admin/assets/plugins/liga.js')}}" type="text/javascript"></script>
@@ -198,6 +184,15 @@
         y: 'top',
       },
     });
+   
+    function showDateTime() {
+      $("#showDateTime").html(moment().format('MMMM Do YYYY - h:mm:ss a - dddd'));
+    }
+
+    setInterval(() => {
+      showDateTime();
+    }, 1000);
+    
   </script>
 
   @section('scripts')

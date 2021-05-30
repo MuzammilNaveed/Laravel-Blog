@@ -153,6 +153,24 @@ class postsControllers extends Controller
         return view("admin.posts.edit_post",compact('categories','tags','post','post_all_tags','users'));
     }
 
+    public function viewPost($id) {
+
+        $post =  Post::where('id',$id)->first();
+ 
+        $post_tags = DB::table("post_tags")->where("post_id",$post->id)->get();
+
+        foreach($post_tags as $post_tag) {
+    
+            $post_tag->tags = Tags::where('id','=',$post_tag->tag_id)->first()->toArray();
+
+        }
+        
+        
+        $category = Category::where('id',$post->cat_id)->first();
+        $users = User::all();
+        return view("admin.posts.view_posts",compact('category','post_tags','post','users'));
+    }
+
 
     public function uploadPostImages(Request $request) {
         
