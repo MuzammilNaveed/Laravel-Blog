@@ -22,6 +22,10 @@ class Post extends Model
         'post_author',
         'meta_tags',
         'meta_description',
+        'created_by',
+        'is_deleted',
+        'deleted_by',
+        'view_count',
     ];
 
 }

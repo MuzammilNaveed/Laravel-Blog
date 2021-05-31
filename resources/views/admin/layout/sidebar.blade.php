@@ -8,6 +8,7 @@ $active_sub_menu = Request::segment(1) == "manage_categories"
   || Request::segment(1) == "add_post"
   || Request::segment(1) == "edit_post" ? "open active" : "-";
 
+
 ?>
 
 <div class="sidebar-menu">

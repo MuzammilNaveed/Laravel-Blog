@@ -8,6 +8,7 @@ use App\Http\Controllers\postsControllers;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\FeatureController;
+use App\Http\Controllers\adminController;
 
 
 
@@ -112,6 +113,10 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/get_all_features', [FeatureController::class, 'getFeatures']);
     Route::get('/get_features_by_id/{id}', [FeatureController::class, 'getFeaturesByID']);
     Route::post('/update_feature', [FeatureController::class, 'update']);
+
+    // admin pages
+    Route::get('/visitors', [adminController::class, 'index'])->name('visitor.index');
+    Route::get('/get_usrr_info', [adminController::class, 'getUserInfo']);
 
  
 });

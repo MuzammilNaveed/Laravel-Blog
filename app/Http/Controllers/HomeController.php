@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Jenssegers\Agent\Agent;
+use Carbon\Carbon;
 
 
 class HomeController extends Controller
@@ -36,32 +38,80 @@ class HomeController extends Controller
         } else {
             $posts = Post::inRandomOrder()->limit(2)->get();
             $singleheader = Post::inRandomOrder()->limit(1)->get();
+
+            // dd($platform);
+            $session = 'post_' . \Request::ip();
+            if(!Session::has($session)) {
+                $this->gatherUserInfo();
+                Session::put($session , 1);
+            }
+
             return view("website.index", compact('posts','singleheader'));
         }
     }
 
-    public function showSinglePost($slug)
-    {
-        $post = DB::Table("posts")->where("slug", "=", $slug)->first();
-        $categories = DB::Table("categories")->get();
-        $posts = DB::Table("posts")->get();
+    public function showSinglePost($slug) {
+        $post = Post::where("slug", $slug)->first();
+        $categories = Category::all();
+        $posts = Post::all();
+
+        $session = 'post_' . \Request::ip();
+        if(!Session::has($session)) {
+            $this->gatherUserInfo();
+            Session::put($session , 1);
+        }
+
         return view("website.post", compact('post', 'categories', 'posts'));
     }
 
-    public function showCategory($slug)
-    {
-        $category = DB::Table("categories")->where("slug", "=", $slug)->first();
-        $posts = DB::Table("posts")->where("cat_id", "=", $category->id)->get();
+    public function showCategory($slug) {
+
+        $category = Category::where("slug", $slug)->first();
+        $posts = Post::where("cat_id",$category->id)->get();
         $post_count = sizeof($posts);
-        $categories = DB::Table("categories")->get();
-        $recent_posts = DB::Table("posts")->get();
+        $categories = Category::all();
+        $recent_posts = Post::get();
+
+        $session = 'post_' . \Request::ip();
+        if(!Session::has($session)) {
+            $this->gatherUserInfo();
+            Session::put($session , 1);
+        }
 
         return view('website.category', compact('category', 'posts', 'post_count', 'categories', 'recent_posts'));
     }
 
+    public function gatherUserInfo() {
+
+        $geoip = geoip()->getLocation(\Request::ip());
+        $agent = new Agent();
+        $platform = $agent->platform();
+        $browser = $agent->browser();
+
+        DB::table("usrr_info")->insert([
+            "date" => Carbon::now(),
+            "ip_add" => $geoip->ip,
+            "country" => $geoip->country,
+            "city" => $geoip->city,
+            "state" => $geoip->state_name,
+            "postal_code" => $geoip->postal_code,
+            "lat" => $geoip->lat,
+            "longi" => $geoip->lon,
+            "time_zone" => $geoip->timezone,
+            "pltform" => $platform,
+            "pltform_version" => $agent->version($platform),
+            "browser" => $browser,
+            "browser_version" => $agent->version($browser),
+            "devices" => $agent->device(),
+            "desktop" => $agent->isDesktop(),
+            "phone" => $agent->isPhone(),
+        ]);
+
+    }
+
     // for dashboard create user
-    public function dashboard()
-    {
+    public function dashboard() {
+
         $post_count = Post::count();
         $category_count = Category::count();
         $tag_count = Tags::count();
@@ -74,14 +124,13 @@ class HomeController extends Controller
     }
 
 
-    public function manageUserPage()
-    {
+    public function manageUserPage() {
+
         $roles = Role::all();
         return view("admin.users.users", compact('roles'));
     }
 
-    public function UserLogin(Request $request)
-    {
+    public function UserLogin(Request $request) {
 
         $request->validate([
             'email' => 'required|email',
@@ -132,17 +181,17 @@ class HomeController extends Controller
         }
     }
 
-    public function logout(Request $request)
-    {
+    public function logout(Request $request){
+
         Auth::logout();
         session()->flush();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/');
+
     }
 
-    public function createUser(Request $request)
-    {
+    public function createUser(Request $request) {
 
         $user = new User();
         $user->name = $request->name;
@@ -176,8 +225,7 @@ class HomeController extends Controller
         return User::all();
     }
 
-    public function updateUser(Request $request)
-    {
+    public function updateUser(Request $request){
 
         $user = User::find($request->id);
         $user->name = $request->name;

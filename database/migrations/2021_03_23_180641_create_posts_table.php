@@ -24,6 +24,7 @@ class CreatePostsTable extends Migration
             $table->string("image")->nullable();
             $table->longText('description')->nullable();
             $table->integer("is_deleted")->default('0');
+            $table->integer("view_count")->default('0');
             $table->integer("deleted_by")->nullable();
             $table->timestamps();
         });
