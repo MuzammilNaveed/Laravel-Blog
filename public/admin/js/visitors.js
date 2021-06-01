@@ -25,6 +25,9 @@ function getAllComments() {
                         defaultContent: ""
                     },
                     {
+                        "data": "date"
+                    },
+                    {
                         "data": "ip_add"
                     },
                     {

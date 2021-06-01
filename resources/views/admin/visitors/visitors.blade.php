@@ -35,6 +35,7 @@
               <thead>
                 <tr>
                   <th>Sr#</th>
+                  <th>Date</th>
                   <th>IP Address</th>
                   <th>Country</th>
                   <th>City</th>

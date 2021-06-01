@@ -45,7 +45,6 @@ class HomeController extends Controller
                 $this->gatherUserInfo();
                 Session::put($session , 1);
             }
-
             return view("website.index", compact('posts','singleheader'));
         }
     }
@@ -120,7 +119,65 @@ class HomeController extends Controller
         $reply_count = CommentReplies::count();
         $active_post = Post::where('is_active', 1)->count();
         $inactive_post = Post::where('is_active', 0)->count();
-        return view('admin.dashboard.index', compact('post_count', 'category_count', 'tag_count', 'user_count', 'comment_count', 'reply_count', 'active_post', 'inactive_post'));
+
+        $browser_arry  = array();
+        $browser_arry_count  = array();
+
+        // browser 
+        $browsers = DB::table("usrr_info")->select('browser')->distinct()->get();
+        foreach($browsers as $browser) {
+
+            $browser_conut = DB::table("usrr_info")
+                ->where('browser',$browser->browser)->count();
+            
+            array_push($browser_arry , $browser->browser);
+            array_push($browser_arry_count , $browser_conut);
+        }
+
+        $browser_names = json_encode($browser_arry);
+        $browser_counts = json_encode($browser_arry_count);
+
+
+        $platform_arry  = array();
+        $platform_arry_count  = array();
+
+        $platforms = DB::table("usrr_info")->select('pltform')->distinct()->get();
+        foreach($platforms as $platform) {
+
+            $platform_count = DB::table("usrr_info")
+                ->where('pltform',$platform->pltform)->count();
+            
+            array_push($platform_arry , $platform->pltform);
+            array_push($platform_arry_count , $platform_count);
+        }
+
+        $platform_names = json_encode($platform_arry);
+        $platform_counts = json_encode($platform_arry_count);
+
+
+
+        $country_arry  = array();
+        $country_arry_count  = array();
+
+        $countries = DB::table("usrr_info")->select('country')->distinct()->get();
+        foreach($countries as $country) {
+
+            $country_count = DB::table("usrr_info")
+                ->where('country',$country->country)->count();
+            
+            array_push($country_arry , $country->country);
+            array_push($country_arry_count , $country_count);
+        }
+
+        $country_names = json_encode($country_arry);
+        $country_counts = json_encode($country_arry_count);
+
+
+
+
+
+
+        return view('admin.dashboard.index', compact('post_count','browser_names','browser_counts','category_count', 'tag_count', 'user_count', 'comment_count', 'reply_count', 'active_post', 'inactive_post','platform_names','platform_counts','country_names','country_counts'));
     }
 
 
