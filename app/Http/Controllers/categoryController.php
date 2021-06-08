@@ -11,7 +11,7 @@ class categoryController extends Controller
 {
     
     public function index(Request $request) {
-        return Category::whereBetween('created_at', [$request->from, $request->to])->get();
+        return Category::where('is_deleted',0)->get();
     }
 
     public function store(Request $request) {

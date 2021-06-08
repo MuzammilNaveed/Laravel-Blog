@@ -99,6 +99,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/comments', [postsControllers::class, 'comments'])->name('comments.index');
     Route::get('/getComments', [postsControllers::class, 'getComments']);
     Route::get('/get_replie_by_id/{id}', [postsControllers::class, 'getCommentReplieByID']);
+    Route::post('/approve_comment', [postsControllers::class, 'approveComment']);
+    Route::post('/approve_comment_reply', [postsControllers::class, 'approveCommentReply']);
 
 
     // settings

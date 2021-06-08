@@ -31,21 +31,26 @@ class HomeController extends Controller
         return view('auth.login');
     }
 
-    public function userHomePage()
-    {
+    public function userHomePage() {
         if (Auth::user()) {
             return redirect()->intended('/dashboard');
         } else {
-            $posts = Post::inRandomOrder()->limit(2)->get();
-            $singleheader = Post::inRandomOrder()->limit(1)->get();
+            
+            $singleheader = Post::where('section',1)->inRandomOrder()->limit(1)->first()->toArray();
 
-            // dd($platform);
+            $posts = Post::where('section',1)->where('id','!=',$singleheader['id'])->inRandomOrder()->limit(2)->get();
+
+            $feature_posts = Post::where('section',2)->inRandomOrder()->limit(4)->get();
+
+            // dd($singleheader);
             $session = 'post_' . \Request::ip();
             if(!Session::has($session)) {
                 $this->gatherUserInfo();
                 Session::put($session , 1);
             }
-            return view("website.index", compact('posts','singleheader'));
+
+
+            return view("website.index", compact('posts','singleheader','feature_posts'));
         }
     }
 
@@ -277,8 +282,7 @@ class HomeController extends Controller
         ]);
     }
 
-    public function getAllUsers()
-    {
+    public function getAllUsers() {
         return User::all();
     }
 

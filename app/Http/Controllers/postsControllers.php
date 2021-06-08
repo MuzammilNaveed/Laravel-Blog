@@ -258,4 +258,75 @@ class postsControllers extends Controller
     public function getCommentReplieByID($id) {
         return DB::table("comment_replies")->where("comment_id",'=',$id)->get();
     }
+
+    public function approveComment(Request $request) {
+
+        if($request->action == "approve") {
+            $comment = Comments::find($request->id);
+            $comment->status = 1;
+            $comment->save();
+            return response()->json([
+                'message' => 'Comment Approved Successfully',
+                'status' => 200,
+                'success' => true
+            ]);
+        }else{
+            $comment = Comments::find($request->id);
+            $comment->status = 2;
+            $comment->save();
+            return response()->json([
+                'message' => 'Comment Rejected Successfully',
+                'status' => 200,
+                'success' => true
+            ]);
+        }
+    }
+
+    public function approveCommentReply(Request $request) {
+
+        if($request->action == "approve") {
+
+            $cmt_reply = CommentReplies::find($request->id);
+            $comment_id = $cmt_reply->comment_id;
+
+            $cmt = Comments::find($comment_id);
+
+            if($cmt->status == 0) {
+                return response()->json([
+                    'message' => 'First Approved Comment please...!',
+                    'status' => 500,
+                    'success' => false,
+                ]);
+            }else if($cmt->status == 2) {
+                return response()->json([
+                    'message' => 'Comment Dis-approved... Reply Cannot be Approved.',
+                    'status' => 500,
+                    'success' => false,
+                ]);
+            }else{
+
+                $cmt_reply->status = 1;
+                $cmt_reply->save();
+                return response()->json([
+                    'message' => 'Comment Reply Approved Successfully',
+                    'status' => 200,
+                    'success' => true
+                ]);
+            }
+
+        }else{
+            $cmt_reply = CommentReplies::find($request->id);
+            $cmt_reply->status = 2;
+                $cmt_reply->save();
+                return response()->json([
+                    'message' => 'Comment Dis-approve Successfully',
+                    'status' => 200,
+                    'success' => true
+                ]);
+        }
+
+    }
+
+
+
 }

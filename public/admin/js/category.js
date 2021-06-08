@@ -99,34 +99,23 @@ $(document).ready(function() {
         }
     });
 
-    let date = new Date();
-    let from = moment(date)
-        .startOf("month")
-        .format("YYYY-MM-DD");
-    let to = moment(date)
-        .endOf("month")
-        .format("YYYY-MM-DD");
 
-    getAllCategories(from, to);
+    getAllCategories();
 });
 
-function getAllCategories(from, to) {
+function getAllCategories() {
     $.ajax({
         type: "GET",
         url: categories,
-        data: { from: from, to: to },
         beforeSend: function(data) {
             $(".loader_container").show();
         },
         success: function(data) {
             $("#counts").text(data.length);
 
-            $("#from_date").text(from);
-            $("#to_date").text(to);
+ 
 
-            $("#showRecord")
-                .DataTable()
-                .destroy();
+            $("#showRecord").DataTable().destroy();
             $.fn.dataTable.ext.errMode = "none";
             var tbl = $("#showRecord").DataTable({
                 data: data,
@@ -153,17 +142,12 @@ function getAllCategories(from, to) {
                         render: function(data, type, full, meta) {
                             return (
                                 ` <div class="d-flex justify-content-center">
-                            <button onclick="viewRecord(` +
-                                full.id +
-                                `, '` +
-                                full.name +
-                                `','` +
-                                full.description +
-                                `')" type="button" class="btn btn-primary card_shadow round">
+                            <button onclick="viewRecord(`+full.id + `, '` + full.name + `','` + full.description +`')" 
+                                type="button" class="btn btn-primary rounded">
                             <i class="material-icons" style="font-size:15px">edit</i> Edit</button>
                             <button  onclick="deleteRecord(` +
                                 full.id +
-                                `)" type="button" class="btn btn-danger ml-2 card_shadow round">
+                                `)" type="button" class="btn btn-danger ml-2 rounded text-white">
                             <i class="material-icons" style="font-size:15px">delete</i> Delete</button>
                         </div>`
                             );
@@ -217,16 +201,8 @@ function deleteRecord(id) {
                 url: categories + "/" + id,
                 success: function(data) {
                     if (data.status == 200 && data.success == true) {
-                        let date = new Date();
-                        let from = moment(date)
-                            .startOf("month")
-                            .format("YYYY-MM-DD");
-                        let to = moment(date)
-                            .endOf("month")
-                            .format("YYYY-MM-DD");
-
                         Swal.fire("Deleted!", data.message, "success");
-                        getAllCategories(from, to);
+                        getAllCategories();
                     } else {
                         Swal.fire("Cancelled!", data.message, "error");
                     }
@@ -239,43 +215,5 @@ function deleteRecord(id) {
     });
 }
 
-function filterData(value) {
-    var today = new Date();
-    switch (value) {
-        case "current_month":
-            var from_date1 = moment(today)
-                .startOf("month")
-                .format("YYYY-MM-DD");
-            var too_date1 = moment(today)
-                .endOf("month")
-                .format("YYYY-MM-DD");
-            getAllCategories(from_date1, too_date1);
-            $("#date_range_filter").attr("style", "display:none !important");
-            break;
-        case "previous_month":
-            var from_date = moment(today)
-                .subtract(1, "months")
-                .startOf("month")
-                .format("YYYY-MM-DD");
-            var too_date = moment(today)
-                .subtract(1, "months")
-                .endOf("month")
-                .format("YYYY-MM-DD");
-            getAllCategories(from_date, too_date);
-            $("#date_range_filter").attr("style", "display:none !important");
-            break;
-        case "all_time":
-            let to_date = moment(today).format("YYYY-MM-DD");
-            getAllCategories("2000-01-01", to_date);
-            $("#date_range_filter").attr("style", "display:none !important");
-            break;
-        case "date_range":
-            $("#date_range_filter").css("display", "block");
-            break;
-    }
-}
-function getDateWiseData() {
-    let from = $("#from").val();
-    let to = $("#to").val();
-    getAllCategories(from, to);
-}
+
+

@@ -16,7 +16,7 @@
 
 <div class="row mt-2">
 
-  <div class="container-fluid">
+  <div class="container p-0">
 
     <div class="row">
       <div class="col-md-1">
@@ -35,14 +35,13 @@
       </div>
     </div>
 
-    <div class="bg-white mt-3">
-      <div class="card card-transparent">
+      <div class="card card_shadow mt-2">
         <div class="card-header d-flex justify-content-between">
           <div class="card-title font-weight-bolder">All Users <span class="badge bg-primary text-white" id="counts"></span> </div>
           <div class="export-options-container">
             <div class="exportOptions">
               <div class="DTTT btn-group">
-                <button class="btn btn-primary btn-lg card_shadow" data-toggle="modal" data-target="#addRecordModal"><i class="material-icons">add</i> Add User</button>
+                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addRecordModal"><i class="material-icons">add</i> Add User</button>
 
               </div>
             </div>
@@ -73,7 +72,6 @@
         </div>
       </div>
     </div>
-  </div>
 </div>
 
 <div class="modal fade stick-up" id="addRecordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Support\Str;
 
 class RoleController extends Controller
@@ -41,12 +42,22 @@ class RoleController extends Controller
     }
 
     public function destroy($id) {
-        $role = Role::find($id);
-        $role->delete();
-        return response()->json([
-            'message' => 'Role Deleted Successfully.',
-            'status' => 200,
-            'success' => true
-        ]);
+        $user = User::where('role_id',$id)->first();
+        if($user) {
+            return response()->json([
+                'message' => 'Role Cannot be Deleted',
+                'status' => 500,
+                'success' => false,
+            ]);
+        }else{
+            $role = Role::find($id);
+            $role->delete();
+            return response()->json([
+                'message' => 'Role Deleted Successfully.',
+                'status' => 200,
+                'success' => true
+            ]);
+        }
+        
     }
 }

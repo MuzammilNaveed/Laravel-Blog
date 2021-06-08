@@ -90,23 +90,16 @@ $(document).ready(function() {
     });
 
 
-    let date = new Date();
-    let from = moment(date).startOf('month').format('YYYY-MM-DD');
-    let to = moment(date).endOf('month').format('YYYY-MM-DD');
-    
-    getAllTags(from,to)
+    getAllTags()
     
 });
 
 
-function getAllTags(from,to) {
-    $("#from_date").text(from);
-    $("#to_date").text(to);
-    
+function getAllTags() {    
     $.ajax({
         type: "GET",
         url: "tags",
-        data: {from:from, to:to},
+        dataType:'json',
         beforeSend:function(data) {
             $(".loader_container").show();
         },
@@ -138,9 +131,9 @@ function getAllTags(from,to) {
                 {
                     "render": function (data, type, full, meta) {
                         return ` <div class="d-flex justify-content-center">
-                            <button onclick="viewRecord(`+ full.id +`, '`+full.name+`')" type="button" class="btn btn-primary card_shadow round" title="Edit">
+                            <button onclick="viewRecord(`+ full.id +`, '`+full.name+`')" type="button" class="btn btn-primary rounded" title="Edit">
                             <i class="material-icons" style="font-size:15px">edit</i> Edit </button>
-                            <button onclick="deleteRecord(`+full.id+`)" type="button" class="btn btn-danger ml-2 card_shadow round" title="Delete">
+                            <button onclick="deleteRecord(`+full.id+`)" type="button" class="btn btn-danger text-white ml-2 rounded" title="Delete">
                             <i class="material-icons" style="font-size:15px">delete</i> Delete</button>
                         </div>`
                     }
@@ -169,7 +162,6 @@ function getAllTags(from,to) {
 
 
 function viewRecord(id,name) {
-
     $("#updateModal").modal('show');
     $("#id").val(id);
     $("#name").val(name);
@@ -195,10 +187,7 @@ function deleteRecord(id) {
             success: function(data) {
     
                 if ((data.status == 200) & (data.success == true)) {
-                    let date = new Date();
-                    let from = moment(date).startOf('month').format('YYYY-MM-DD');
-                    let to = moment(date).endOf('month').format('YYYY-MM-DD');
-                    getAllTags(from,to);
+                    getAllTags();
                     Swal.fire(
                         'Deleted!',
                         data.message,
@@ -219,37 +208,4 @@ function deleteRecord(id) {
         });
         }
       })
-}
-
-function filterData(value) {
-    var today = new Date();
-    switch (value) {
-        case 'current_month':
-            var from_date1 =  moment(today).startOf('month').format('YYYY-MM-DD');
-            var too_date1 =  moment(today).endOf('month').format('YYYY-MM-DD');
-            getAllTags(from_date1,too_date1)
-            $("#date_range_filter").attr('style', 'display:none !important');
-          break;
-        case 'previous_month':
-            var from_date =  moment(today).subtract(1,'months').startOf('month').format('YYYY-MM-DD');
-            var too_date =  moment(today).subtract(1,'months').endOf('month').format('YYYY-MM-DD');
-            getAllTags(from_date,too_date)
-           $("#date_range_filter").attr('style', 'display:none !important');
-          break;
-        case 'all_time':
-            let to_date = moment(today, "YYYY-MM-DD").format("YYYY-MM-DD");
-            getAllTags('2000-01-01',to_date)
-           $("#date_range_filter").attr('style', 'display:none !important');
-          break;
-        case 'date_range':
-          $("#date_range_filter").css("display","block");
-          break;
-      }
-}
-
-function dateWiseData() {
-    var from = $("#start").val();
-    var to = $("#end").val();
-
-    getAllTags(from,to)
 }

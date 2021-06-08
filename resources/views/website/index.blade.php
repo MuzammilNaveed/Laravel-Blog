@@ -68,7 +68,7 @@
   </div>
 </nav>
 
-    <header class="search_div w-100" style="height:240px; display:none; background:#fff; box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);position:absolute;z-index:10" >
+    <div class="search_div w-100" style="height:240px; display:none; background:#fff; box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);position:absolute;z-index:10" >
 
         <div class="container pt-3">
             <div class="input-group mb-3">
@@ -83,34 +83,26 @@
             </div>
 
         </div>
-    </header>
+    </div>
 
 
 
-    <div class="container mt-3">
-
-
-
+    <header class="container mt-3">
         <div class="row">
             <div class="col-md-7 col-lg-7 col-sm-12">
-            @foreach($singleheader as $post) 
-                    @if($post->section == 1)
-                    <a href="{{url('post')}}/{{$post->slug}}">
+                <a href="{{url('post')}}/{{$singleheader['slug']}}">
                 <div class="header_post mt-2" style="position:relative">
-                    <img src="{{asset('images')}}/{{$post->image}}" style='height:420px; width: 100%; object-fit: cover' class="img-fluid" alt="">
+                    <img src="{{asset('images')}}/{{$singleheader['image']}}" style='height:420px; width: 100%; object-fit: cover' class="img-fluid" alt="">
                     <div class="header_content" style="position:absolute; bottom:4px;left:10px" class="img-fluid">
                         <span class="badge bg-dark text-white pt-1 pr-3 pl-3 pb-1">Category</span>
-                        <h5 class="bg-dark text-white p-2 mt-2">{{$post->title}}</h5>
-                        <p class="small text-white"><i class="far fa-calendar-alt"></i> {{$post->created_at}} </p>
+                        <h5 class="bg-dark text-white p-2 mt-2">{{$singleheader['title']}}</h5>
+                        <p class="small text-white"><i class="far fa-calendar-alt"></i> {{$singleheader['created_at']}} </p>
                     </div>
                 </div>
                 </a>
-                @endif
-                @endforeach
             </div>
             <div class="col-md-5 col-lg-5 col-sm-3">
                 @foreach($posts as $post) 
-                    @if($post->section == 1)
                     <a href="{{url('post')}}/{{$post->slug}}">
                     <div class="header_post mt-2" style="position:relative">
                         <img src="{{asset('images')}}/{{$post->image}}" style='height:205px; width: 100%; object-fit: cover' class="img-fluid" alt="">
@@ -121,12 +113,11 @@
                         </div>
                     </div>
                     </a>
-                    @endif
                 @endforeach
             </div>
         </div>
 
-    </div>
+    </header>
 
 
 
@@ -136,7 +127,7 @@
 
 
 
-    <div class="container" style="margin-top: 200px;">
+    <div class="container" style="margin-top: 30px;">
 
         <!-- all project -->
         <div class="d-flex justify-content-between mt-3">
@@ -145,23 +136,21 @@
         </div>
 
         <div class="row">
-            @foreach($posts as $post) 
-                @if($post->section == 2)
-                    <div class="col-md-3">
-                        <a href="{{url('post')}}/{{$post->slug}}">
-                            <div class="project_post" style="  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);">
-                                <div class="project_img">
-                                    <img src="{{asset('images')}}/{{$post->image}}" style="width:100%; min-height:150px; height:100px" class="img-fluid" alt="">
-                                    <span style="position:absolute;bottom:5px;left:5px;" class="badge bg-dark text-white pt-1 pr-3 pl-3 pb-1">Category</span>
-                                </div>
-                                <div class="project_content">
-                                    <h2>{{$post->title}}</h2>
-                                    <p class="small text-dark"><i class="far fa-calendar-alt"></i> {{$post->created_at}}</p>
-                                </div>
+            @foreach($feature_posts as $post)
+                <div class="col-md-3">
+                    <a href="{{url('post')}}/{{$post->slug}}">
+                        <div class="project_post" style="  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);">
+                            <div class="project_img" style="position:relative">
+                                <img src="{{asset('images')}}/{{$post->image}}" style="width:100%; min-height:150px; height:100px" class="img-fluid" alt="">
+                                <span style="position:absolute;bottom:5px;left:5px;" class="badge bg-dark text-white pt-1 pr-3 pl-3 pb-1">Category</span>
                             </div>
-                        </a>
-                    </div>
-                @endif
+                            <div class="project_content p-3">
+                                <h5><?php echo substr($post->title . '...', 0,40); ?> </h5>
+                                <p class="small text-dark"><i class="far fa-calendar-alt"></i> {{$post->created_at}}</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
             @endforeach
           
         </div>
@@ -174,8 +163,7 @@
             <a href="#" class="small"></a>
         </div>
 
-        @foreach($posts as $post) 
-            @if($post->section == 3)
+        @foreach($feature_posts as $post) 
             <a href="{{url('post')}}/{{$post->slug}}">
                 <div class="row">
                     <div class="col-md-4"><img src="{{asset('images')}}/{{$post->image}}" style="width:100%; height:auto" class="img-fluid" alt=""></div>
@@ -187,7 +175,6 @@
                 </div>
             </a>
             <hr>
-            @endif
         @endforeach
 
     </div>

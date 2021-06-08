@@ -122,8 +122,8 @@ function getAllRoles() {
                 {
                     "render": function (data, type, full, meta) {
                         return ` <div class="d-flex justify-content-center">
-                            <button onclick="viewRecord(`+ full.id +`, '`+full.name+`')" type="button" class="btn btn-primary card_shadow round" title="Edit"><i class="material-icons" style="font-size:15px">edit</i> Edit</button>
-                            <button onclick="deleteRecord(`+full.id+`)" type="button" class="btn btn-danger ml-2 card_shadow round" title="Delete"><i class="material-icons" style="font-size:15px">delete</i> Delete</button>
+                            <button onclick="viewRecord(`+ full.id +`, '`+full.name+`')" type="button" class="btn btn-primary rounded" title="Edit"><i class="material-icons" style="font-size:15px">edit</i> Edit</button>
+                            <button onclick="deleteRecord(`+full.id+`)" type="button" class="btn btn-danger ml-2 rounded text-white" title="Delete"><i class="material-icons" style="font-size:15px">delete</i> Delete</button>
                         </div>`
                     }
                 },
@@ -163,8 +163,12 @@ function deleteRecord(id) {
         type: "DELETE",
         url: "roles/" + id,
         success: function(data) {
-            notyf.success(data.message);
-            getAllRoles();
+            if(data.status == 200 && data.success == true) {
+                notyf.success(data.message);
+                getAllRoles();
+            }else{
+                notyf.error(data.message);
+            }           
         },
         error: function(e) {
             console.log(e);

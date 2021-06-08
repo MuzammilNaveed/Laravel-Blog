@@ -167,11 +167,11 @@ function getAllUsers() {
                             return (
                                 ` <div class="d-flex justify-content-center">
                             <button onclick="viewRecord(`+full.id +`,'` +full.role_id +`','` +full.name +`','` + full.email +`','` + full.status +`','` + full.phone +`',
-                                '` + full.address +`','` + full.facebook +`','` + full.twitter +`','` + full.instagram +`','` + full.linkedin +`','` + full.profile_pic +`')" type="button" class="btn btn-primary card_shadow round">
+                                '` + full.address +`','` + full.facebook +`','` + full.twitter +`','` + full.instagram +`','` + full.linkedin +`','` + full.profile_pic +`')" type="button" class="btn btn-primary rounded">
                             <i class="material-icons" style="font-size:15px">edit</i> Edit</button>
                             <button  onclick="deleteRecord(` +
                                 full.id +
-                                `)" type="button" class="btn btn-danger ml-2 card_shadow round">
+                                `)" type="button" class="btn btn-danger ml-2 text-white rounded">
                             <i class="material-icons" style="font-size:15px">delete</i> Delete</button>
                         </div>`
                             );

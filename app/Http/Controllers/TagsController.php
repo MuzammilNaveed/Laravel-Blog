@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 class TagsController extends Controller
 {
     public function index(Request $request) {
-        return Tags::whereBetween('created_at', [$request->from, $request->to])->where("is_deleted",0)->get();
+        return Tags::where("is_deleted",0)->get();
     }
 
     public function store(Request $request) {
@@ -46,7 +46,7 @@ class TagsController extends Controller
 
         if($post_tags > 0) {
             return response()->json([
-                'message' => 'Depended Tag Cannot be Deleted',
+                'message' => 'Tag Used in Post Cannot be Deleted',
                 'status' => 500,
                 'success' => false
             ]);

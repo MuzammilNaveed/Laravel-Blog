@@ -8,7 +8,7 @@
   }
 </style>
 
-<div class="d-md-flex mt-2">
+<div class="d-md-flex mt-2 ml-0">
   <div class="custom-control custom-radio ml-0 ml-md-3">
     <input type="radio" onclick="filterData('current_month')" class="custom-control-input" id="current_month" name="radio-stacked" checked>
     <label class="custom-control-label" for="current_month">Current Month</label>
@@ -39,14 +39,13 @@
   </div>
 </div>
 
-<div class="row ml-3">
+<div class="row">
   <strong class="text-primary font-weight-bold">Current Record </strong> &nbsp; from: &nbsp; <span class="text-primary font-weight-bold" id="from_date"></span> &nbsp; to:&nbsp; <span id="to_date" class="text-primary font-weight-bold"></span>
 </div>
 
 <div class="row mt-2">
-  <div class="container-fluid">
-    <div class="bg-white">
-      <div class="card card-transparent">
+  <div class="container p-0">
+      <div class="card card_shadow">
         <div class="card-header d-flex justify-content-between">
           <div class="card-title font-weight-bolder">All Posts</div>
           <div class="export-options-container">
@@ -84,7 +83,6 @@
         </div>
       </div>
     </div>
-  </div>
 </div>
 
 

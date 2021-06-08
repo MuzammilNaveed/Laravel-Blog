@@ -16,10 +16,10 @@
 
 <div class="row mt-2">
 
-  <div class="container-fluid">
+  <div class="container p-0">
 
     <div class="bg-white mt-3">
-      <div class="card card-transparent">
+      <div class="card card_shadow">
         <div class="card-header d-flex justify-content-between">
           <div class="card-title font-weight-bolder">All Visitors <span class="badge bg-primary text-white" id="counts"></span> </div>
           <div class="export-options-container">

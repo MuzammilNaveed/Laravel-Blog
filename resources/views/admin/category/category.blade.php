@@ -7,65 +7,12 @@
     width: 200px !important;
   }
 </style>
-<div class="container-fluid mt-3">
-  <div class="d-md-flex justify-content-between">
-    <div class="radios">
-      <div class="row">
-        <div class="form-check primary">
-          <input type="radio" name="texture" onclick="filterData('current_month')" id="current_month" value="Verbose" checked>
-          <label for="current_month">
-            Current Month
-          </label>
-        </div>
-
-        <div class="form-check primary ml-3">
-          <input type="radio" onclick="filterData('previous_month')" name="texture" id="previous_month" value="Verbose">
-          <label for="previous_month">
-            Previous Month
-          </label>
-        </div>
-
-        <div class="form-check primary ml-3">
-          <input type="radio" onclick="filterData('all_time')" name="texture" id="all_time" value="Verbose">
-          <label for="all_time">
-            All Time
-          </label>
-        </div>
-
-        <div class="form-check primary ml-3">
-          <input type="radio" onclick="filterData('date_range')" name="texture" id="date_range" value="Verbose">
-          <label for="date_range">
-            Date Range
-          </label>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div>
-<div class="d-md-flex" id="date_range_filter" style="display:none !important">
-  <div class="form-group">
-    <input type="date" id="from" class="form-control">
-  </div>
-  <div class="form-group ml-0 ml-md-4">
-    <input type="date" id="to" class="form-control">
-  </div>
-  <div class="form-group ml-0 ml-md-4">
-    <button onclick="getDateWiseData()" class="btn btn-primary card_shadow mt-1"><i class="material-icons">search</i></button>
-  </div>
-</div>
-<div class="row ml-3">
-
-  <strong class="text-primary font-weight-bold">Current Record </strong> &nbsp; from: &nbsp; <span class="text-primary font-weight-bold" id="from_date"></span> &nbsp; to:&nbsp; <span id="to_date" class="text-primary font-weight-bold"></span>
-
-</div>
 
 <div class="row mt-2">
-  <div class="container-fluid">
-    <div class="bg-white">
-      <div class="card card-transparent">
+  <div class="container p-0">
+      <div class="card card_shadow">
         <div class="card-header d-flex justify-content-between">
-          <div class="card-title font-weight-bolder">All Categories</div>
+          <div class="card-title font-weight-bolder">All Categories <span class="badge bg-primary text-white" id="counts"></span> </div>
           <div class="export-options-container">
             <div class="exportOptions">
               <div class="DTTT btn-group"> <button data-toggle="modal" data-target="#addRecordModal" class="btn btn-primary"><i class="material-icons">add</i> Add Category</button></div>
@@ -94,7 +41,6 @@
         </div>
       </div>
     </div>
-  </div>
 </div>
 
 <!-- Modal -->

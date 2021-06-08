@@ -1,7 +1,14 @@
 
 $(document).ready(function() {
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+        }
+    });
 
     getAllComments();
+
+    
 
 });
 
@@ -55,20 +62,29 @@ function getAllComments() {
                     }
                 },
                 {
-                    "data" : "replies",
-                },
-                {
                     "render": function (data, type, full, meta) {
-                        let approve = `<span class="badge bg-success text-white">Approved</span>`;
-                        let reject = `<span class="badge bg-warning text-white">Pending</span>`;
-                        return full.status == 1 ? approve: reject;
+                        return `<span class="badge bg-primary text-white">`+full.replies + `</span>`;
                     }
                 },
                 {
                     "render": function (data, type, full, meta) {
-                        return ` <div class="d-flex justify-content-center">
-                            <button onclick="viewRecord(`+ full.id +`, '`+full.name+`')" type="button" class="btn btn-primary card_shadow round" title="Edit"><i class="fas fa-check"></i></button>
-                            <button onclick="deleteRecord(`+full.id+`)" type="button" class="btn btn-danger ml-2 card_shadow round" title="Delete">
+                        let approve = `<span class="badge bg-success text-white">Approved</span>`;
+                        let pending = `<span class="badge bg-warning text-white">Pending</span>`;
+                        let reject = `<span class="badge bg-danger text-white">Rejected</span>`;
+                        if(full.status == 1) {
+                            return approve;
+                        } else if(full.status == 2) {
+                            return reject;
+                        }else {
+                            return pending;
+                        }
+                    }
+                },
+                {
+                    "render": function (data, type, full, meta) {
+                        return `<div class="d-flex justify-content-center">
+                            <button data-toggle="tooltip" data-placement="top" title="Approve Comment" onclick="commentStatus(`+ full.id +`,'approve')" type="button" class="btn btn-success   round"><i class="fas fa-check"></i></button>
+                            <button data-toggle="tooltip" data-placement="top" title="Dis-approve Comment" onclick="commentStatus(`+full.id+`,'reject')" type="button" class="btn btn-danger ml-2   round">
                             <i class="fas fa-trash"></i></button>
                         </div>`
                     }
@@ -101,6 +117,7 @@ function getAllComments() {
                         },
                         complete:function(data) {
                             $(".loader_container").hide();
+                            $('[data-toggle="tooltip"]').tooltip();
                         },
                         error: function(e) {
                             console.log(e);
@@ -124,6 +141,7 @@ function getAllComments() {
         },
         complete:function(data) {
             $(".loader_container").hide();
+            $('[data-toggle="tooltip"]').tooltip();
         },
         error: function(e) {
             console.log(e);
@@ -131,12 +149,20 @@ function getAllComments() {
     });
 }
 
-
 function format ( data ) {
-    console.log(data, "data");
+
     var row = ``;
     var count =1;
     for(var i =0; i< data.length; i++) {
+
+        cmt_rp_status = '';
+        if(data[i].status == 1) {
+            cmt_rp_status = '<span class="badge bg-success text-white">Approved</span>';
+        } else if(data[i].status == 2) {
+            cmt_rp_status = '<span class="badge bg-danger text-white">Rejected</span>';
+        }else {
+            cmt_rp_status = '<span class="badge bg-warning text-white">Pending</span>';
+        }
 
         row += `
             <tr>
@@ -145,8 +171,15 @@ function format ( data ) {
                 <td>`+data[i].name + `</td>
                 <td>`+data[i].email+`</td>
                 <td>`+data[i].comment+`</td>
-                <td>`+data[i].status+`</td>
-                <td>-</td>
+                <td>`+ cmt_rp_status +`</td>
+                <td>
+                    <div class="d-flex justify-content-center">
+                        <button data-toggle="tooltip" data-placement="top" title="Approve Reply" onclick="commentReplyStatus(`+ data[i].id +`,'approve')" type="button" class="btn btn-success   round" title="Edit"><i class="fas fa-check"></i></button>
+                        <button data-toggle="tooltip" data-placement="top" title="Disapprove Reply" onclick="commentReplyStatus(`+data[i].id+`,'reject')" type="button" class="btn btn-danger ml-2   round" title="Delete">
+                        <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
             </tr>
         `;
         count++;
@@ -168,4 +201,56 @@ function format ( data ) {
             `+row+`
         </tbody>
     </table>`;
+}
+
+function commentStatus(id,action) {
+    $.ajax({
+        type: "POST",
+        url: approve_comment,
+        dataType:'json',
+        data:{id:id,action:action},
+        beforeSend:function(data) {
+            $(".loader_container").show();
+        },  
+        success: function(data) {
+            if (data.status == 200 && data.success == true) {
+                getAllComments()
+                notyf.success(data.message);
+            } else {
+                notyf.error(data.message);
+            }
+        },
+        complete:function(data) {
+            $(".loader_container").hide();
+        },
+        error: function(e) {
+            console.log(e);
+        }
+    });
+}
+
+function commentReplyStatus(id,action) {
+    $.ajax({
+        type: "POST",
+        url: approve_comment_reply,
+        dataType:'json',
+        data:{id:id,action:action},
+        beforeSend:function(data) {
+            $(".loader_container").show();
+        },  
+        success: function(data) {
+            if (data.status == 200 && data.success == true) {
+                // getAllComments()
+                notyf.success(data.message);
+            } else {
+                notyf.error(data.message);
+            }
+        },
+        complete:function(data) {
+            $(".loader_container").hide();
+        },
+        error: function(e) {
+            console.log(e);
+        }
+    });
 }
