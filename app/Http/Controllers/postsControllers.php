@@ -22,24 +22,23 @@ class postsControllers extends Controller
         $posts =  Post::whereBetween('created_at', [$request->from, $request->to])->get();
 
         foreach($posts as $post) {
-            $category = Category::where("id","=",$post->cat_id)->select("name")->get();         
-            $post_tags = DB::table("post_tags")->where("post_id","=",$post->id)
+            $post->category = Category::where("id",$post->cat_id)->select("name")->first();         
+            $post->tags = DB::table("post_tags")->where("post_id","=",$post->id)
             ->join('tags','post_tags.tag_id','tags.id')
             ->select('name')
             ->get();
 
-            $post->category = $category;
-            $post->tags = $post_tags;          
-
+            $post->user = User::where('id',$post->created_by)->first();
+            $post->comments = Comments::where('post_id',$post->id)->get();
         }
         return $posts;
 
     }
 
     public function addPostPage() {
-        $tags = Tags::all();
-        $categories = Category::all();
-        $users = User::all();
+        $tags = Tags::where('is_deleted',0)->get();
+        $categories = Category::where('is_deleted',0)->get();
+        $users = User::where('is_deleted',0)->where('is_author',1)->get();
         return view('admin.posts.add_post',compact('categories','tags','users')); 
     }
 
@@ -327,6 +326,8 @@ class postsControllers extends Controller
 
     }
 
-
+    public function commentDetails(Request $request) {
+        return Comments::where('id',$request->id)->get();
+    }
 
 }

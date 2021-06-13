@@ -36,7 +36,7 @@
 
     <form id="addRecord" enctype="multipart/form-data">
 
-        <div class="row mt-4">
+        <div class="row">
             <div class="col-md-9">
                 <h4>1. <span class="text-primary">Post Section</span> </h4>
                 <div class="card card_shadow p-3 border-0 rounded-0">

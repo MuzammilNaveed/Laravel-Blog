@@ -56,43 +56,43 @@ Route::group(['middleware' => ['auth']], function() {
 
     // category crud
     Route::resource('categories', categoryController::class);
-    Route::get('/manage_categories', function() {
-        return view('admin.category.category');
-    })->name('category.index');
+    Route::get('/manage_categories', function() { return view('admin.category.category'); })->name('category.index');
+    Route::post('/category_posts', [categoryController::class, 'viewCategoryPosts']);
+
+
 
     // tags crud
     Route::resource('tags', TagsController::class);
+    Route::get('/manage_tags', function() { return view('admin.tags.tag'); })->name('tag.index');
 
-    Route::get('/manage_tags', function() {
-        return view('admin.tags.tag');
-    })->name('tag.index');
 
     // posts crud
     Route::resource('posts', postsControllers::class);
+    Route::get('/manage_post', function() { return view('admin.posts.post'); })->name('post.index');
     Route::get('/add_post', [postsControllers::class, 'addPostPage'])->name('add_post.index');
     Route::get('/edit_post/{id}', [postsControllers::class, 'editPostPage']);
     Route::get('/active_post/{id}', [postsControllers::class, 'activePost']);
     Route::get('/view_post/{id}', [postsControllers::class, 'viewPost']);
     Route::post('/update_post', [postsControllers::class, 'updatePost']);
 
-
     Route::post('/upload_post_imgs', [postsControllers::class, 'uploadPostImages']);
     Route::post('/delete_post_imgs', [postsControllers::class, 'deletePostImages']);
-
-    Route::get('/manage_post', function() { return view('admin.posts.post'); })->name('post.index');
-
+    
 
 
     // roles crud
     Route::resource('roles', RoleController::class);
     Route::get('/manage_roles', [RoleController::class, 'manageRoles'])->name('role.index');
 
-
+    
     // users crud
     Route::get('/manage_users',[HomeController::class, 'manageUserPage'])->name("user.index");
     Route::post('/create_users',[HomeController::class, 'createUser']);
     Route::get('/get_all_users',[HomeController::class, 'getAllUsers']);
     Route::post('/update_users',[HomeController::class, 'updateUser']);
+    Route::post('/delete_users',[HomeController::class, 'deleteUser']);
+
+    Route::post('/user_detail',[HomeController::class, 'userDetail']);
 
 
     // comments
@@ -101,6 +101,9 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/get_replie_by_id/{id}', [postsControllers::class, 'getCommentReplieByID']);
     Route::post('/approve_comment', [postsControllers::class, 'approveComment']);
     Route::post('/approve_comment_reply', [postsControllers::class, 'approveCommentReply']);
+
+    Route::post('/comment_details', [postsControllers::class, 'commentDetails']);
+
 
 
     // settings
@@ -115,6 +118,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/get_all_features', [FeatureController::class, 'getFeatures']);
     Route::get('/get_features_by_id/{id}', [FeatureController::class, 'getFeaturesByID']);
     Route::post('/update_feature', [FeatureController::class, 'update']);
+
 
     // admin pages
     Route::get('/visitors', [adminController::class, 'index'])->name('visitor.index');

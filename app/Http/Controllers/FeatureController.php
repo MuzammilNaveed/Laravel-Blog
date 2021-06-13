@@ -44,7 +44,7 @@ class FeatureController extends Controller
     }
 
     public function getFeatures()  {
-        $features =  Feature::all();
+        $features =  Feature::orderBy('sequence')->get();
         foreach($features as $feature) {
             $f_role_id = explode(',', $feature->role_id);
             $rl_arr_name = array();

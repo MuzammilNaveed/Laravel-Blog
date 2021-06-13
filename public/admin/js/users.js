@@ -5,16 +5,18 @@ $(document).ready(function() {
         }
     });
 
-
     //for insert user record
     $("#addRecord").submit(function(e) {
         e.preventDefault();
 
         let form_data = new FormData(this);
         let status = 0;
+        let is_author = 0;
 
         $("#status").is(":checked") ? (status = 1) : (status = 0);
+        $("#author").is(":checked") ? (is_author = 1) : (is_author = 0);
         form_data.append("status", status);
+        form_data.append("author", is_author);
 
         $.ajax({
             headers: {
@@ -35,13 +37,12 @@ $(document).ready(function() {
                 console.log(data, "a");
 
                 if ((data.status == 200) & (data.success == true)) {
-
                     $("#addRecord")[0].reset();
-                    $("addRecordModal").modal("hide");
+                    $("#addRecordModal").modal("hide");
                     getAllUsers();
-
+                } else {
+                    notyf.error(data.message);
                 }
-                
             },
             complete: function(data) {
                 $("#save").show();
@@ -55,7 +56,7 @@ $(document).ready(function() {
         });
     });
 
-    //for insert user record
+    //for updateing user record
     $("#editRecord").submit(function(e) {
         e.preventDefault();
 
@@ -81,18 +82,14 @@ $(document).ready(function() {
                 $("#upprocess").show();
             },
             success: function(data) {
-
                 if ((data.status == 200) & (data.success == true)) {
-
                     $("#editRecord")[0].reset();
                     $("#updateModal").modal("hide");
                     getAllUsers();
                     notyf.success(data.message);
-
-                }else{
+                } else {
                     notyf.error(data.message);
                 }
-                
             },
             complete: function(data) {
                 $("#upsave").show();
@@ -121,9 +118,7 @@ function getAllUsers() {
             console.log(data, "users");
             $("#counts").text(data.length);
 
-            $("#user_table")
-                .DataTable()
-                .destroy();
+            $("#user_table").DataTable().destroy();
             $.fn.dataTable.ext.errMode = "none";
             var tbl = $("#user_table").DataTable({
                 data: data,
@@ -137,8 +132,8 @@ function getAllUsers() {
                     },
                     {
                         render: function(data, type, full, meta) {
-                            let img =`<img src="/users/`+ full.profile_pic +`" width="80" height="50" class="shadow-sm rounded">`;
-                            return img;
+                            let img = `<img src="/users/` + full.profile_pic + `" width="80" height="50" class="shadow-sm rounded">`;
+                            return full.profile_pic != null ? img : `<p class="text-danger text-center">Missing</p>`;
                         }
                     },
                     {
@@ -147,13 +142,19 @@ function getAllUsers() {
                         }
                     },
                     {
-                        data: "name"
+                        render: function(data, type, full, meta) {
+                            return full.name != null ? full.name : "-";
+                        }
                     },
                     {
-                        data: "email"
+                        render: function(data, type, full, meta) {
+                            return full.email != null ? full.email : "-";
+                        }
                     },
                     {
-                        data: "role_id"
+                        render: function(data, type, full, meta) {
+                            return full.role_id != null ? full.role_id : "-";
+                        }
                     },
                     {
                         render: function(data, type, full, meta) {
@@ -166,13 +167,13 @@ function getAllUsers() {
                         render: function(data, type, full, meta) {
                             return (
                                 ` <div class="d-flex justify-content-center">
-                            <button onclick="viewRecord(`+full.id +`,'` +full.role_id +`','` +full.name +`','` + full.email +`','` + full.status +`','` + full.phone +`',
-                                '` + full.address +`','` + full.facebook +`','` + full.twitter +`','` + full.instagram +`','` + full.linkedin +`','` + full.profile_pic +`')" type="button" class="btn btn-primary rounded">
-                            <i class="material-icons" style="font-size:15px">edit</i> Edit</button>
+                            <button onclick="viewRecord(` + full.id + `,'` + full.role_id + `','` + full.name + `','` + full.email + `','` + full.status + `','` + full.phone + `', '` + full.address + `','` +full.facebook +`','` + full.twitter + `','` +full.instagram +`','` + full.linkedin + `','` +full.profile_pic +`')" 
+                                type="button" class="btn btn-primary btn_cirlce text-white">
+                                <i class="fas fa-pencil-alt"></i></button>
                             <button  onclick="deleteRecord(` +
                                 full.id +
-                                `)" type="button" class="btn btn-danger ml-2 text-white rounded">
-                            <i class="material-icons" style="font-size:15px">delete</i> Delete</button>
+                                `)" type="button" class="btn btn-danger ml-2 text-white btn_cirlce text-white">
+                                <i class="fas fa-trash"></i></button>
                         </div>`
                             );
                         }
@@ -200,7 +201,8 @@ function getAllUsers() {
     });
 }
 
-function viewRecord(id,role_id,name,email,status, phone,address, facebook,twitter,instagram,linkedin,profile) {
+function viewRecord( id, role_id, name, email, status, phone, address, facebook, twitter, instagram, linkedin, profile) {
+    $("#edit_modal_loader").show();
     $("#updateModal").modal("show");
 
     $("#id").val(id);
@@ -214,17 +216,30 @@ function viewRecord(id,role_id,name,email,status, phone,address, facebook,twitte
     $("#instagram").val(twitter);
     $("#twitter").val(instagram);
     $("#linkedin").val(linkedin);
-    $("#role_id").val(role_id).trigger('change');
+    $("#role_id")
+        .val(role_id)
+        .trigger("change");
 
-    status == 1 ? $("input[name='editstatus']").prop("checked",true) : $("input[name='editstatus']").prop("checked",false);
-    
-    $("#profile_pic").html(`<div class="form-group">
-        <input type="file" class="form-control dropify" data-default-file="`+image_path +'/'+ profile+`" name="edit_profile_pic" data-allowed-file-extensions="png jpg jpeg">
-    </div>`);
-  $('.dropify').dropify();
+    status == 1
+        ? $("input[name='editstatus']").prop("checked", true)
+        : $("input[name='editstatus']").prop("checked", false);
+
+    $("#profile_pic").html(
+        `<div class="form-group">
+        <input type="file" class="form-control dropify" data-default-file="` +
+            image_path +
+            "/" +
+            profile +
+            `" name="edit_profile_pic" data-allowed-file-extensions="png jpg jpeg">
+    </div>`
+    );
+    $(".dropify").dropify();
+    setTimeout(() => {
+        $("#edit_modal_loader").hide();
+    }, 1000);
 }
 
-function deleteRecord() {
+function deleteRecord(id) {
     Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
@@ -235,7 +250,35 @@ function deleteRecord() {
         confirmButtonText: "Yes, delete it!"
     }).then(result => {
         if (result.isConfirmed) {
-            Swal.fire("Deleted!", "Your file has been deleted.", "success");
+            $.ajax({
+                type: "POST",
+                url: delete_users,
+                data: {id:id},
+                beforeSend: function(data) {
+                    $(".loader_container").show();
+                },
+                success: function(data) {
+                    console.log(data, "a");
+    
+                    if ((data.status == 200) & (data.success == true)) {
+    
+                        getAllUsers();
+                        Swal.fire("Deleted!", data.message, "success");
+    
+                    }else{
+                        Swal.fire("Cancelled!", data.message, "error");
+                    }
+                    
+                },
+                complete: function(data) {
+                    $(".loader_container").hide();
+                },
+                error: function(e) {
+                    console.log(e);
+                    $(".loader_container").hide();
+                }
+            });
+            
         }
     });
 }

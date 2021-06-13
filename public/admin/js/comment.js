@@ -83,9 +83,9 @@ function getAllComments() {
                 {
                     "render": function (data, type, full, meta) {
                         return `<div class="d-flex justify-content-center">
-                            <button data-toggle="tooltip" data-placement="top" title="Approve Comment" onclick="commentStatus(`+ full.id +`,'approve')" type="button" class="btn btn-success   round"><i class="fas fa-check"></i></button>
-                            <button data-toggle="tooltip" data-placement="top" title="Dis-approve Comment" onclick="commentStatus(`+full.id+`,'reject')" type="button" class="btn btn-danger ml-2   round">
-                            <i class="fas fa-trash"></i></button>
+                            <button data-toggle="tooltip" data-placement="top" title="Approve Comment" onclick="commentStatus(`+ full.id +`,'approve')" type="button" class="btn btn-success text-white btn_cirlce"><i class="fas fa-check"></i></button>
+                            <button data-toggle="tooltip" data-placement="top" title="Dis-approve Comment" onclick="commentStatus(`+full.id+`,'reject')" type="button" class="btn btn-danger text-white ml-2 btn_cirlce">
+                            <i class="fas fa-ban"></i>
                         </div>`
                     }
                 },
@@ -174,9 +174,9 @@ function format ( data ) {
                 <td>`+ cmt_rp_status +`</td>
                 <td>
                     <div class="d-flex justify-content-center">
-                        <button data-toggle="tooltip" data-placement="top" title="Approve Reply" onclick="commentReplyStatus(`+ data[i].id +`,'approve')" type="button" class="btn btn-success   round" title="Edit"><i class="fas fa-check"></i></button>
-                        <button data-toggle="tooltip" data-placement="top" title="Disapprove Reply" onclick="commentReplyStatus(`+data[i].id+`,'reject')" type="button" class="btn btn-danger ml-2   round" title="Delete">
-                        <i class="fas fa-trash"></i>
+                        <button data-toggle="tooltip" data-placement="top" title="Approve Reply" onclick="commentReplyStatus(`+ data[i].id +`,'approve')" type="button" class="btn btn-success text-white btn_cirlce" title="Edit"><i class="fas fa-check"></i></button>
+                        <button data-toggle="tooltip" data-placement="top" title="Disapprove Reply" onclick="commentReplyStatus(`+data[i].id+`,'reject')" type="button" class="btn btn-danger ml-2 text-white btn_cirlce" title="Delete">
+                            <i class="fas fa-ban"></i>
                         </button>
                     </div>
                 </td>

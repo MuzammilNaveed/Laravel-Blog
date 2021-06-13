@@ -16,7 +16,7 @@
 </style>
 
 <div class="row">
-    <div class="container p-0">
+    <div class="container-fluid p-0">
         <div class="card card_shadow mt-4 border-0 rounded-0">
             <div class="card-header">
                 <div class="d-flex justify-content-between">

@@ -177,11 +177,6 @@ class HomeController extends Controller
         $country_names = json_encode($country_arry);
         $country_counts = json_encode($country_arry_count);
 
-
-
-
-
-
         return view('admin.dashboard.index', compact('post_count','browser_names','browser_counts','category_count', 'tag_count', 'user_count', 'comment_count', 'reply_count', 'active_post', 'inactive_post','platform_names','platform_counts','country_names','country_counts'));
     }
 
@@ -267,12 +262,15 @@ class HomeController extends Controller
         $user->instagram = $request->instagram;
         $user->twitter = $request->twitter;
         $user->status = $request->status;
+        $user->is_author = $request->author;
 
-        $image = $request->file('profile_pic');
-        $imageName = rand() . '.' . $image->extension();
-        $image->move(public_path('users'), $imageName);
-
-        $user->profile_pic = $imageName;
+        if($request->profile_pic) {
+            $image = $request->file('profile_pic');
+            $imageName = rand() . '.' . $image->extension();
+            $image->move(public_path('users'), $imageName);
+    
+            $user->profile_pic = $imageName;
+        }       
         $user->created_by = Auth::user()->id;
         $user->save();
         return response()->json([
@@ -283,7 +281,7 @@ class HomeController extends Controller
     }
 
     public function getAllUsers() {
-        return User::all();
+        return User::where('is_deleted',0)->get();
     }
 
     public function updateUser(Request $request){
@@ -317,5 +315,40 @@ class HomeController extends Controller
             'success' => true,
             'status' => 200
         ]);
+    }
+
+    public function userDetail(Request $request) {
+        if($request->page == "post") {
+            $user =  User::find($request->id);
+            $user->role = Role::find($user->role_id);
+            return $user;
+        }else{
+            return User::where('role_id',$request->id)->get();
+        }
+        
+    }
+
+
+    public function deleteUser(Request $request) {
+        
+        $posts = Post::where('created_by',$request->id)->count();
+
+        if($posts > 0) {
+            return response()->json([
+                'message' => 'User Cannot be deleted... User have Posts',
+                'success' => false,
+                'status' => 500
+            ]);
+        }else{
+            $user = User::where('id',$request->id)->first();
+            $user->is_deleted = 1;
+            $user->deleted_by = Auth::user()->id;
+            $user->save();
+            return response()->json([
+                'message' => 'User Deleted Successfully',
+                'success' => true,
+                'status' => 200
+            ]);
+        }
     }
 }

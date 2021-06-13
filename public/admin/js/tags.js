@@ -131,10 +131,10 @@ function getAllTags() {
                 {
                     "render": function (data, type, full, meta) {
                         return ` <div class="d-flex justify-content-center">
-                            <button onclick="viewRecord(`+ full.id +`, '`+full.name+`')" type="button" class="btn btn-primary rounded" title="Edit">
-                            <i class="material-icons" style="font-size:15px">edit</i> Edit </button>
-                            <button onclick="deleteRecord(`+full.id+`)" type="button" class="btn btn-danger text-white ml-2 rounded" title="Delete">
-                            <i class="material-icons" style="font-size:15px">delete</i> Delete</button>
+                            <button onclick="viewRecord(`+ full.id +`, '`+full.name+`')" type="button" class="btn btn-primary text-white btn_cirlce" title="Edit">
+                            <i class="fas fa-pencil-alt"></i> </button>
+                            <button onclick="deleteRecord(`+full.id+`)" type="button" class="btn btn-danger text-white ml-2 text-white btn_cirlce" title="Delete">
+                            <i class="fas fa-trash"></i></button>
                         </div>`
                     }
                 },

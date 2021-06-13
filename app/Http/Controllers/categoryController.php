@@ -11,7 +11,11 @@ class categoryController extends Controller
 {
     
     public function index(Request $request) {
-        return Category::where('is_deleted',0)->get();
+        $categories = Category::where('is_deleted',0)->get();
+        foreach($categories as $category) {
+            $category->post_count = Post::where('cat_id',$category->id)->count();
+        }
+        return $categories;
     }
 
     public function store(Request $request) {
@@ -62,5 +66,11 @@ class categoryController extends Controller
 
     }
 
+    public function viewCategoryPosts(Request $request) {
+
+        $posts = Post::where('cat_id',$request->id)->where('is_deleted',0)->get();
+        return $posts;
+
+    }
 
 }

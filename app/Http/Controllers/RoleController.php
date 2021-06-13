@@ -14,7 +14,12 @@ class RoleController extends Controller
     }
 
     public function index(Request $request) {
-        return Role::all();
+        $roles = Role::all();
+        foreach($roles as $role) {
+            $role->user_count = User::where('role_id',$role->id)->count();
+        }
+        
+        return $roles;
     }
 
     public function store(Request $request) {
@@ -45,7 +50,7 @@ class RoleController extends Controller
         $user = User::where('role_id',$id)->first();
         if($user) {
             return response()->json([
-                'message' => 'Role Cannot be Deleted',
+                'message' => 'Role Cannot be Deleted... User Exist with this role',
                 'status' => 500,
                 'success' => false,
             ]);

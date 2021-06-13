@@ -9,38 +9,39 @@
 </style>
 
 <div class="row mt-2">
-  <div class="container p-0">
-      <div class="card card_shadow">
-        <div class="card-header d-flex justify-content-between">
-          <div class="card-title font-weight-bolder">All Categories <span class="badge bg-primary text-white" id="counts"></span> </div>
-          <div class="export-options-container">
-            <div class="exportOptions">
-              <div class="DTTT btn-group"> <button data-toggle="modal" data-target="#addRecordModal" class="btn btn-primary"><i class="material-icons">add</i> Add Category</button></div>
-            </div>
+  <div class="container-fluid p-0">
+    <div class="card card_shadow">
+      <div class="card-header d-flex justify-content-between">
+        <div class="card-title font-weight-bolder">All Categories <span class="badge bg-primary text-white" id="counts"></span> </div>
+        <div class="export-options-container">
+          <div class="exportOptions">
+            <div class="DTTT btn-group"> <button data-toggle="modal" data-target="#addRecordModal" class="btn btn-primary"><i class="material-icons">add</i> Add Category</button></div>
           </div>
-        </div>
-        <div class="card-body">
-          <div class="table-responsive sm-m-b-15">
-            <table class="table table-hover no-footer w-100" id="showRecord">
-              <thead>
-                <tr role="row">
-                  <th>Sr #</th>
-                  <th>Created At</th>
-                  <th>Category Name</th>
-                  <th>Category Description</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div class="loader_container" style="display:none">
-          <div class="loader"></div>
         </div>
       </div>
+      <div class="card-body">
+        <div class="table-responsive sm-m-b-15">
+          <table class="table table-hover no-footer w-100" id="showRecord">
+            <thead>
+              <tr role="row">
+                <th>Sr #</th>
+                <th>Created At</th>
+                <th>Category Name</th>
+                <th>Total Posts</th>
+                <th>Category Description</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="loader_container" style="display:none">
+        <div class="loader"></div>
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- Modal -->
@@ -82,7 +83,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade stick-up" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -121,11 +122,39 @@
 </div>
 
 
+<!-- post view modal -->
+<div class="modal fade stick-up" id="postViewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"> <span class="text-primary" id="categoryname"></span> has following posts</h5>
+
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mt-2" id="category_post">
+
+
+
+      </div>
+    </div>
+
+    <div class="loader_container" id="cat_post_loader">
+      <div class="loader"></div>
+    </div>
+
+  </div>
+</div>
+
+
 @endsection
 @section('scripts')
 <script src="{{asset('admin/js/category.js')}}"></script>
 
 <script>
   var categories = "{{url('categories')}}";
+  var category_posts = "{{url('category_posts')}}";
+  var view_post = "{{url('view_post')}}";
 </script>
 @show

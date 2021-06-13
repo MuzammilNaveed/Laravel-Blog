@@ -67,6 +67,9 @@
                 <li class="nav-item">
                     <a href="#" data-toggle="tab" data-target="#slide4"><span>Website</span></a>
                 </li>
+                <li class="nav-item">
+                    <a href="#" data-toggle="tab" data-target="#slide5"><span>Email Setting</span></a>
+                </li>
             </ul>
             <div class="nav-tab-dropdown cs-wrapper full-width d-lg-none d-xl-none d-md-none">
                 <div class="cs-select cs-skin-slide full-width" tabindex="0"><span class="cs-placeholder">Hello World</span>
@@ -76,12 +79,14 @@
                             <li data-option="" data-value="#slide2"><span>Profile</span></li>
                             <li data-option="" data-value="#slide3"><span>Messages</span></li>
                             <li data-option="" data-value="#slide4"><span>website</span></li>
+                            <li data-option="" data-value="#slide4"><span>Email Setting</span></li>
                         </ul>
                     </div><select class="cs-select cs-skin-slide full-width" data-init-plugin="cs-select">
                         <option value="#slide1" selected="">Home</option>
                         <option value="#slide2">Profile</option>
                         <option value="#slide3">Messages</option>
                         <option value="#slide4">website</option>
+                        <option value="#slide4">Email Setting</option>
                     </select>
                     <div class="cs-backdrop"></div>
                 </div>
@@ -307,6 +312,37 @@
                             <button type="submit" id="saveBtn" class="btn btn-success">Save</button>
                             <button style="display:none" id="processing" class="btn btn-success" type="button" disabled><i class="fas fa-circle-notch fa-spin"></i> Processing</button>
                         </form>
+                    </div>
+                </div>
+
+                <div class="tab-pane slide-left" id="slide5">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group form-group-default">
+                                <label class="small text-muted">Site Url <span class="text-danger">*</span> </label>
+                                <input name="site_name"  type="text" class="form-control input-sm" placeholder="Site Url">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group form-group-default">
+                                <label class="small text-muted">Host Name <span class="text-danger">*</span> </label>
+                                <input name="site_url" type="text" class="form-control input-sm" placeholder="Host Name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group form-group-default">
+                                <label class="small text-muted">Email<span class="text-danger">*</span> </label>
+                                <input name="site_name"  type="text" class="form-control input-sm" placeholder="Sending Email From">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group form-group-default">
+                                <label class="small text-muted">Email Password <span class="text-danger">*</span> </label>
+                                <input name="site_url" type="text" class="form-control input-sm" placeholder="Email Password">
+                            </div>
+                        </div>
                     </div>
                 </div>
 

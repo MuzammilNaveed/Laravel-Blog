@@ -113,8 +113,6 @@ function getAllCategories() {
         success: function(data) {
             $("#counts").text(data.length);
 
- 
-
             $("#showRecord").DataTable().destroy();
             $.fn.dataTable.ext.errMode = "none";
             var tbl = $("#showRecord").DataTable({
@@ -128,28 +126,42 @@ function getAllCategories() {
                         defaultContent: ""
                     },
                     {
-                        render: function(data, type, full, meta) {
+                        "render": function(data, type, full, meta) {
                             return moment(full.created_at).format("DD-MM-YYYY");
                         }
                     },
                     {
-                        data: "name"
+                        "render": function(data, type, full, meta) {
+                            return full.name != null ? full.name : '-';
+                        }
                     },
                     {
-                        data: "description"
+                        "className" : "small text-center",
+                        "render": function(data, type, full, meta) {
+                            let post_count =  full.post_count != null ? full.post_count : '-';
+                            let cat_name = full.name != null ? full.name : '-';
+                            return `<a href="#" onclick="showPosts(`+full.id+`,'`+cat_name+`')">`+post_count+`</a>`;
+                        }
                     },
                     {
-                        render: function(data, type, full, meta) {
+                        "render": function(data, type, full, meta) {
+                            return full.description != null ? full.description.substring(0,30) + "...." : '-';
+                        }
+                    },
+                    {
+                        "render": function(data, type, full, meta) {
                             return (
                                 ` <div class="d-flex justify-content-center">
-                            <button onclick="viewRecord(`+full.id + `, '` + full.name + `','` + full.description +`')" 
-                                type="button" class="btn btn-primary rounded">
-                            <i class="material-icons" style="font-size:15px">edit</i> Edit</button>
-                            <button  onclick="deleteRecord(` +
-                                full.id +
-                                `)" type="button" class="btn btn-danger ml-2 rounded text-white">
-                            <i class="material-icons" style="font-size:15px">delete</i> Delete</button>
-                        </div>`
+                                    <button onclick="viewRecord(`+full.id + `, '` + full.name + `','` + full.description +`')" 
+                                        type="button" class="btn btn-primary text-white btn_cirlce">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </button>
+
+                                    <button  onclick="deleteRecord(`+ full.id + `)" type="button" 
+                                        class="btn btn-danger ml-2 text-white btn_cirlce">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>`
                             );
                         }
                     }
@@ -216,4 +228,40 @@ function deleteRecord(id) {
 }
 
 
+function showPosts(id,name) {
 
+    $("#categoryname").text(name);
+    $("#postViewModal").modal('show');
+
+    $.ajax({
+        type: "POST",
+        url: category_posts,
+        data: {id:id},
+        dataType:'json',
+        beforeSend: function(data) {
+            $("#cat_post_loader").show();
+        },
+        success: function(data) {
+            console.log(data);
+
+            let html = ``;
+            let index = 1;
+            for(var i = 0; i < data.length; i ++) {
+
+                html +=`
+                    <li style="list-style:none"><strong>`+index+`. </strong> <a href="`+view_post+`/`+data[i].id+`">`+data[i].title+`</a></li>
+                `;
+                index++;
+            }
+
+            $("#category_post").html(html);
+        },
+        complete: function(data) {
+            $("#cat_post_loader").hide();
+        },
+        error: function(e) {
+            console.log(e);
+        }
+    });
+
+}

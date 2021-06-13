@@ -46,9 +46,9 @@
     }
 
     .loader {
-      width: 50px;
-      height: 50px;
-      border: 3px solid;
+      width: 30px;
+      height: 30px;
+      border: 2px solid;
       color: #111;
       border-radius: 50%;
       border-top-color: transparent;
@@ -81,6 +81,10 @@
     }
     .card_shadow {
         box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    }
+    .btn_cirlce {
+      border-radius: 100px;
+      padding: 8px 9px;
     }
   </style>
 </head>

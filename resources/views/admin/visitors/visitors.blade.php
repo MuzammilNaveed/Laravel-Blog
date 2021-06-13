@@ -16,7 +16,7 @@
 
 <div class="row mt-2">
 
-  <div class="container p-0">
+  <div class="container-fluid p-0">
 
     <div class="bg-white mt-3">
       <div class="card card_shadow">

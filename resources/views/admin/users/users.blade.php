@@ -16,7 +16,7 @@
 
 <div class="row mt-2">
 
-  <div class="container p-0">
+  <div class="container-fluid p-0">
 
     <div class="row">
       <div class="col-md-1">
@@ -74,6 +74,8 @@
     </div>
 </div>
 
+
+<!-- insert user detail modal -->
 <div class="modal fade stick-up" id="addRecordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" style="width:100%">
     <div class="modal-content">
@@ -176,6 +178,17 @@
             </div>
           </div>
 
+            <div class="col-md-6">
+              <div class="custom-control custom-checkbox mt-2">
+                <input type="checkbox" class="custom-control-input" id="author">
+                <label class="custom-control-label" for="author">is Author</label>
+              </div>
+              <span class="text-muted small"> <i>if checked author post display on frontend</i> </span>
+            </div>
+
+            <br>
+            <br>
+
           <!-- <div class="row mt-2"> -->
           <button id="save" type="submit" class="btn btn-primary btn-lg mr-2">Save</button>
           <button id="process" style="display:none" type="button" class="btn btn-primary btn-lg" disabled><i class="fas fa-circle-notch fa-spin mr-1"></i> Processing</button>
@@ -189,6 +202,7 @@
 </div>
 
 
+<!-- update user detail modal -->
 <div class="modal fade slide-right" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" style="width:100%">
     <div class="modal-content">
@@ -280,11 +294,13 @@
             <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">Cancel</button>
 
         </form>
+        <div class="loader_container" id="edit_modal_loader" style="display:none">
+          <div class="loader"></div>
+        </div>
       </div>
     </div>
   </div>
 </div>
-
 
 
 @endsection
@@ -293,10 +309,11 @@
 
 <script type="text/javascript" src="{{asset('admin/js/users.js')}}"></script>
 <script type="text/javascript">
-  let create_users = "{{url('create_users')}}"
-  let get_all_users = "{{url('get_all_users')}}"
+  let create_users = "{{url('create_users')}}";
+  let get_all_users = "{{url('get_all_users')}}";
   let image_path = "{{asset('users')}}";
-  let update_user = "{{url('update_users')}}"
+  let update_user = "{{url('update_users')}}";
+  let delete_users = "{{url('delete_users')}}";
 </script>
 <script language="JavaScript" type="text/javascript">
   $('.dropify').dropify({
@@ -307,8 +324,6 @@
       'error': 'Ooops, something wrong happended.'
     }
   });
-
-
 
   $(".user-password-div").on('click', '.show-password-btn', function() {
     $(this).toggleClass("fa-eye fa-eye-slash");
