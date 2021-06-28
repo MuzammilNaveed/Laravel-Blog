@@ -86,20 +86,45 @@
       border-radius: 100px;
       padding: 8px 9px;
     }
+
+    /* width */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: #b5b5b5;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+
   </style>
 </head>
 <body class="fixed-header windows desktop js-focus-visible pace-done menu-pin">
 
   <nav class="page-sidebar" data-pages="sidebar">
     <div class="sidebar-header">
-      <img src="{{asset('admin/assets/img/logo_white.png')}}" alt="logo" class="brand" data-src="{{asset('admin/assets/img/logo_white.png')}}" data-src-retina="{{asset('admin/assets/img/logo_white_2x.png')}}" width="78" height="22">
-      <div class="sidebar-header-controls">
+      @if( Session('dashboard_logo') != null && Session('dashboard_logo') != '' )
+        <img src="{{asset('settings')}}/{{Session('dashboard_logo')}}" alt="logo" class="brand" data-src="{{asset('settings')}}/{{Session('dashboard_logo')}}" data-src-retina="{{asset('settings')}}/{{Session('dashboard_logo')}}" width="78" height="22">
+      @else
+        <p>Dashboard</p>
+      @endif
+      <div class="sidebar-header-controls" style="margin-left:58px">
         <button aria-label="Pin Menu" type="button" class="btn btn-icon-link invert d-lg-inline-block d-xlg-inline-block d-md-inline-block d-sm-none d-none" data-toggle-pin="sidebar">
           <i class="pg-icon"></i>
         </button>
       </div>
     </div>
-
+    
     @include('admin.layout.sidebar')
 
   </nav>

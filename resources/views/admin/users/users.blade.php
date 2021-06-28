@@ -18,22 +18,17 @@
 
   <div class="container-fluid p-0">
 
-    <div class="row">
-      <div class="col-md-1">
-        <select class="cs-select cs-skin-slide" data-init-plugin="cs-select">
-          <option value=" ">Role</option>
-          <option value="business">Helvetica</option>
-          <option value="honeymoon">SegeoUI</option>
+  <div class="d-flex justify-content-between">
+    <div class="form-group form-group-default form-group-default-select2" style="width:150px;position: relative; z-index: 10;">
+        <label class="">Role</label>
+        <select class="full-width select2-hidden-accessible" id='role_select' data-placeholder="Select Role" data-init-plugin="select2" tabindex="-1" aria-hidden="true">
+            <option value=" ">All</option>
+              @foreach($roles as $role) 
+                <option value="{{$role->name}}"> {{$role->name}} </option>
+              @endforeach
         </select>
-      </div>
-      <div class="col-md-1">
-        <select class="cs-select cs-skin-slide" data-init-plugin="cs-select">
-          <option value=" ">Account Status</option>
-          <option value="business">Helvetica</option>
-          <option value="honeymoon">SegeoUI</option>
-        </select>
-      </div>
     </div>
+  </div>
 
       <div class="card card_shadow mt-2">
         <div class="card-header d-flex justify-content-between">
@@ -54,11 +49,11 @@
                 <tr>
                   <th>Sr#</th>
                   <th>Profile</th>
-                  <th>Date</th>
                   <th>User Name</th>
                   <th>Email</th>
                   <th>Role</th>
                   <th>Account Status</th>
+                  <th>Author</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -191,11 +186,15 @@
 
           <!-- <div class="row mt-2"> -->
           <button id="save" type="submit" class="btn btn-primary btn-lg mr-2">Save</button>
-          <button id="process" style="display:none" type="button" class="btn btn-primary btn-lg" disabled><i class="fas fa-circle-notch fa-spin mr-1"></i> Processing</button>
           <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">Cancel</button>
           <!-- </div> -->
 
         </form>
+        
+        <div class="loader_container" style="display:none" id="add_loader">
+          <div class="loader"></div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -290,11 +289,10 @@
             </div>
 
             <button id="upsave" type="submit" class="btn btn-primary btn-lg mr-2">Save</button>
-            <button id="upprocess" style="display:none" type="button" class="btn btn-primary btn-lg mr-2" disabled><i class="fas fa-circle-notch fa-spin mr-1"></i> Processing</button>
             <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">Cancel</button>
 
         </form>
-        <div class="loader_container" id="edit_modal_loader" style="display:none">
+        <div class="loader_container" id="edit_loader" style="display:none">
           <div class="loader"></div>
         </div>
       </div>
@@ -307,7 +305,7 @@
 
 @section('scripts')
 
-<script type="text/javascript" src="{{asset('admin/js/users.js')}}"></script>
+<script type="text/javascript" src="{{asset('admin/js/users.js').'?ver='.rand()}}"></script>
 <script type="text/javascript">
   let create_users = "{{url('create_users')}}";
   let get_all_users = "{{url('get_all_users')}}";

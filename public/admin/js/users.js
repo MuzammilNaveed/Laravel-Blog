@@ -30,8 +30,7 @@ $(document).ready(function() {
             cache: false,
             processData: false,
             beforeSend: function(data) {
-                $("#save").hide();
-                $("#process").show();
+                $("#add_loader").show();
             },
             success: function(data) {
                 console.log(data, "a");
@@ -45,13 +44,11 @@ $(document).ready(function() {
                 }
             },
             complete: function(data) {
-                $("#save").show();
-                $("#process").hide();
+                $("#add_loader").hide();
             },
             error: function(e) {
                 console.log(e);
-                $("#save").show();
-                $("#process").hide();
+                $("#add_loader").hide();
             }
         });
     });
@@ -78,8 +75,7 @@ $(document).ready(function() {
             cache: false,
             processData: false,
             beforeSend: function(data) {
-                $("#upsave").hide();
-                $("#upprocess").show();
+                $("#edit_loader").show();
             },
             success: function(data) {
                 if ((data.status == 200) & (data.success == true)) {
@@ -92,13 +88,11 @@ $(document).ready(function() {
                 }
             },
             complete: function(data) {
-                $("#upsave").show();
-                $("#upprocess").hide();
+                $("#edit_loader").hide();
             },
             error: function(e) {
                 console.log(e);
-                $("#upsave").show();
-                $("#upprocess").hide();
+                $("#edit_loader").hide();
             }
         });
     });
@@ -131,48 +125,55 @@ function getAllUsers() {
                         defaultContent: ""
                     },
                     {
-                        render: function(data, type, full, meta) {
+                        "render": function(data, type, full, meta) {
                             let img = `<img src="/users/` + full.profile_pic + `" width="80" height="50" class="shadow-sm rounded">`;
                             return full.profile_pic != null ? img : `<p class="text-danger text-center">Missing</p>`;
                         }
                     },
                     {
-                        render: function(data, type, full, meta) {
-                            return moment(full.created_at).format("DD-MM-YYYY");
+                        "render": function(data, type, full, meta) {
+                            return `
+                                <div>
+                                    <p> <strong class="text-primary">`+(full.name != null ? full.name : "-")+`</strong> <br> <span class="text-muted small"> Created at: `+moment(full.created_at).format("DD-MM-YYYY")+`</span> </p>
+                                </div>`;
                         }
                     },
                     {
-                        render: function(data, type, full, meta) {
-                            return full.name != null ? full.name : "-";
-                        }
-                    },
-                    {
-                        render: function(data, type, full, meta) {
+                        "render": function(data, type, full, meta) {
                             return full.email != null ? full.email : "-";
                         }
                     },
                     {
-                        render: function(data, type, full, meta) {
-                            return full.role_id != null ? full.role_id : "-";
+                        "render": function(data, type, full, meta) {
+                            if(full.role != null && full.role != "") {
+                                return full.role.name != null && full.role.name != "" ? full.role.name : "-";
+                            }                            
                         }
                     },
                     {
-                        render: function(data, type, full, meta) {
+                        "render": function(data, type, full, meta) {
                             let active = `<span class="badge text-white bg-success">Active</span>`;
                             let deactive = `<span class="badge text-white bg-danger">De-Active</span>`;
                             return full.status == 1 ? active : deactive;
                         }
                     },
                     {
-                        render: function(data, type, full, meta) {
+                        "render": function(data, type, full, meta) {
+                            let yes = `<span class="badge text-white bg-success">Yes</span>`;
+                            let no = `<span class="badge text-white bg-danger">No</span>`;
+                            return full.is_author == 1 ? yes : no;
+                        }
+                    },
+                    {
+                        "render": function(data, type, full, meta) {
                             return (
-                                ` <div class="d-flex justify-content-center">
+                                `<div class="d-flex justify-content-center">
                             <button onclick="viewRecord(` + full.id + `,'` + full.role_id + `','` + full.name + `','` + full.email + `','` + full.status + `','` + full.phone + `', '` + full.address + `','` +full.facebook +`','` + full.twitter + `','` +full.instagram +`','` + full.linkedin + `','` +full.profile_pic +`')" 
-                                type="button" class="btn btn-primary btn_cirlce text-white">
+                                type="button" class="btn btn-primary btn_cirlce text-white" data-toggle="tooltip" data-placement="top" title="Edit">
                                 <i class="fas fa-pencil-alt"></i></button>
                             <button  onclick="deleteRecord(` +
                                 full.id +
-                                `)" type="button" class="btn btn-danger ml-2 text-white btn_cirlce text-white">
+                                `)" type="button" class="btn btn-danger ml-2 text-white btn_cirlce text-white" data-toggle="tooltip" data-placement="top" title="Delete">
                                 <i class="fas fa-trash"></i></button>
                         </div>`
                             );
@@ -191,9 +192,16 @@ function getAllUsers() {
                         cell.innerHTML = i + 1;
                     });
             }).draw();
+
+
+            $("#role_select").on('change', function () {
+                tbl.column(4).search($(this).val()).draw();
+            });
+
         },
         complete: function(data) {
             $(".loader_container").hide();
+            $('[data-toggle="tooltip"]').tooltip();
         },
         error: function(e) {
             console.log(e);

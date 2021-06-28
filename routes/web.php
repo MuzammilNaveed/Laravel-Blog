@@ -68,7 +68,9 @@ Route::group(['middleware' => ['auth']], function() {
 
     // posts crud
     Route::resource('posts', postsControllers::class);
-    Route::get('/manage_post', function() { return view('admin.posts.post'); })->name('post.index');
+
+    Route::get('/manage_post', [postsControllers::class, 'manage_post'])->name('post.index');
+
     Route::get('/add_post', [postsControllers::class, 'addPostPage'])->name('add_post.index');
     Route::get('/edit_post/{id}', [postsControllers::class, 'editPostPage']);
     Route::get('/active_post/{id}', [postsControllers::class, 'activePost']);
@@ -124,6 +126,12 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/visitors', [adminController::class, 'index'])->name('visitor.index');
     Route::get('/get_usrr_info', [adminController::class, 'getUserInfo']);
 
+    // pages
+    Route::get('/manage_pages', [adminController::class, 'managePages'])->name('pages.index');
+    Route::get('/add_page', [adminController::class, 'addPages']);
+    Route::post('/insert_page_data', [adminController::class, 'insertPageData']);
+    Route::get('/get_all_pages', [adminController::class, 'getAllPages']);
+    Route::get('/edit_page/{slug}', [adminController::class, 'editPage']);
  
 });
 

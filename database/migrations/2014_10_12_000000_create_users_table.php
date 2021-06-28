@@ -31,6 +31,7 @@ class CreateUsersTable extends Migration
             $table->string('profile_pic')->nullable();
             $table->integer("is_deleted")->default('0');
             $table->integer("deleted_by")->nullable();
+            $table->text("about")->nullable();
             $table->timestamps();
         });
     }

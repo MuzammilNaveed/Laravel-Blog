@@ -60,6 +60,9 @@
         <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cancel</button>
       </div>
       </form>
+      <div class="loader_container" id="add_loader">
+        <div class="loader"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -85,10 +88,14 @@
       </div>
       <div class="modal-footer">
         <button id="save_up" type="submit" class="btn btn-primary btn-sm">Save</button>
-        <button id="process_up" style="display:none" type="button" class="btn btn-primary btn-sm" disabled><i class="fas fa-circle-notch fa-spin"></i> Processing</button>
         <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cancel</button>
       </div>
       </form>
+
+      <div class="loader_container" id="edit_loader">
+        <div class="loader"></div>
+      </div>
+
     </div>
   </div>
 </div>

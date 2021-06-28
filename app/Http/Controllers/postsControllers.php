@@ -19,7 +19,7 @@ class postsControllers extends Controller
 {
     //
     public function index(Request $request) {
-        $posts =  Post::whereBetween('created_at', [$request->from, $request->to])->get();
+        $posts =  Post::whereBetween('created_at', [$request->from, $request->to])->orderBy('id','desc')->get();
 
         foreach($posts as $post) {
             $post->category = Category::where("id",$post->cat_id)->select("name")->first();         
@@ -28,11 +28,17 @@ class postsControllers extends Controller
             ->select('name')
             ->get();
 
-            $post->user = User::where('id',$post->created_by)->first();
+            $post->user = User::where('id',$post->meta_author_id)->first();
             $post->comments = Comments::where('post_id',$post->id)->get();
         }
         return $posts;
 
+    }
+
+    public function manage_post() {
+        $categories = Category::where('is_deleted' ,0)->get();
+        $authors = User::where('is_deleted' ,0)->where('is_author',1)->get();
+        return view('admin.posts.post', compact('categories','authors'));
     }
 
     public function addPostPage() {
@@ -187,19 +193,9 @@ class postsControllers extends Controller
 
     public function deletePostImages(Request $request) {
 
-        return $request->src;
+        unlink( public_path('uploads') . '/' . $request->image_name );      
         
-        try {
-            $response = FroalaEditor_Image::delete($_POST['src']);
-            echo stripslashes(json_encode('Success'));
-          }
-          catch (Exception $e) {
-            http_response_code(404);
-          }
-
     }
-
-
 
     public function postComment(Request $request) {
         $comment = new Comments();

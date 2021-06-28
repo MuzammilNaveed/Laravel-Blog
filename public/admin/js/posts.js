@@ -167,6 +167,15 @@ function getAllPosts(from,to) {
                         cell.innerHTML = i + 1;
                     });
             }).draw();
+
+
+            $("#sections").on('change', function () {
+                tbl.column(5).search($(this).val()).draw();
+            });
+
+            $("#category_id").on('change', function () {
+                tbl.column(4).search($(this).val()).draw();
+            });
         },
         complete: function(data) {
             $(".loader_container").hide();

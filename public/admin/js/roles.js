@@ -18,27 +18,27 @@ $(document).ready(function() {
                 data: $("#addRecord").serialize(),
                 beforeSend:function(data) {
                     $("#save").hide();
-                    $("#process").show();
+                    $("#add_loader").show();
                 },
                 success: function(data) {
                     console.log(data, "a");
                     if ((data.status == 200) & (data.success == true)) {
                         notyf.success(data.message);
-                        setTimeout(() => {
-                            $("#addModal").modal("hide");
-                            $("#addRecord")[0].reset();    
-                        }, 1000);
-                        $("#save").show();
-                        $("#process").hide();
+
+                        $("#addModal").modal("hide");
+                        $("#addRecord")[0].reset();    
+                        
                         getAllRoles();
                     } else {
                         notyf.error(data.message);
                     }
                 },
+                complete:function(data) {
+                    $("#add_loader").hide();
+                },
                 error: function(e) {
                     console.log(e);
-                    $("#save").show();
-                    $("#process").hide();
+                    $("#add_loader").hide();
                 }
             });
         }
@@ -57,27 +57,26 @@ $(document).ready(function() {
                 url: "roles/" + id,
                 data: $("#updateRecord").serialize(),
                 beforeSend:function(data) {
-                    $("#save_up").hide();
-                    $("#process_up").show();
+                    $("#edit_loader").show();
                 },
                 success: function(data) {
                     console.log(data, "a");
                     if ((data.status == 200) & (data.success == true)) {
+                        
                         notyf.success(data.message);
-                        setTimeout(() => {
-                            $("#updateModal").modal("hide");  
-                        }, 1000);
-                        $("#save_up").show();
-                        $("#process_up").hide();
+                        $("#updateModal").modal("hide");
                         getAllRoles();
+
                     } else {
                         notyf.error(data.message);
                     }
                 },
+                complete:function(data) {
+                    $("#edit_loader").hide();
+                },
                 error: function(e) {
                     console.log(e);
-                    $("#save_up").show();
-                    $("#process_up").hide();
+                    $("#edit_loader").hide();
                 }
             });
         }
@@ -130,8 +129,11 @@ function getAllRoles() {
                 {
                     "render": function (data, type, full, meta) {
                         return ` <div class="d-flex justify-content-center">
-                            <button onclick="viewRecord(`+ full.id +`, '`+full.name+`')" type="button" class="btn btn-primary text-white btn_cirlce" title="Edit"><i class="fas fa-pencil-alt"></i></button>
-                            <button onclick="deleteRecord(`+full.id+`)" type="button" class="btn btn-danger ml-2 text-white btn_cirlce" title="Delete"><i class="fas fa-trash"></i></button>
+                            <button onclick="viewRecord(`+ full.id +`, '`+full.name+`')" type="button" 
+                                class="btn btn-primary text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></button>
+                            
+                            <button onclick="deleteRecord(`+full.id+`)" type="button" 
+                                class="btn btn-danger ml-2 text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash"></i></button>
                         </div>`
                     }
                 },
@@ -149,6 +151,7 @@ function getAllRoles() {
         },
         complete:function(data) {
             $(".loader_container").hide();
+            $('[data-toggle="tooltip"]').tooltip();
         },
         error: function(e) {
             console.log(e);
@@ -207,6 +210,7 @@ function showUserDetails(id) {
                 let deactive = `<span class="badge bg-danger text-white">de-active</span>`;
                 let status = data[i].status == 1 ? active : deactive;
                 let img = `<img src="/users/`+ data[i].profile_pic +`" width="120" height="70" class="rounded">`;
+                let noimage = `<span class="text-danger">Profile Picture is Missing</span>`;
 
                 html += `
                 <div class="card-group horizontal mb-1" id="accordion" role="tablist" aria-multiselectable="true">
@@ -238,7 +242,7 @@ function showUserDetails(id) {
                                     <p class="p-0 m-0"> `+(data[i].twitter != null ? `<i class="fab fa-twitter"></i> `+   `<a href="`+data[i].twitter+`">`+data[i].twitter+`</a>` :'-')+`</p>
                                 </div>
                                 <div class="col-md-4">
-                                    `+img+`
+                                    `+ ( data[i].profile_pic != null && data[i].profile_pic != '' ? img : noimage) +`
                                 </div>
                             </div>
                         </div>

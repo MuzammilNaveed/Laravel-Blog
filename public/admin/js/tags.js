@@ -17,8 +17,7 @@ $(document).ready(function() {
                 url: "tags",
                 data: $("#addRecord").serialize(),
                 beforeSend:function(data) {
-                    $("#save").hide();
-                    $("#process").show();
+                    $("#add_loader").show();
                 },
                 success: function(data) {
                     console.log(data, "a");
@@ -38,10 +37,12 @@ $(document).ready(function() {
                         notyf.error(data.message);
                     }
                 },
+                complete: function(data) {
+                    $("#add_loader").hide();
+                },
                 error: function(e) {
                     console.log(e);
-                    $("#save").show();
-                    $("#process").hide();
+                    $("#add_loader").hide();
                 }
             });
         }
@@ -60,18 +61,14 @@ $(document).ready(function() {
                 url: "tags/" + id,
                 data: $("#updateRecord").serialize(),
                 beforeSend:function(data) {
-                    $("#save_up").hide();
-                    $("#process_up").show();
+                    $("#edit_loader").show();
                 },
                 success: function(data) {
                     console.log(data, "a");
                     if ((data.status == 200) & (data.success == true)) {
                         notyf.success(data.message);
-                        setTimeout(() => {
-                            $("#updateModal").modal("hide");  
-                        }, 1000);
-                        $("#save_up").show();
-                        $("#process_up").hide();
+                        $("#updateModal").modal("hide");  
+                        
                         let date = new Date();
                         let from = moment(date).startOf('month').format('YYYY-MM-DD');
                         let to = moment(date).endOf('month').format('YYYY-MM-DD');
@@ -80,10 +77,12 @@ $(document).ready(function() {
                         notyf.error(data.message);
                     }
                 },
+                complete: function(data) {
+                    $("#edit_loader").hide();
+                },
                 error: function(e) {
                     console.log(e);
-                    $("#save_up").show();
-                    $("#process_up").hide();
+                    $("#edit_loader").hide();
                 }
             });
         }
@@ -123,17 +122,23 @@ function getAllTags() {
                     }
                 },
                 {
-                    "data" : "name",
+                    "render": function (data, type, full, meta) {
+                        return full.name != null ? full.name : '--';
+                    }
                 },
                 {
-                    "data" : "slug",
+                    "render": function (data, type, full, meta) {
+                        return full.slug != null ? full.slug : '--';
+                    }
                 },
                 {
                     "render": function (data, type, full, meta) {
                         return ` <div class="d-flex justify-content-center">
-                            <button onclick="viewRecord(`+ full.id +`, '`+full.name+`')" type="button" class="btn btn-primary text-white btn_cirlce" title="Edit">
+                            <button onclick="viewRecord(`+ full.id +`, '`+full.name+`')" type="button" 
+                                class="btn btn-primary text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Edit" >
                             <i class="fas fa-pencil-alt"></i> </button>
-                            <button onclick="deleteRecord(`+full.id+`)" type="button" class="btn btn-danger text-white ml-2 text-white btn_cirlce" title="Delete">
+                            <button onclick="deleteRecord(`+full.id+`)" type="button" 
+                                class="btn btn-danger text-white ml-2 text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Delete">
                             <i class="fas fa-trash"></i></button>
                         </div>`
                     }
@@ -153,6 +158,7 @@ function getAllTags() {
         },
         complete:function(data) {
             $(".loader_container").hide();
+            $('[data-toggle="tooltip"]').tooltip();
         },
         error: function(e) {
             console.log(e);

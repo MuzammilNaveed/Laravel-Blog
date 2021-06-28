@@ -20,14 +20,22 @@ class SettingController extends Controller
 
     public function changePassword(Request $request) {
 
-        return $old_password = Hash::make($request->old_password);
+        // $old_password = Hash::make($request->old_password);
         
         $user = User::find(Auth::user()->id);
-        if ($user->password == $old_password) {
-            return "matched";
-        }else{
-            return "not";
-        }
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        Auth::logout();
+        session()->flush();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return response()->json([
+            'message' => 'Password Updated Successfully.',
+            'status' => 200,
+            'success' => true
+        ]);
         
     }
 
@@ -103,26 +111,6 @@ class SettingController extends Controller
                 }else{
                     $image->move(public_path('settings'), $imageName);
                     $setting->dashboard_logo = $imageName;
-                }
-
-            }
-
-            if($request->hasFile('dashboard_favicon')) {
-                $image = $request->file('dashboard_favicon');
-                
-                $file = $request->file('dashboard_favicon')->getClientOriginalName();
-                $imageName = 'dashboard_favicon_'.Auth::user()->id. '.' . pathinfo($file, PATHINFO_EXTENSION);
-
-                $filesize = $image->getSize()/1024;
-                if($filesize > 2048) {
-                    return response()->json([
-                        'message' => 'File size exceeds 2MB',
-                        'status' => 500,
-                        'success' => true
-                    ]);
-                }else{
-                    $image->move(public_path('settings'), $imageName);
-                    $setting->dashboard_favicon = $imageName;
                 }
 
             }
@@ -203,26 +191,6 @@ class SettingController extends Controller
                 }else{
                     $image->move(public_path('settings'), $imageName);
                     $setting->dashboard_logo = $imageName;
-                }
-
-            }
-
-            if($request->hasFile('dashboard_favicon')) {
-                $image = $request->file('dashboard_favicon');
-                
-                $file = $request->file('dashboard_favicon')->getClientOriginalName();
-                $imageName = 'dashboard_favicon_'.Auth::user()->id. '.' . pathinfo($file, PATHINFO_EXTENSION);
-
-                $filesize = $image->getSize()/1024;
-                if($filesize > 2048) {
-                    return response()->json([
-                        'message' => 'File size exceeds 2MB',
-                        'status' => 500,
-                        'success' => true
-                    ]);
-                }else{
-                    $image->move(public_path('settings'), $imageName);
-                    $setting->dashboard_favicon = $imageName;
                 }
 
             }

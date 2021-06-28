@@ -185,7 +185,7 @@ function format ( data ) {
         count++;
     }
 
-    return `<table class="table table-hover w-75 text-center " style="padding-left:50px;">
+    return `<table class="table table-hover w-75 text-center bg-light" style="padding-left:50px;">
         <thead>
             <tr>
                 <th>Sr#</th>

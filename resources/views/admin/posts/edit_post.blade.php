@@ -21,7 +21,7 @@
 </style>
 <link href="https://cdn.jsdelivr.net/npm/froala-editor@3.1.0/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
 
-<div class=" mt-3">
+<div class="mt-1 mb-5">
     <div class="">
         <ul class="breadcrumb p-l-0">
             <li class="breadcrumb-item"><a href="{{route('post.index')}}">Post</a>
@@ -30,7 +30,6 @@
             </li>
         </ul>
     </div>
-
 
     <form id="editRecord">
         <input type="hidden" id="post_id" name="post_id" value="{{$post->id}}">
@@ -98,7 +97,7 @@
             <div class="col-md-3 mt-3 mt-md-0">
                 <div class="card card_shadow p-3 border-0 rounded-0">
                     <div class="form-group">
-                        <label for="image" class="small font-weight-bold text-dark">Image</label>
+                        <label for="image" class="small font-weight-bold text-dark">Feature Image</label>
                         <input type="file" class="form-control dropify" data-height="150" data-default-file="{{asset('images')}}/{{$post->image}}" name="image">
                     </div>
                     <div class="form-group form-group-default">
@@ -159,7 +158,7 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary btn-lg"><i class="material-icons">save</i> Save</button>
+        <button type="submit" class="btn btn-primary p-2 mb-5 w-100"><i class="fas fa-check-circle mr-1"></i> Save</button>
 
     </form>
 </div>
@@ -211,9 +210,16 @@
             type: 'POST',
             data: form_data,
             dataType: 'JSON',
+            async:true,
             contentType: false,
             cache: false,
             processData: false,
+            beforeSend:function(data) {
+                $("#card1").show();
+                $("#card2").show();
+                $("#card3").show();
+                $("#card4").show();
+            },
             success: function(data) {
                 console.log(data);
                 if ((data.status == 200) & (data.success == true)) {
@@ -222,8 +228,17 @@
                     notyf.error(data.message);
                 }
             },
+            complete:function(data) {
+                $("#card1").hide();
+                $("#card2").hide();
+                $("#card3").hide();
+                $("#card4").hide();
+            },
             error: function(e) {
-                console.log(e)
+                $("#card1").hide();
+                $("#card2").hide();
+                $("#card3").hide();
+                $("#card4").hide();
             }
         });
     });

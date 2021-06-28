@@ -28,6 +28,7 @@ class User extends Authenticatable
         'instagram',
         'twitter',
         'profile_pic',
+        'about',
     ];
 
     /**

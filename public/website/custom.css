@@ -6,11 +6,15 @@
 }
 .darkmode {
     background-color: var(--black);
+    color:var(--white);
 }
 
 body {
     background-color: var(--white);
     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+a:hover {
+    text-decoration: none;
 }
 .outline {
     font-weight:700;
@@ -23,10 +27,10 @@ body {
 #search {
     border:none;
     height:100px;
-    font-size:3rem;
+    font-size:2rem;
     font-weight: 800;
     color: black;
-    -webkit-text-fill-color: white; 
+    -webkit-text-fill-color: #f8f9fa; 
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
 }
@@ -35,9 +39,9 @@ body {
     box-shadow: none;
 }
 #search::placeholder {
-    font-size:3rem;
+    font-size:2rem;
     font-weight: 800;
-    color:#212121;
+    color: var(--black);
     opacity: 0.8;
 }
 
@@ -79,3 +83,40 @@ header post
     border-radius: 50px;
     color: var(--black);
 }
+
+
+/* gradient */
+
+.gradient {
+    position: absolute;
+    background-image: linear-gradient(to top, #000,transparent);
+    height: 100%;
+    width: 100%;
+    opacity: 0.9;
+}
+
+.header_post:hover , .project_post:hover, .singlePopularPost:hover , .tutorial:hover {
+    opacity: 0.8;
+    transition: 0.3s ease-in-out;
+}
+
+.project_content h5 {
+    font-size:1.19rem;
+    font-weight: 800;
+    color:var(--black);
+} 
+.headers_content h2 {
+    font-size: 0.9rem;
+    color:var(--black);
+    font-weight: 700;
+}
+
+.tutorial_content h2 {
+    font-size: 1.7rem;
+    color:var(--black);
+    font-weight: 800;
+}
+
+
+
+/* navbar */

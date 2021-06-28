@@ -10,115 +10,83 @@
     <meta name="author" content="">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <script src="https://kit.fontawesome.com/5fcfcbf541.js" crossorigin="anonymous"></script>
-    <!-- <link rel="stylesheet" href="{{asset('website/custom.css').'?ver='.rand()}}"> -->
+    <link rel="stylesheet" href="{{asset('website/custom.css').'?ver='.rand()}}">
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <title>Home Page</title>
 </head>
 <style>
     .dropdown:hover>.dropdown-menu {
         display: block;
     }
+
     .img {
         width: 100%;
         height: 100%;
     }
+
+    .small_nav li {
+        display: inline;
+        margin-right: 20px;
+    }
+
+    .small_nav li a {
+        text-decoration: none;
+    }
+
+    .alltags:hover {
+        background-color: #282828 !important;
+        transition: 0.3s ease-in-out;
+        color: #fff;
+    }
+
+    .w-5 {
+        width: 12px;
+        height: 12px;
+    }
+    .leading-5 {
+        margin-top: 10px;
+    }
 </style>
+
 <body>
 
 
-<nav class="navbar navbar-expand-lg navbar-light bg-white" style="border-bottom: 3px solid #eceff1;">
-  <div class="container">
-  <a class="navbar-brand animate__animated animate__bounce" href="{{url('/')}}">Blog</a>
-  <span class="animate__animated animate__bounce">|</span>
-  <ul class="navbar-nav mr-auto">
-      <li class="nav-item dropdown ml-3">
-        <a class="nav-link dropdown-toggle animate__animated animate__bounce" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Tutorial
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle animate__animated animate__bounce" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Categories
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
-    </ul>
-  
+   @include('website/layout/navbar')
 
-  <div class="" id="navbarSupportedContent">
-    <div class="form-inline my-2 my-lg-0">
-        <i class="fas fa-sun text-warning" id="dark-mode-btn"></i>
-        <i class="fas fa-search animate__animated animate__bounce ml-2" id="search_icon"></i>
-        </div>
-    </div>
-  </div>
-</nav>
-
-    <div class="search_div w-100" style="height:240px; display:none; background:#fff; box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);position:absolute;z-index:10" >
-
-        <div class="container pt-3">
-            <div class="input-group mb-3">
-                <input type="text" autocomplete="off" placeholder="Search here" class="form-control" id="search" >
-            </div>
-
-            <hr>
-
-            <div class="searches">
-                <span class="badge badge-pill bg-primary">123</span>
-
-            </div>
-
-        </div>
-    </div>
-
-
-
-    <header class="container mt-3">
+    <section class="container">
         <div class="row">
             <div class="col-md-7 col-lg-7 col-sm-12">
                 <a href="{{url('post')}}/{{$singleheader['slug']}}">
-                <div class="header_post mt-2" style="position:relative">
-                    <img src="{{asset('images')}}/{{$singleheader['image']}}" style='height:420px; width: 100%; object-fit: cover' class="img-fluid" alt="">
-                    <div class="header_content" style="position:absolute; bottom:4px;left:10px" class="img-fluid">
-                        <span class="badge bg-dark text-white pt-1 pr-3 pl-3 pb-1">Category</span>
-                        <h5 class="bg-dark text-white p-2 mt-2">{{$singleheader['title']}}</h5>
-                        <p class="small text-white"><i class="far fa-calendar-alt"></i> {{$singleheader['created_at']}} </p>
+                    <div class="header_post mt-2" style="position:relative">
+                        <div class="gradient"></div>
+                        <img src="{{asset('images')}}/{{$singleheader['image']}}" style='height:420px; width: 100%; object-fit: cover; ' class="img-fluid" alt="">
+                        <div class="header_content" style="position:absolute; bottom:4px;left:10px" class="img-fluid">
+                            <span class="badge bg-dark text-white badge-pill pt-1 pr-3 pl-3 pb-1">{{$singleheader['category']['name']}}</span>
+                            <h5 class="bg-dark text-white p-2 mt-2">{{$singleheader['title']}}</h5>
+                            <p class="small text-white"><i class="far fa-calendar-alt"></i> {{$singleheader['created_at']}} </p>
+                        </div>
                     </div>
-                </div>
                 </a>
             </div>
             <div class="col-md-5 col-lg-5 col-sm-3">
-                @foreach($posts as $post) 
-                    <a href="{{url('post')}}/{{$post->slug}}">
+                @foreach($posts as $post)
+                <a href="{{url('post')}}/{{$post->slug}}">
                     <div class="header_post mt-2" style="position:relative">
+                        <div class="gradient"></div>
                         <img src="{{asset('images')}}/{{$post->image}}" style='height:205px; width: 100%; object-fit: cover' class="img-fluid" alt="">
                         <div class="header_content" style="position:absolute; bottom:4px;left:10px;">
-                            <span class="badge bg-dark text-white pt-1 pr-3 pl-3 pb-1">Category</span>
+                            <span class="badge bg-dark text-white badge-pill pt-1 pr-3 pl-3 pb-1">{{$post['category']['name']}}</span>
                             <h5 class="bg-dark text-white p-2 mt-2"> {{$post->title}} </h5>
                             <p class="small text-white"><i class="far fa-calendar-alt"></i> {{$post->created_at}} </p>
                         </div>
                     </div>
-                    </a>
+                </a>
                 @endforeach
             </div>
         </div>
-
-    </header>
-
+    </section>
 
 
 
@@ -127,32 +95,33 @@
 
 
 
-    <div class="container" style="margin-top: 30px;">
 
-        <!-- all project -->
-        <div class="d-flex justify-content-between mt-3">
+    <div class="container">
+
+        <div class="d-flex justify-content-between mt-5">
             <h2 style="font-size:1.6rem; font-weight:800">All Projects</h2>
-            <a href="#" class="small">View more</a>
+            <a href="#">view more <i class="fas fa-long-arrow-alt-right"></i></a>
         </div>
 
         <div class="row">
             @foreach($feature_posts as $post)
-                <div class="col-md-3">
-                    <a href="{{url('post')}}/{{$post->slug}}">
-                        <div class="project_post" style="  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);">
-                            <div class="project_img" style="position:relative">
-                                <img src="{{asset('images')}}/{{$post->image}}" style="width:100%; min-height:150px; height:100px" class="img-fluid" alt="">
-                                <span style="position:absolute;bottom:5px;left:5px;" class="badge bg-dark text-white pt-1 pr-3 pl-3 pb-1">Category</span>
-                            </div>
-                            <div class="project_content p-3">
-                                <h5><?php echo substr($post->title . '...', 0,40); ?> </h5>
-                                <p class="small text-dark"><i class="far fa-calendar-alt"></i> {{$post->created_at}}</p>
-                            </div>
+            <div class="col-md-3">
+                <a href="{{url('post')}}/{{$post->slug}}">
+                    <div class="project_post">
+
+                        <div class="project_img" style="position:relative">
+                            <img src="{{asset('images')}}/{{$post->image}}" style="width:100%; min-height:150px; height:100px" class="img-fluid" alt="">
+                            <span style="position:absolute;top:5px;left:5px;" class="badge bg-dark badge-pill text-white pt-1 pr-3 pl-3 pb-1">{{$post['category']['name']}}</span>
                         </div>
-                    </a>
-                </div>
+                        <div class="project_content p-0">
+                            <h5 class="pt-2"><?php echo substr($post->title . '...', 0, 50); ?> </h5>
+                            <p class="small text-dark m-0"><i class="far fa-calendar-alt"></i> {{$post->created_at}}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
             @endforeach
-          
+
         </div>
 
 
@@ -160,24 +129,45 @@
 
         <div class="d-flex justify-content-between mt-5">
             <h2 style="font-size:1.6rem; font-weight:800">All Tutorials</h2>
-            <a href="#" class="small"></a>
         </div>
 
-        @foreach($feature_posts as $post) 
-            <a href="{{url('post')}}/{{$post->slug}}">
-                <div class="row">
-                    <div class="col-md-4"><img src="{{asset('images')}}/{{$post->image}}" style="width:100%; height:auto" class="img-fluid" alt=""></div>
-                    <div class="col-md-4">
-                        <h2 style="font-size:1.825rem; font-weight:800">{{$post->title}}</h2> <br>
-                        <p class="small text-muted m-0 p-0"><i class="far fa-calendar-alt"></i> {{$post->created_at}}</p>    
+        <div class="row mt-2">
+
+            <div class="col-md-8">
+                @foreach($tutorial_posts as $post)
+                <a href="{{url('post')}}/{{$post->slug}}">
+                    <div class="row tutorial">
+                        <div class="col-md-6">
+                            <img src="{{asset('images')}}/{{$post->image}}" style="width:100%; height:auto" class="img-fluid" alt="">
+                        </div>
+                        <div class="col-md-6 tutorial_content">
+                            <span class="badge bg-dark text-white badge-pill pt-1 pr-3 pl-3 pb-1">{{$post['category']['name']}}</span>
+                            <h2>{{$post->title}}</h2>
+                            <span class="small text-muted m-0 p-0"><i class="far fa-calendar-alt"></i> {{$post->created_at}}</span>
+                        </div>
                     </div>
-                    <div class="col-md-4"><p class="small"><?php echo substr($post->description,930); ?></p></div>
-                </div>
-            </a>
-            <hr>
-        @endforeach
+                </a>
+                <hr>
+                @endforeach
+                <span class="small">{{$tutorial_posts->links()}}</span>
+            </div>
+
+            <div class="col-md-4">
+
+                <!-- right sidebar -->
+
+                @include('website/layout/rightside')
+
+            </div>
+        </div>
 
     </div>
+
+    @include('website/layout/footer')
+
+
+
+
 
 
 
@@ -203,22 +193,22 @@
 
         const disabledDarkMode = () => {
             document.body.classList.remove("darkmode");
-            localStorage.setItem("darkMode",null);
+            localStorage.setItem("darkMode", null);
         }
 
-        if(darkMode === "enabled") {
+        if (darkMode === "enabled") {
             enableDarkMode();
         }
 
-        darkModeToggle.addEventListener("click",() => {
+        darkModeToggle.addEventListener("click", () => {
             darkMode = localStorage.getItem("darkMode");
-            if(darkMode !== "enabled") {
+            if (darkMode !== "enabled") {
                 enableDarkMode();
-            }else{
+            } else {
                 disabledDarkMode();
             }
         });
-
     </script>
 </body>
-</html> 
+
+</html>

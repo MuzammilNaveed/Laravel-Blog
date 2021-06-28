@@ -10,6 +10,7 @@ use App\Models\Category;
 use App\Models\Tags;
 use App\Models\CommentReplies;
 use App\Models\Comments;
+use App\Models\Settings;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -37,52 +38,75 @@ class HomeController extends Controller
         } else {
             
             $singleheader = Post::where('section',1)->inRandomOrder()->limit(1)->first()->toArray();
+            $singleheader['category']  = Category::where('id',$singleheader['cat_id'])->first()->toArray();
+
 
             $posts = Post::where('section',1)->where('id','!=',$singleheader['id'])->inRandomOrder()->limit(2)->get();
+            foreach($posts as $post) {
+                $post->category  = Category::where('id',$post['cat_id'])->first()->toArray();
+            } 
+            
 
             $feature_posts = Post::where('section',2)->inRandomOrder()->limit(4)->get();
+            foreach($feature_posts as $feature_post) {
+                $feature_post->category  = Category::where('id',$feature_post['cat_id'])->first()->toArray();
+            } 
 
-            // dd($singleheader);
+            $tutorial_posts = Post::where('section',3)->inRandomOrder()->paginate(4);
+            
+            foreach($tutorial_posts as $post) {
+                $post->category  = Category::where('id',$post['cat_id'])->first()->toArray();
+            } 
+
+            
+
             $session = 'post_' . \Request::ip();
             if(!Session::has($session)) {
                 $this->gatherUserInfo();
                 Session::put($session , 1);
             }
 
+            $tags = Tags::where('is_deleted',0)->get();
+            $categories = Category::where('is_deleted',0)->inRandomOrder()->limit(10)->get();
 
-            return view("website.index", compact('posts','singleheader','feature_posts'));
+            $popular_posts = Post::orderBy('view_count','desc')->where('is_deleted',0)->limit(5)->get();
+
+            return view("website.index", compact('posts','singleheader','feature_posts','tags','categories','popular_posts','tutorial_posts'));
         }
     }
 
     public function showSinglePost($slug) {
-        $post = Post::where("slug", $slug)->first();
-        $categories = Category::all();
-        $posts = Post::all();
+        $post = Post::where('is_deleted',0)->where("slug", $slug)->first();
+        $post_author = User::where('is_deleted',0)->where('is_author',1)->where('id',$post->meta_author_id)->select('name','profile_pic')->first();
+
+        $categories = Category::where('is_deleted',0)->inRandomOrder()->get();
+        $posts = Post::where('is_deleted',0)->inRandomOrder()->limit(5)->get();
 
         $session = 'post_' . \Request::ip();
         if(!Session::has($session)) {
             $this->gatherUserInfo();
             Session::put($session , 1);
         }
-
-        return view("website.post", compact('post', 'categories', 'posts'));
+        $comments = Comments::where('is_deleted',0)->where('post_id',$post->id)->count();
+        $popular_posts = Post::orderBy('view_count','desc')->where('is_deleted',0)->inRandomOrder()->limit(5)->get();
+        return view("website.post", compact('post', 'categories', 'posts','popular_posts','post_author','comments'));
     }
 
     public function showCategory($slug) {
 
-        $category = Category::where("slug", $slug)->first();
-        $posts = Post::where("cat_id",$category->id)->get();
+        $category = Category::where('is_deleted',0)->inRandomOrder()->where("slug", $slug)->first();
+        $posts = Post::where('is_deleted',0)->where("cat_id",$category->id)->paginate(4);
         $post_count = sizeof($posts);
-        $categories = Category::all();
-        $recent_posts = Post::get();
 
+        $categories = Category::where('is_deleted',0)->inRandomOrder()->get();
+        
         $session = 'post_' . \Request::ip();
         if(!Session::has($session)) {
             $this->gatherUserInfo();
             Session::put($session , 1);
         }
-
-        return view('website.category', compact('category', 'posts', 'post_count', 'categories', 'recent_posts'));
+        $popular_posts = Post::orderBy('view_count','desc')->where('is_deleted',0)->inRandomOrder()->limit(5)->get();
+        return view('website.category', compact('category', 'posts', 'post_count', 'categories','popular_posts'));
     }
 
     public function gatherUserInfo() {
@@ -228,6 +252,12 @@ class HomeController extends Controller
                         $feature->sub_menu = $sub_menu;
                     }
                     Session::put('menus', $role_features->sortBy('sequence'));
+                    
+                    $setting = Settings::where('created_by', Auth::user()->id)->first();
+                    if($setting) {
+                        Session::put('dashboard_logo', $setting->dashboard_logo);
+                    }
+
                     return redirect()->intended('/dashboard');
                 } else {
                     return redirect()->back()->with('deactive', 'Password not matched');
@@ -281,7 +311,11 @@ class HomeController extends Controller
     }
 
     public function getAllUsers() {
-        return User::where('is_deleted',0)->get();
+        $users =  User::where('is_deleted',0)->get();
+        foreach($users as $user) {
+            $user->role = Role::where('id',$user->role_id)->select('name')->first();
+        }
+        return $users;
     }
 
     public function updateUser(Request $request){

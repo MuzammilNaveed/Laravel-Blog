@@ -69,6 +69,9 @@
             <button aria-label="" type="button" class="btn btn-cons" data-dismiss="modal"> Cancel</button>
           </div>
         </form>
+        <div class="loader_container" id="add_loader" style="display:none">
+          <div class="loader"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -100,6 +103,9 @@
             <button aria-label="" type="button" class="btn btn-cons" data-dismiss="modal"> Cancel</button>
           </div>
         </form>
+        <div class="loader_container" id="edit_loader" style="display:none">
+          <div class="loader"></div>
+        </div>
       </div>
     </div>
   </div>

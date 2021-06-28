@@ -20,23 +20,16 @@ $(document).ready(function() {
                 url: categories,
                 data: $("#addRecord").serialize(),
                 beforeSend: function(data) {
-                    $("#save").hide();
-                    $("#process").show();
+                    $("#add_loader").show();
                 },
                 success: function(data) {
                     console.log(data, "a");
                     if ((data.status == 200) & (data.success == true)) {
                         $("#addRecord")[0].reset();
-                        setTimeout(() => {
-                            $("#addRecordModal").modal("hide");
-                        }, 1000);
+                        $("#addRecordModal").modal("hide");
                         let date = new Date();
-                        let from = moment(date)
-                            .startOf("month")
-                            .format("YYYY-MM-DD");
-                        let to = moment(date)
-                            .endOf("month")
-                            .format("YYYY-MM-DD");
+                        let from = moment(date).startOf("month").format("YYYY-MM-DD");
+                        let to = moment(date).endOf("month").format("YYYY-MM-DD");
 
                         getAllCategories(from, to);
                         notyf.success(data.message);
@@ -44,10 +37,12 @@ $(document).ready(function() {
                         notyf.error(data.message);
                     }
                 },
+                complete:function(data) {
+                    $("#add_loader").hide();
+                },
                 error: function(e) {
                     console.log(e);
-                    $("#save").show();
-                    $("#process").hide();
+                    $("#add_loader").hide();
                 }
             });
         }
@@ -69,8 +64,7 @@ $(document).ready(function() {
                 url: categories + "/" + id,
                 data: $("#updateRecord").serialize(),
                 beforeSend: function(data) {
-                    $("#save_up").hide();
-                    $("#process_up").show();
+                    $("#edit_loader").show();
                 },
                 success: function(data) {
                     console.log(data, "a");
@@ -90,10 +84,12 @@ $(document).ready(function() {
                         notyf.erro(data.message);
                     }
                 },
+                complete:function(data) {
+                    $("#edit_loader").hide();
+                },
                 error: function(e) {
                     console.log(e);
-                    $("#save_up").show();
-                    $("#process_up").hide();
+                    $("#edit_loader").hide();
                 }
             });
         }
@@ -153,12 +149,12 @@ function getAllCategories() {
                             return (
                                 ` <div class="d-flex justify-content-center">
                                     <button onclick="viewRecord(`+full.id + `, '` + full.name + `','` + full.description +`')" 
-                                        type="button" class="btn btn-primary text-white btn_cirlce">
+                                        type="button" class="btn btn-primary text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Edit">
                                         <i class="fas fa-pencil-alt"></i>
                                     </button>
 
                                     <button  onclick="deleteRecord(`+ full.id + `)" type="button" 
-                                        class="btn btn-danger ml-2 text-white btn_cirlce">
+                                        class="btn btn-danger ml-2 text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Delete">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>`
@@ -181,6 +177,7 @@ function getAllCategories() {
         },
         complete: function(data) {
             $(".loader_container").hide();
+            $('[data-toggle="tooltip"]').tooltip();
         },
         error: function(e) {
             console.log(e);

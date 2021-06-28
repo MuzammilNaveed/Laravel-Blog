@@ -22,7 +22,6 @@ class CreateSettingsTable extends Migration
             $table->string('site_logo');
             $table->string('site_favicon');
             $table->string('dashboard_logo');
-            $table->string('dashboard_favicon');
             $table->string('facebook');
             $table->string('linkedin');
             $table->string('instagram');
