@@ -52,15 +52,10 @@ function getAllPages() {
                     },
                     {
                         "render": function(data, type, full, meta) {
-                            return full.created_by;
-                        }
-                    },
-                    {
-                        "render": function(data, type, full, meta) {
                             return (
                                 ` <div class="d-flex justify-content-center">
 
-                                    <a href="#" type="button" class="btn btn-primary text-white btn_cirlce ml-2" data-toggle="tooltip" data-placement="top" title="Edit Page"><i class="fas fa-pen"></i></a>
+                                    <a href="`+edit_page+`/`+full.page_slug+`" type="button" class="btn btn-primary text-white btn_cirlce ml-2" data-toggle="tooltip" data-placement="top" title="Edit Page"><i class="fas fa-pen"></i></a>
                                     
                                     <button data-toggle="tooltip" data-placement="top" title="Delete Page" type="button" class="btn btn-danger text-white ml-2 text-white btn_cirlce">
                                     <i class="fas fa-trash"></i></button>

@@ -49,4 +49,22 @@ class adminController extends Controller
     public function getAllPages() {
         return DB::table('pages')->get();
     }
+
+    public function editPage($slug) {
+        $page = DB::table('pages')->where('page_slug',$slug)->first();
+        return view('admin.pages.edit_page', compact('page'));
+    }
+
+    public function saveEditPage(Request $request) {
+        DB::table('pages')->where('id',$request->id)->update([
+            "page_name" => $request->title,
+            "page_desc" =>$request->description,
+        ]);
+
+        return response()->json([
+            'message' => $request->title . ' Page Updated Successfully.',
+            'status' => 200,
+            'success' => true
+        ]);
+    }
 }

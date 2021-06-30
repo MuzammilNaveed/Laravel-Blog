@@ -20,8 +20,7 @@
                 <th>Sr#</th>
                 <th>Date</th>
                 <th>Title</th>
-                <th>Created At</th>
-                <th>Created By</th>
+                <th>Slug</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -44,6 +43,7 @@
 @section('scripts')
 <script>
   let get_all_pages = '{{url("get_all_pages")}}';
+  let edit_page = "{{url('edit_page')}}";
 </script>
 <script src="{{asset('admin/js/pages.js')}}"></script>
 @show

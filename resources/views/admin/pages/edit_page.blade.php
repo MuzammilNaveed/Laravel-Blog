@@ -1,5 +1,5 @@
 @extends('admin.layout.master')
-@section('page_title','Add Post')
+@section('page_title','Edit Page')
 @section('container')
 
 <style>
@@ -32,16 +32,17 @@
     </ul>
 </div>
 
-<div class="mb-5">
+<div class="" style="margin-bottom:30px">
 
     <form id="addRecord" enctype="multipart/form-data">
 
         <div class="row">
             <div class="col-12">
                 <div class="card card_shadow p-3 border-0 rounded-0">
+                    <input type="hidden" name="id" value="{{$page->id}}">
                     <div class="form-group form-group-default">
                         <label>Page Name</label>
-                        <input name="title" id="title" name="title" type="text" class="form-control input-sm" placeholder="Post Title">
+                        <input name="title" id="title" name="title" value="{{$page->page_name}}" type="text" class="form-control input-sm" placeholder="Post Title">
                     </div>
                     <div class="loader_container" id="card1">
                         <div class="loader"></div>
@@ -52,14 +53,14 @@
         </div>
 
 
-        <div class="card mt-4 p-3 border-0 card_shadow rounded-0">
-            <textarea name="description" class="editor" id="description" class="w-100"></textarea>
+        <div class="card mt-2 p-3 border-0 card_shadow rounded-0">
+            <textarea name="description" class="editor" id="description" class="w-100">{{$page->page_desc}}</textarea>
             <div class="loader_container" id="card3">
                 <div class="loader"></div>
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary btn=lg"><i class="fas fa-check-circle mr-1"></i> Save</button>
+        <button type="submit" class="btn btn-primary btn-lg mb-5"><i class="fas fa-check-circle mr-1"></i> Save</button>
 
     </form>
 </div>
@@ -151,7 +152,7 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            url: 'posts',
+            url: '{{url("save_edit_page")}}',
             type: 'POST',
             data: form_data,
             dataType: 'JSON',
@@ -161,33 +162,24 @@
             processData: false,
             beforeSend:function(data) {
                 $("#card1").show();
-                $("#card2").show();
                 $("#card3").show();
-                $("#card4").show();
             },
             success: function(data) {
                 console.log(data);
                 if ((data.status == 200) & (data.success == true)) {
                     notyf.success(data.message);
-
-
-
                 } else {
                     notyf.error(data.message);
                 }
             },
             complete:function(data) {
                 $("#card1").hide();
-                $("#card2").hide();
                 $("#card3").hide();
-                $("#card4").hide();
             },
             error: function(e) {
                 console.log(e)
                 $("#card1").hide();
-                $("#card2").hide();
                 $("#card3").hide();
-                $("#card4").hide();
             }
 
         });

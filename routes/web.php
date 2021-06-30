@@ -112,6 +112,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');
     Route::post('/change_password', [SettingController::class, 'changePassword']);
     Route::post('/save_setting', [SettingController::class, 'saveSetting']);
+    Route::post('/update_profile', [SettingController::class, 'updateProfile']);
 
 
     // feature
@@ -132,6 +133,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/insert_page_data', [adminController::class, 'insertPageData']);
     Route::get('/get_all_pages', [adminController::class, 'getAllPages']);
     Route::get('/edit_page/{slug}', [adminController::class, 'editPage']);
+    Route::post('/save_edit_page', [adminController::class, 'saveEditPage']);
  
 });
 

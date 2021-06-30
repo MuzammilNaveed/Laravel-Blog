@@ -12,16 +12,48 @@ use Illuminate\Support\Facades\Crypt;
 
 class SettingController extends Controller
 {
+
     public function index() {
         $user = User::where("id", Auth::user()->id)->first();
         $setting = Settings::where('created_by', Auth::user()->id)->first();
         return view('admin.settings.setting', compact('user','setting'));
     }
 
+    public function updateProfile(Request $request) {
+
+        $user = User::findOrFail($request->user_id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->address = $request->user_address;
+
+        $user->facebook = $request->facebook;
+        $user->instagram = $request->instagram;
+        $user->linkedin = $request->linkedin;
+        $user->twitter = $request->twitter;
+
+        if($request->hasFile('profile_pic')) {
+
+            unlink( public_path('users') . '/' . $request->old_profile);
+
+            $image = $request->file('profile_pic');
+            $imageName = rand(). '.' . $image->extension();
+            $image->move(public_path('users'), $imageName);
+            $user->profile_pic = $imageName;
+        }
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'Profile Updated Successfully.',
+            'status' => 200,
+            'success' => true
+        ]);
+
+    }
+
     public function changePassword(Request $request) {
 
-        // $old_password = Hash::make($request->old_password);
-        
         $user = User::find(Auth::user()->id);
         $user->password = Hash::make($request->password);
         $user->save();

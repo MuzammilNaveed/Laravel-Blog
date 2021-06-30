@@ -72,9 +72,10 @@
 
                 <div class="tab-pane slide-left active" id="slide1">
                     <div class="col-md-12">
-                        <form id="addRecord" enctype="multipart/form-data" autocomplete="off">
+                        <form id="saveProfile" action="{{url('update_profile')}}" method="POST" enctype="multipart/form-data" autocomplete="off">
                             <div class="row mt-2">
-                                <div class="col-md-6">
+                                <input type="hidden" name="user_id" value="{{$user->id}}">
+                                <div class="col-md-6 pl-0">
                                     <div class="form-group form-group-default">
                                         <label class="small text-muted">Name <span class="text-danger">*</span> </label>
                                         <input name="name" type="text" value="{{$user->name}}" class="form-control input-sm" placeholder="User Name">
@@ -83,7 +84,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default bg-light">
                                         <label class="small text-muted">Email Address <span class="text-danger">*</span></label>
-                                        <input name="email" type="email" value="{{$user->email}}" class="form-control input-sm" placeholder="User Email Address" disabled>
+                                        <input name="user_email" type="email" value="{{$user->email}}" class="form-control input-sm" placeholder="User Email Address" disabled>
+                                        <input type="hidden" name="email" value="{{$user->email}}">
                                     </div>
                                 </div>
                             </div>
@@ -98,7 +100,7 @@
                                 <div class="col-md-9">
                                     <div class="form-group form-group-default">
                                         <label class="small text-muted">Address</label>
-                                        <input name="address" type="text" value="{{$user->address}}" class="form-control input-sm" placeholder="User Full Address">
+                                        <input name="user_address" type="text" value="{{$user->address}}" class="form-control input-sm" placeholder="User Full Address">
                                     </div>
                                 </div>
                             </div>
@@ -124,18 +126,22 @@
                                 </div>
 
                                 <div class="col-md-4">
+                                    <input type="hidden" name="old_profile" value="{{$user->profile_pic}}">
                                     <div class="form-group">
                                         <input type="file" class="form-control dropify" data-default-file="{{asset('users')}}/{{$user->profile_pic}}" name="profile_pic" data-allowed-file-extensions="png jpg jpeg">
                                     </div>
                                 </div>
                             </div>
                             <div class="row mt-2">
-                                <button id="save" type="submit" class="btn btn-success btn-lg text-white w-25 mr-2"> <i class="fas fa-check-circle mr-1"></i> Save</button>
+                                <button type="submit" class="btn btn-success btn-lg text-white w-25 mr-2"> <i class="fas fa-check-circle mr-1"></i> Save</button>
                                 <button id="process" style="display:none" type="button" class="btn btn-primary w-25 text-white btn-lg" disabled><i class="fas fa-circle-notch fa-spin mr-1"></i> Processing</button>
                             </div>
 
-
                         </form>
+
+                        <div class="loader_container" id="profile_loader" style="display:none">
+                            <div class="loader"></div>
+                        </div>
                     </div>
                 </div>
 
@@ -165,6 +171,9 @@
 
 
                         </form>
+                        <div class="loader_container" id="password_loader" style="display:none">
+                            <div class="loader"></div>
+                        </div>
                     </div>
                 </div>
 
@@ -295,6 +304,10 @@
                             <button type="submit" id="saveBtn" class="btn btn-success btn-lg w-25  text-white"> <i class="fas fa-check-circle mr-1"></i> Save</button>
                             <button style="display:none" id="processing" class="btn btn-success btn-lg w-25  text-white" type="button" disabled><i class="fas fa-circle-notch fa-spin"></i> Processing</button>
                         </form>
+
+                        <div class="loader_container" id="site_loader" style="display:none">
+                            <div class="loader"></div>
+                        </div>
                     </div>
                 </div>
             </div>
