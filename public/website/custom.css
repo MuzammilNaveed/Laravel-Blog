@@ -120,3 +120,77 @@ header post
 
 
 /* navbar */
+#navbar {
+    background-color: var(--white);
+}
+#navbar ul li a {
+    font-weight: 500;
+    font-size: 0.9rem;
+    word-spacing: 2px;
+    color:var(--black)
+}
+.mobile_menu {
+    display: none;
+}
+@media screen and (max-width: 999px) {
+    .navbar-nav {
+        display: none;
+    }
+    .mobile_menu {
+        display: block;
+    }
+  }
+
+
+  /* mobile */
+.mobile_sidebar {
+    width: 0px;
+    background: var(--white);
+    position: fixed;
+    overflow-x: hidden;
+    transition: 0.2s;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    z-index: 9999;
+    line-height: 1.15;
+    overflow-x: none;
+}
+.mob_top {
+    border-bottom: 3px solid #eceff1;
+    padding: 10px;
+}
+
+.cs-site-overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0,0,0,0.25);
+    -webkit-animation: fade .5s;
+    animation: fade .5s;
+    z-index: 99;
+}
+
+
+
+.mobile_sidebar ul li {
+    list-style: none;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eceff1;
+}
+.mobile_sidebar ul li a {
+    text-decoration: none;
+    color: #1b1b1b;
+    font-weight: 600;
+    font-size: 1.2rem;
+    display: inherit;
+    padding:10px;
+}
+
+.mobile_sidebar .menu-primary {
+    margin:20px;
+    padding: 0px;
+}

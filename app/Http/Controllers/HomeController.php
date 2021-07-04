@@ -27,6 +27,8 @@ class HomeController extends Controller
     //     $this->middleware('auth');
     // }
 
+    public static $setting = '';
+
     public function index()
     {
         return view('auth.login');
@@ -69,15 +71,17 @@ class HomeController extends Controller
             $tags = Tags::where('is_deleted',0)->get();
             $categories = Category::where('is_deleted',0)->inRandomOrder()->limit(10)->get();
 
+            $setting = Settings::first();
             $popular_posts = Post::orderBy('view_count','desc')->where('is_deleted',0)->limit(5)->get();
-
-            return view("website.index", compact('posts','singleheader','feature_posts','tags','categories','popular_posts','tutorial_posts'));
+            
+            return view("website.index", compact('posts','setting','singleheader','feature_posts','tags','categories','popular_posts','tutorial_posts'));
         }
     }
 
     public function showSinglePost($slug) {
         $post = Post::where('is_deleted',0)->where("slug", $slug)->first();
-        $post_author = User::where('is_deleted',0)->where('is_author',1)->where('id',$post->meta_author_id)->select('name','profile_pic')->first();
+        $post_category = Category::where('id',$post->cat_id)->where('is_deleted',0)->first();
+        $post_author = User::where('is_deleted',0)->where('is_author',1)->where('id',$post->meta_author_id)->select('id','name','profile_pic')->first();
 
         $categories = Category::where('is_deleted',0)->inRandomOrder()->get();
         $posts = Post::where('is_deleted',0)->inRandomOrder()->limit(5)->get();
@@ -89,7 +93,8 @@ class HomeController extends Controller
         }
         $comments = Comments::where('is_deleted',0)->where('post_id',$post->id)->count();
         $popular_posts = Post::orderBy('view_count','desc')->where('is_deleted',0)->inRandomOrder()->limit(5)->get();
-        return view("website.post", compact('post', 'categories', 'posts','popular_posts','post_author','comments'));
+        $setting = Settings::first();
+        return view("website.post", compact('post', 'categories','setting', 'posts','popular_posts','post_author','comments','post_category'));
     }
 
     public function showCategory($slug) {
@@ -106,7 +111,8 @@ class HomeController extends Controller
             Session::put($session , 1);
         }
         $popular_posts = Post::orderBy('view_count','desc')->where('is_deleted',0)->inRandomOrder()->limit(5)->get();
-        return view('website.category', compact('category', 'posts', 'post_count', 'categories','popular_posts'));
+        $setting = Settings::first();
+        return view('website.category', compact('category','setting', 'posts', 'post_count', 'categories','popular_posts'));
     }
 
     public function gatherUserInfo() {
@@ -136,6 +142,21 @@ class HomeController extends Controller
         ]);
 
     }
+
+    public function viewAuthorPage($id) {
+        $posts = Post::where('created_by',$id)->paginate(6);
+        foreach($posts as $post) {
+            $post->post_category = Category::where('id',$post->cat_id)->where('is_deleted',0)->first();
+        }
+        $user = User::where('id',$id)->first();
+        $categories = Category::where('is_deleted',0)->inRandomOrder()->get();
+        $setting = Settings::first();
+        $popular_posts = Post::orderBy('view_count','desc')->where('is_deleted',0)->inRandomOrder()->limit(5)->get();
+        return view('website.author',compact('categories','setting','popular_posts','posts','user'));
+
+    }
+
+
 
     // for dashboard create user
     public function dashboard() {

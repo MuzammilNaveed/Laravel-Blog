@@ -43,12 +43,13 @@ Route::get('/', [HomeController::class,'userHomePage']);
 
 
 
-   // post comment
-   Route::post('/post_comment',[postsControllers::class, 'postComment']);
-   Route::post('/get_all_comment',[postsControllers::class, 'getAllComments']);
-   Route::post('/comment_reply',[postsControllers::class, 'postCommentReply']);
+    // post comment
+    Route::post('/post_comment',[postsControllers::class, 'postComment']);
+    Route::post('/get_all_comment',[postsControllers::class, 'getAllComments']);
+    Route::post('/comment_reply',[postsControllers::class, 'postCommentReply']);
 
- 
+    // authour
+    Route::get('/author/{id}', [HomeController::class, 'viewAuthorPage']);
 
 Route::group(['middleware' => ['auth']], function() {
 
@@ -133,7 +134,6 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/insert_page_data', [adminController::class, 'insertPageData']);
     Route::get('/get_all_pages', [adminController::class, 'getAllPages']);
     Route::get('/edit_page/{slug}', [adminController::class, 'editPage']);
-    Route::post('/save_edit_page', [adminController::class, 'saveEditPage']);
- 
+    Route::post('/save_edit_page', [adminController::class, 'saveEditPage']); 
 });
 

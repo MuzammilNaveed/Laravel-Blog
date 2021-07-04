@@ -23,7 +23,6 @@
 
     @include('website/layout/navbar')
 
-
     <div class="container">
         <div class="row">
             <div class="col-md-8 p-4">
@@ -32,7 +31,7 @@
                     <div class="__post_head_with_img __overlay" style="position:relative; z-index:1">
                         <img src="{{asset('images')}}/{{$post->image}}" style="width:100%" class="img-fluid" alt="">
                         <div class="header_content">
-                            <span class="badge bg-dark text-white pt-1 pr-3 pl-3 pb-1">Category</span>
+                            <span class="badge bg-dark text-white pt-1 pr-3 pl-3 pb-1">{{$post_category->name}}</span>
                             <h1 class="bg-dark text-white p-2 mt-2">{{$post->title}}</h1>
                         </div>
                     </div>
@@ -46,7 +45,7 @@
                                 BY
 
                             @if($post_author != null && $post_author != "" && $post_author->name != null && $post_author->name != "")
-                                <a href="#">{{$post_author->name}}</a>
+                                <a href="{{url('author')}}/{{$post_author->id}}">{{$post_author->name}}</a>
                             @endif
                             -
                             <span class="text-muted m-0 p-0"><i class="far fa-calendar-alt"></i> {{$post->created_at}}</span>

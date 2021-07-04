@@ -52,7 +52,6 @@
 
 <body>
 
-
    @include('website/layout/navbar')
 
     <section class="container">
@@ -87,12 +86,6 @@
             </div>
         </div>
     </section>
-
-
-
-
-
-
 
 
 
@@ -165,49 +158,51 @@
 
     @include('website/layout/footer')
 
-
-
-
-
-
-
-
-
-
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script>
+        $(document).ready(function() {
+            $('.dropdown_menu').css('display','none');
+        });
+        
+
         $("#search_icon").click(function() {
             $(".search_div").slideToggle();
         });
 
+        $(".drpdown").click(function() {
+            $(this).toggleClass("fas fas fa-angle-up");
+            $(".dropdown_menu").slideToggle();
+        })
+
+
         // dark mode
-        let darkMode = localStorage.getItem("darkMode");
-        const darkModeToggle = document.querySelector("#dark-mode-btn");
+        // let darkMode = localStorage.getItem("darkMode");
+        // const darkModeToggle = document.querySelector("#dark-mode-btn");
 
-        const enableDarkMode = () => {
-            document.body.classList.add("darkmode");
-            localStorage.setItem("darkMode", "enabled");
-        }
+        // const enableDarkMode = () => {
+        //     document.body.classList.add("darkmode");
+        //     localStorage.setItem("darkMode", "enabled");
+        // }
 
-        const disabledDarkMode = () => {
-            document.body.classList.remove("darkmode");
-            localStorage.setItem("darkMode", null);
-        }
+        // const disabledDarkMode = () => {
+        //     document.body.classList.remove("darkmode");
+        //     localStorage.setItem("darkMode", null);
+        // }
 
-        if (darkMode === "enabled") {
-            enableDarkMode();
-        }
+        // if (darkMode === "enabled") {
+        //     enableDarkMode();
+        // }
 
-        darkModeToggle.addEventListener("click", () => {
-            darkMode = localStorage.getItem("darkMode");
-            if (darkMode !== "enabled") {
-                enableDarkMode();
-            } else {
-                disabledDarkMode();
-            }
-        });
+        // darkModeToggle.addEventListener("click", () => {
+        //     darkMode = localStorage.getItem("darkMode");
+        //     if (darkMode !== "enabled") {
+        //         enableDarkMode();
+        //     } else {
+        //         disabledDarkMode();
+        //     }
+        // });
     </script>
 </body>
 
