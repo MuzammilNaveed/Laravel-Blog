@@ -69,7 +69,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-md-5 col-lg-5 col-sm-3">
+            <div class="col-md-5 col-lg-5 col-sm-12">
                 @foreach($posts as $post)
                 <a href="{{url('post')}}/{{$post->slug}}">
                     <div class="header_post mt-2" style="position:relative">

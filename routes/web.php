@@ -40,6 +40,7 @@ Route::get('/', [HomeController::class,'userHomePage']);
 
     Route::post('/login_user',[HomeController::class,'UserLogin']);
     Route::get('/logout',[HomeController::class,'logout'])->name('logout.user');
+    Route::get('/contact_us',[HomeController::class,'contactUsPage']);
 
 
 

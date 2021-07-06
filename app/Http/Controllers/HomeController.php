@@ -14,10 +14,11 @@ use App\Models\Settings;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Session;
 use Jenssegers\Agent\Agent;
 use Carbon\Carbon;
-
+use GuzzleHttp\Cookie\SetCookie;
 
 class HomeController extends Controller
 {
@@ -34,7 +35,7 @@ class HomeController extends Controller
         return view('auth.login');
     }
 
-    public function userHomePage() {
+    public function userHomePage(Request $request) {
         if (Auth::user()) {
             return redirect()->intended('/dashboard');
         } else {
@@ -60,13 +61,12 @@ class HomeController extends Controller
                 $post->category  = Category::where('id',$post['cat_id'])->first()->toArray();
             } 
 
-            
-
-            $session = 'post_' . \Request::ip();
-            if(!Session::has($session)) {
+            if(!isset($_COOKIE['visitors'])) {
+                SetCookie('visitors', 'yes' , time() + (60*60*24*30));
                 $this->gatherUserInfo();
-                Session::put($session , 1);
             }
+            
+            dd( request()->headers->get('referer') );
 
             $tags = Tags::where('is_deleted',0)->get();
             $categories = Category::where('is_deleted',0)->inRandomOrder()->limit(10)->get();
@@ -86,11 +86,11 @@ class HomeController extends Controller
         $categories = Category::where('is_deleted',0)->inRandomOrder()->get();
         $posts = Post::where('is_deleted',0)->inRandomOrder()->limit(5)->get();
 
-        $session = 'post_' . \Request::ip();
-        if(!Session::has($session)) {
+        if(!isset($_COOKIE['visitors'])) {
+            SetCookie('visitors', 'yes' , time() + (60*60*24*30));
             $this->gatherUserInfo();
-            Session::put($session , 1);
         }
+
         $comments = Comments::where('is_deleted',0)->where('post_id',$post->id)->count();
         $popular_posts = Post::orderBy('view_count','desc')->where('is_deleted',0)->inRandomOrder()->limit(5)->get();
         $setting = Settings::first();
@@ -105,11 +105,11 @@ class HomeController extends Controller
 
         $categories = Category::where('is_deleted',0)->inRandomOrder()->get();
         
-        $session = 'post_' . \Request::ip();
-        if(!Session::has($session)) {
+        if(!isset($_COOKIE['visitors'])) {
+            SetCookie('visitors', 'yes' , time() + (60*60*24*30));
             $this->gatherUserInfo();
-            Session::put($session , 1);
         }
+
         $popular_posts = Post::orderBy('view_count','desc')->where('is_deleted',0)->inRandomOrder()->limit(5)->get();
         $setting = Settings::first();
         return view('website.category', compact('category','setting', 'posts', 'post_count', 'categories','popular_posts'));
@@ -405,5 +405,12 @@ class HomeController extends Controller
                 'status' => 200
             ]);
         }
+    }
+
+
+    // contact us page 
+    public function contactUsPage() {
+        $setting = Settings::first();
+        return view('website.pages.contact_us',compact('setting'));
     }
 }

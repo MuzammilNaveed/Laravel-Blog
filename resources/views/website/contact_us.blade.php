@@ -30,7 +30,7 @@
     <div class="__wrapper mt-5">
         <div class="row">
             <div class="col-md-8 p-4">
-
+                <h1>Contact Us</h1>
             </div>
 
             <div class="col-md-4 p-4">
