@@ -9,6 +9,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\adminController;
+use App\Http\Controllers\siteController;
 
 
 
@@ -41,8 +42,11 @@ Route::get('/', [HomeController::class,'userHomePage']);
     Route::post('/login_user',[HomeController::class,'UserLogin']);
     Route::get('/logout',[HomeController::class,'logout'])->name('logout.user');
     Route::get('/contact_us',[HomeController::class,'contactUsPage']);
+    // Route::get('/{slug}',[HomeController::class,'showPages']);
 
 
+    // save contact form
+    Route::post('/save_contact',[siteController::class,'saveContactUs']);
 
     // post comment
     Route::post('/post_comment',[postsControllers::class, 'postComment']);
@@ -58,14 +62,14 @@ Route::group(['middleware' => ['auth']], function() {
 
     // category crud
     Route::resource('categories', categoryController::class);
-    Route::get('/manage_categories', function() { return view('admin.category.category'); })->name('category.index');
+    Route::get('/manage_categories', [categoryController::class, 'categoryPage'])->name('category.index');
     Route::post('/category_posts', [categoryController::class, 'viewCategoryPosts']);
 
 
 
     // tags crud
     Route::resource('tags', TagsController::class);
-    Route::get('/manage_tags', function() { return view('admin.tags.tag'); })->name('tag.index');
+    Route::get('/manage_tags', [TagsController::class, 'tagPage'])->name('tag.index');
 
 
     // posts crud
@@ -87,6 +91,9 @@ Route::group(['middleware' => ['auth']], function() {
     // roles crud
     Route::resource('roles', RoleController::class);
     Route::get('/manage_roles', [RoleController::class, 'manageRoles'])->name('role.index');
+    Route::get('/manage_permissions', [RoleController::class, 'managePermission'])->name('permission.index');
+    Route::post('/save_permissions', [RoleController::class, 'savePermission']);
+    Route::post('/show_role_permissions', [RoleController::class, 'showRolePermission']);
 
     
     // users crud

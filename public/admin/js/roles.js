@@ -128,13 +128,24 @@ function getAllRoles() {
                 },
                 {
                     "render": function (data, type, full, meta) {
-                        return ` <div class="d-flex justify-content-center">
-                            <button onclick="viewRecord(`+ full.id +`, '`+full.name+`')" type="button" 
-                                class="btn btn-primary text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></button>
-                            
-                            <button onclick="deleteRecord(`+full.id+`)" type="button" 
-                                class="btn btn-danger ml-2 text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash"></i></button>
-                        </div>`
+                        let update_btn = `<button onclick="viewRecord(`+ full.id +`, '`+full.name+`')" type="button" 
+                        class="btn btn-primary text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></button>`;
+
+                        let del_btn = `<button onclick="deleteRecord(`+full.id+`)" type="button" 
+                        class="btn btn-danger ml-2 text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash"></i></button>`;
+
+                        var update = $("#update").text();
+                        var del = $("#delete").text();
+
+                        if(update == 1 && del == 1) {
+                            return update_btn + del_btn
+                        } else if(update == 1 && del == 0) {
+                            return update_btn;
+                        }else if(update == 0 && del == 1) {
+                            return del_btn;
+                        }else{
+                            return '-';
+                        }
                     }
                 },
                 ],

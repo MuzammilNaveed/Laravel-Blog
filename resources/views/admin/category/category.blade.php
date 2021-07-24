@@ -10,15 +10,21 @@
 
 <div class="row mt-2">
   <div class="container-fluid p-0">
-    <div class="card card_shadow">
+
+      <p id="update" class="d-none"> {{str_contains($permission->action,'update') ? 1 : 0}} </p>
+      <p id="delete" class="d-none"> {{str_contains($permission->action,'delete') ? 1 : 0}} </p>
+
+        <div class="card card_shadow">
       <div class="card-header d-flex justify-content-between">
-        <div class="card-title font-weight-bolder">All Categories <span class="badge bg-primary text-white" id="counts"></span> </div>
-        <div class="export-options-container">
-          <div class="exportOptions">
-            <div class="DTTT btn-group"> <button data-toggle="modal" data-target="#addRecordModal" class="btn btn-primary"><i class="material-icons">add</i> Add Category</button></div>
-          </div>
-        </div>
+        <div class="card-title font-weight-bolder">All Categories 
+            <span class="badge bg-primary text-white" id="counts"></span> 
+        </div> 
+        @if( str_contains($permission->action,'create') )
+        <button data-toggle="modal" data-target="#addRecordModal" class="btn btn-primary">
+          <i class="material-icons">add</i> Add Category</button>
+        @endif
       </div>
+
       <div class="card-body">
         <div class="table-responsive sm-m-b-15">
           <table class="table table-hover no-footer w-100" id="showRecord">
@@ -73,6 +79,19 @@
               </div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-12">
+                <div class="form-group form-group-default form-group-default-select2">
+                    <label class="">Category</label>
+                    <select class="full-width select2-hidden-accessible" name="parent_id" data-placeholder="Select Parent Category" data-init-plugin="select2" tabindex="-1" aria-hidden="true">
+                        <option value="0">Root</option>
+                        @foreach($categories as $cat)
+                        <option value="{{$cat->id}}">{{$cat->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+          </div>
           <div class="modal-footer pr-0">
             <button id="add-app" type="submit" class="btn btn-primary  btn-cons"> Save</button>
             <button aria-label="" type="button" class="btn btn-cons" data-dismiss="modal"> Cancel</button>
@@ -113,6 +132,17 @@
                 <label>Description</label>
                 <textarea cols="30" rows="10" id="description" name="description" type="text" class="form-control" style="resize:none;height:80px" placeholder="Tell us more about it"></textarea>
               </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group form-group-default form-group-default-select2">
+                <label class="">Category</label>
+                <select class="full-width select2-hidden-accessible" id='parent_id' name="parent_id" data-placeholder="Select Category" data-init-plugin="select2" tabindex="-1" aria-hidden="true">
+                    <option value="0">Root</option>
+                    @foreach($categories as $category) 
+                      <option value="{{$category->id}}"> {{$category->name}} </option>
+                    @endforeach
+                </select>
             </div>
           </div>
           <div class="modal-footer pr-0">

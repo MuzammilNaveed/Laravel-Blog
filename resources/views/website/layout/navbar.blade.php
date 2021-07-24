@@ -10,22 +10,22 @@
         </a>
         <ul class="navbar-nav mr-auto">
             <li class="nav-item dropdown ml-3">
-                <a class="nav-link dropdown-toggle  " href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Tutorial
+                <a class="nav-link " href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Tutorial <i class="fas fa-chevron-down"></i>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
+                    @foreach($menus as $menu)
+                        <a class="dropdown-item" href="{{url('category')}}/{{$menu->slug}}">{{$menu->name}}</a>
+                    @endforeach
                 </div>
             </li>
-            <li class="nav-item">
-                <a href="" class="nav-link  ">Packages</a>
-            </li>
-            <li class="nav-item">
-                <a href="" class="nav-link  ">About Us</a>
-            </li>
+            @if($pages != null && $pages != " ")
+                @foreach($pages as $page)
+                <li class="nav-item">
+                    <a href="{{url('/')}}/{{$page->page_slug}}" class="nav-link  ">{{$page->page_name}}</a>
+                </li>
+                @endforeach
+            @endif
             <li class="nav-item">
                 <a href="{{url('contact_us')}}" class="nav-link">Contact Us</a>
             </li>
@@ -37,6 +37,7 @@
             <div class="form-inline my-2 my-lg-0">
                 <div class="nav-social ml-3">
                     <a href=""><i class="fab fa-instagram text-dark ml-3  "></i></a>
+                    <i class="fas fa-moon text-dark ml-3" id="dark-mode-btn"></i>
                 </div>
                 <i class="fas fa-search   ml-3" id="search_icon"></i>
             </div>
@@ -63,30 +64,26 @@
     </div>
     <ul class="menu-primary">
         <li class="">
-        <!-- <i class="fas fa-angle-up"></i> -->
             <a href="#" id="navbarDropdown">
                 Tutorial  <i class="fas fa-angle-down drpdown" style="float:right"></i>
             </a>
             <ul class="dropdown_menu">
-                <li>
-                    <a href="#">Action</a>
-                </li>
-                <li>
-                    <a href="#">Action 1</a>
-                </li>
-                <li>
-                    <a href="#">Action 2</a>
-                </li>
+                @foreach($menus as $menu)
+                    <li>
+                        <a class="dropdown-item" href="{{url('category')}}/{{$menu->slug}}">{{$menu->name}}</a>
+                    </li>
+                @endforeach
             </ul>
         </li>
-        <li>
-            <a href="">Packages</a>
+
+        @foreach($pages as $page)
+        <li class="nav-item">
+            <a href="{{url('/')}}/{{$page->page_slug}}" class="nav-link  ">{{$page->page_name}}</a>
         </li>
+        @endforeach
+
         <li>
-            <a href="">About Us</a>
-        </li>
-        <li>
-            <a  href="">Contact Us</a>
+            <a href="{{url('contact_us')}}">Contact Us</a>
         </li>
         
     </ul>

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Post;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class categoryController extends Controller
@@ -14,8 +17,16 @@ class categoryController extends Controller
         $categories = Category::where('is_deleted',0)->get();
         foreach($categories as $category) {
             $category->post_count = Post::where('cat_id',$category->id)->count();
+            $category->created_by = User::where('id',$category->created_by)->first();
+            $category->deleted_by = User::where('id',$category->deleted_by)->first();
         }
         return $categories;
+    }
+
+    public function categoryPage() {
+        $permission = DB::table("permissions")->where("created_by",Auth::id())->where('title','category')->first();
+        $categories = Category::where('is_deleted',0)->get();
+        return view('admin.category.category', compact('categories','permission'));
     }
 
     public function store(Request $request) {
@@ -23,6 +34,8 @@ class categoryController extends Controller
         $cat->name = $request->name;
         $cat->slug = Str::slug($request->name, '-');
         $cat->description = $request->description;
+        $cat->parent_id = $request->category;
+        $cat->created_by = Auth::id();
         $cat->save();
 
         return response()->json([
@@ -37,6 +50,7 @@ class categoryController extends Controller
         $cat->name = $request->name;
         $cat->slug = Str::slug($request->name, '-');
         $cat->description = $request->description;
+        $cat->parent_id = $request->parent_id;
         $cat->save();
 
         return response()->json([
@@ -45,6 +59,7 @@ class categoryController extends Controller
             'success' => true
         ]);
     }
+
     public function destroy($id) {
         
         $post = Post::where("cat_id",$id)->count();

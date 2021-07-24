@@ -7,6 +7,8 @@
     line-height: 0px;
   }
 </style>
+<p id="update" class="d-none"> {{str_contains($permission->action,'update') ? 1 : 0}} </p>
+<p id="delete" class="d-none"> {{str_contains($permission->action,'delete') ? 1 : 0}} </p>
 
 <div class="d-md-flex justify-content-between mt-2 ml-0">
   <div class="row">
@@ -87,8 +89,10 @@
         <div class="export-options-container">
           <div class="exportOptions">
             <div class="DTTT btn-group">
+            @if( str_contains($permission->action,'create') )  
               <button type="button" class="btn btn-primary btn-sm rounded"><a href="{{route('add_post.index')}}">
                   <i class="fas fa-plus-circle"></i> Add Post</a></button>
+            @endif
             </div>
           </div>
         </div>

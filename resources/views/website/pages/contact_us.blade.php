@@ -33,37 +33,56 @@
     
     <div class="container mt-5" style="height:70vh;">
         <div class="row">
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
 
-                <form action="">
+                <form action="{{url('save_contact')}}" method="post">
+                    @csrf
                     <div class="row">
+                            @if(session()->has('success'))
+                                <div class="alert alert-success">
+                                    {{ session()->get('success') }}
+                                </div>
+                            @endif
+                    
                         <div class="col-md-6">
                             <label for="name" class="small font-weight-bold">Your Name </label>
-                            <input type="text" class="form-control" name="name">
+                            <input type="text" class="form-control" name="name" value="{{old('name')}}">
+                            @error('name')
+                                <div class="small text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-md-6">
                             <label for="email" class="small font-weight-bold">Your Email </label>
-                            <input type="email" class="form-control" name="email">
+                            <input type="text" class="form-control" name="email" value="{{old('email')}}">
+                            @error('email')
+                                <div class="small text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-12">
                             <label for="subject" class="small font-weight-bold"> Subject </label>
-                            <input type="text" class="form-control" name="subject">
+                            <input type="text" class="form-control" name="subject" value="{{old('subject')}}">
+                            @error('subject')
+                                <div class="small text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="row mt-4">
                         <div class="col-12">
                             <label for="message" class="small font-weight-bold"> Message </label>
-                            <textarea name="message" cols="30" rows="5" class="form-control"></textarea>
+                            <textarea name="message" cols="30" rows="5" class="form-control">{{old('message')}}</textarea>
+                            @error('message')
+                                <div class="small text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
-                    <button class="btn btn-primary mt-2">Send</button>
+                    <button type="submit" class="btn btn-primary mt-2">Send</button>
                 </form>
 
-            </div>
+            </div> -->
             
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <h1>Contact Us</h1>
                 <p>Feel free to contact us if you have any queries. We will get back to you promptly.  </p>
 

@@ -143,15 +143,25 @@ function getAllPosts(from,to) {
                     },
                     {
                         "render": function(data, type, full, meta) {
-                            return (
-                                ` <div class="d-flex justify-content-center">
-                                    <a data-toggle="tooltip" data-placement="top" title="view post" href="`+view_post+`/`+full.id+`"class="btn btn-info text-white btn_cirlce ml-2">
-                                    <i class="far fa-eye"></i></a>
-                                    <a href="edit_post/`+full.id+`" onclick="viewRecord(`+ full.id +`, '` + full.name +`')" type="button" class="btn btn-primary text-white btn_cirlce ml-2" data-toggle="tooltip" data-placement="top" title="edit post"><i class="fas fa-pen"></i></a>
-                                    <button data-toggle="tooltip" data-placement="top" title="delete post" onclick="deleteRecord(`+ full.id + `)" type="button" class="btn btn-danger text-white ml-2 text-white btn_cirlce">
-                                    <i class="fas fa-trash"></i></button>
-                                </div>`
-                            );
+                            let view_btn = `<a data-toggle="tooltip" data-placement="top" title="view post" href="`+view_post+`/`+full.id+`"class="btn btn-info text-white btn_cirlce ml-2">
+                            <i class="far fa-eye"></i></a>`;
+                            let update_btn = ` <a href="edit_post/`+full.id+`" type="button" class="btn btn-primary text-white btn_cirlce ml-2" data-toggle="tooltip" data-placement="top" title="edit post"><i class="fas fa-pen"></i></a>`;
+                            let del_btn = `<button data-toggle="tooltip" data-placement="top" title="delete post" onclick="deleteRecord(`+ full.id + `)" type="button" class="btn btn-danger text-white ml-2 text-white btn_cirlce">
+                            <i class="fas fa-trash"></i></button>`;
+                            
+                            var update = $("#update").text();
+                            var del = $("#delete").text();
+
+                            if(update == 1 && del == 1) {
+                                return view_btn + update_btn + del_btn
+                            } else if(update == 1 && del == 0) {
+                                return view_btn + update_btn;
+                            }else if(update == 0 && del == 1) {
+                                return view_btn + del_btn;
+                            }else{
+                                return view_btn;
+                            }
+                        
                         }
                     }
                 ]

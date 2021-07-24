@@ -86,6 +86,9 @@
       border-radius: 100px;
       padding: 8px 9px;
     }
+    .table tbody tr td {
+        padding:8px;
+    }
 
     /* width */
     ::-webkit-scrollbar {

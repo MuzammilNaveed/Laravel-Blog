@@ -62,19 +62,21 @@ class HomeController extends Controller
             } 
 
             if(!isset($_COOKIE['visitors'])) {
-                SetCookie('visitors', 'yes' , time() + (60*60*24*30));
+                SetCookie('visitors', 'yes' , time() + (60*60*24*1));
                 $this->gatherUserInfo();
             }
-            
-            dd( request()->headers->get('referer') );
 
             $tags = Tags::where('is_deleted',0)->get();
             $categories = Category::where('is_deleted',0)->inRandomOrder()->limit(10)->get();
+            
+            $menus = Category::where('is_deleted',0)->where('parent_id',0)->get();
 
             $setting = Settings::first();
             $popular_posts = Post::orderBy('view_count','desc')->where('is_deleted',0)->limit(5)->get();
+
+            $pages = DB::table("pages")->get();
             
-            return view("website.index", compact('posts','setting','singleheader','feature_posts','tags','categories','popular_posts','tutorial_posts'));
+            return view("website.index", compact('posts','setting','singleheader','feature_posts','tags','categories','popular_posts','tutorial_posts','pages','menus'));
         }
     }
 
@@ -84,17 +86,27 @@ class HomeController extends Controller
         $post_author = User::where('is_deleted',0)->where('is_author',1)->where('id',$post->meta_author_id)->select('id','name','profile_pic')->first();
 
         $categories = Category::where('is_deleted',0)->inRandomOrder()->get();
+        $menus = Category::where('is_deleted',0)->get();
         $posts = Post::where('is_deleted',0)->inRandomOrder()->limit(5)->get();
 
         if(!isset($_COOKIE['visitors'])) {
-            SetCookie('visitors', 'yes' , time() + (60*60*24*30));
+            SetCookie('visitors', 'yes' , time() + (60*60*24*1));
             $this->gatherUserInfo();
         }
 
-        $comments = Comments::where('is_deleted',0)->where('post_id',$post->id)->count();
+        $post->increment('view_count');
+
         $popular_posts = Post::orderBy('view_count','desc')->where('is_deleted',0)->inRandomOrder()->limit(5)->get();
         $setting = Settings::first();
-        return view("website.post", compact('post', 'categories','setting', 'posts','popular_posts','post_author','comments','post_category'));
+        $pages = DB::table("pages")->get();
+
+        $comments =  Comments::where("post_id","=",$post->id)->get();
+
+        foreach($comments as $comment) {
+            $comment->comment_replies = CommentReplies::where('comment_id',$comment->id)->get();
+        }
+        
+        return view("website.post", compact('post', 'categories','setting', 'posts','popular_posts','post_author','post_category','pages','menus','comments'));
     }
 
     public function showCategory($slug) {
@@ -104,15 +116,17 @@ class HomeController extends Controller
         $post_count = sizeof($posts);
 
         $categories = Category::where('is_deleted',0)->inRandomOrder()->get();
+        $menus = Category::where('is_deleted',0)->get();
         
         if(!isset($_COOKIE['visitors'])) {
-            SetCookie('visitors', 'yes' , time() + (60*60*24*30));
+            SetCookie('visitors', 'yes' , time() + (60*60*24*1));
             $this->gatherUserInfo();
         }
 
         $popular_posts = Post::orderBy('view_count','desc')->where('is_deleted',0)->inRandomOrder()->limit(5)->get();
         $setting = Settings::first();
-        return view('website.category', compact('category','setting', 'posts', 'post_count', 'categories','popular_posts'));
+        $pages = DB::table("pages")->get();
+        return view('website.category', compact('category','setting', 'posts', 'post_count', 'categories','popular_posts','pages','menus'));
     }
 
     public function gatherUserInfo() {
@@ -150,9 +164,11 @@ class HomeController extends Controller
         }
         $user = User::where('id',$id)->first();
         $categories = Category::where('is_deleted',0)->inRandomOrder()->get();
+        $menus = Category::where('is_deleted',0)->get();
         $setting = Settings::first();
         $popular_posts = Post::orderBy('view_count','desc')->where('is_deleted',0)->inRandomOrder()->limit(5)->get();
-        return view('website.author',compact('categories','setting','popular_posts','posts','user'));
+        $pages = DB::table("pages")->get();
+        return view('website.author',compact('categories','setting','popular_posts','posts','user','pages','menus'));
 
     }
 
@@ -221,6 +237,12 @@ class HomeController extends Controller
 
         $country_names = json_encode($country_arry);
         $country_counts = json_encode($country_arry_count);
+
+        $visitors = DB::table('usrr_info')->select(DB::raw("(COUNT(*)) as visitors"),DB::raw("MONTHNAME(date) as month"))
+        ->whereYear('date', date('Y'))
+        ->groupBy('month')
+        ->get()->toArray();
+
 
         return view('admin.dashboard.index', compact('post_count','browser_names','browser_counts','category_count', 'tag_count', 'user_count', 'comment_count', 'reply_count', 'active_post', 'inactive_post','platform_names','platform_counts','country_names','country_counts'));
     }
@@ -411,6 +433,15 @@ class HomeController extends Controller
     // contact us page 
     public function contactUsPage() {
         $setting = Settings::first();
-        return view('website.pages.contact_us',compact('setting'));
+        $pages = DB::table("pages")->get();
+        return view('website.pages.contact_us',compact('setting','pages'));
+    }
+
+    public function showPages($slug) {
+        $setting = Settings::first();
+        $pages = DB::table("pages")->get();
+
+        $page_data = DB::table('pages')->where('page_slug',$slug)->first();
+        return view('website.pages.pages',compact('setting','pages','page_data'));
     }
 }

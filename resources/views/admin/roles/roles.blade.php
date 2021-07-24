@@ -2,6 +2,8 @@
 @section('page_title','Manage Roles')
 @section('container')
 
+<p id="update" class="d-none"> {{str_contains($permission->action,'update') ? 1 : 0}} </p>
+<p id="delete" class="d-none"> {{str_contains($permission->action,'delete') ? 1 : 0}} </p>
 
 <div class="row mt-2">
   <div class="container-fluid p-0">
@@ -10,7 +12,11 @@
           <div class="card-title font-weight-bolder">All Roles <span class="badge bg-primary text-white" id="counts"></span></div>
           <div class="export-options-container">
             <div class="exportOptions">
-              <div class="DTTT btn-group"> <button data-toggle="modal" data-target="#addModal" class="btn btn-primary"><i class="material-icons">add</i> Add Role</button></div>
+              <div class="DTTT btn-group"> 
+              @if( str_contains($permission->action,'create') )  
+              <button data-toggle="modal" data-target="#addModal" class="btn btn-primary"><i class="material-icons">add</i> Add Role</button>
+              @endif
+            </div>
             </div>
           </div>
         </div>

@@ -10,13 +10,21 @@
 
 <div class="row mt-2">
 
+  <p id="update" class="d-none"> {{str_contains($permission->action,'update') ? 1 : 0}} </p>
+  <p id="delete" class="d-none"> {{str_contains($permission->action,'delete') ? 1 : 0}} </p>
+
   <div class="container-fluid p-0">
       <div class="card card_shadow">
         <div class="card-header d-flex justify-content-between">
           <div class="card-title font-weight-bolder">All Tags <span id="counts" class="badge bg-primary text-white"></span> </div>
           <div class="export-options-container">
             <div class="exportOptions">
-              <div class="DTTT btn-group"> <button data-toggle="modal" data-target="#addModal" class="btn btn-primary"><i class="material-icons">add</i> Add Tag</button></div>
+              <div class="DTTT btn-group">
+              @if( str_contains($permission->action,'create') )  
+                <button data-toggle="modal" data-target="#addModal" class="btn btn-primary">
+                  <i class="material-icons">add</i> Add Tag</button>
+              @endif
+              </div>
             </div>
           </div>
         </div>

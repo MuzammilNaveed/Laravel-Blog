@@ -38,7 +38,8 @@ class postsControllers extends Controller
     public function manage_post() {
         $categories = Category::where('is_deleted' ,0)->get();
         $authors = User::where('is_deleted' ,0)->where('is_author',1)->get();
-        return view('admin.posts.post', compact('categories','authors'));
+        $permission = DB::table("permissions")->where("created_by",Auth::id())->where('title','post')->first();
+        return view('admin.posts.post', compact('categories','authors','permission'));
     }
 
     public function addPostPage() {
@@ -213,9 +214,14 @@ class postsControllers extends Controller
     }
 
     public function getAllComments(Request $request) {
-        return Comments::where("post_id","=",$request->post_id)->get();
+        $comments =  Comments::where("post_id","=",$request->post_id)->get();
+
+        foreach($comments as $comment) {
+            $comment->comment_replies = CommentReplies::where('comment_id',$comment->id)->get();
+        }
+        return $comments;
     }
-    
+        
     public function postCommentReply(Request $request) {
         $comment = new CommentReplies();
         $comment->name = $request->name;

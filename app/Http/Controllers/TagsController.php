@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Tags;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -11,7 +12,16 @@ use Illuminate\Support\Str;
 class TagsController extends Controller
 {
     public function index(Request $request) {
-        return Tags::where("is_deleted",0)->get();
+        $tags = Tags::where("is_deleted",0)->get();
+        foreach($tags as $tag) {
+            $tag->created_by = User::where('id',$tag->created_by)->first();
+        }
+        return $tags;
+    }
+
+    public function tagPage() {
+        $permission = DB::table("permissions")->where("created_by",Auth::id())->where('title','tags')->first();
+        return view('admin.tags.tag',compact('permission'));
     }
 
     public function store(Request $request) {

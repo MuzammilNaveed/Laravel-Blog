@@ -23,6 +23,7 @@
 
     @include('website/layout/navbar')
 
+
     <div class="container">
         <div class="row">
             <div class="col-md-8 p-4">
@@ -51,7 +52,7 @@
                             <span class="text-muted m-0 p-0"><i class="far fa-calendar-alt"></i> {{$post->created_at}}</span>
                         </p>
                         <p class="mt-3" style="font-size:0.675rem;">
-                            <span class=" text-muted m-0 p-0"><i class="fas fa-comment"></i> {{$comments}}</span>
+                            <!-- <span class=" text-muted m-0 p-0"><i class="fas fa-comment"></i> {{$comments}}</span> -->
                         </p>
                     </div>
 
@@ -73,16 +74,22 @@
 
 
 
-
-
                 <!-- about author -->
-                <div class="row mt-5 border p-2">
+                <div class="row mt-5 p-3 bg-light">
                     @if($post_author != null && $post_author != "" && $post_author->profile_pic != null && $post_author->profile_pic != "")
                     <div class="col-md-2">
                         <img style="width:100px;height:90px;border-radius:100px;" 
                             src="{{asset('users')}}/{{$post_author->profile_pic}}" class="img-fluid mx-auto mt-1 d-block" alt="">
                     </div>
-                    @endif
+                    <div class="col-md-10">
+                        <h2>{{$post_author->name}}</h2>
+                        <p class="small text-muted">
+                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptates, omnis error. Quibusdam
+                            amet ea aliquid porro accusamus labore illum ratione, sed et, vitae quidem architecto id
+                            debitis ullam fugit ipsam iste, eaque aliquam doloribus! Omnis doloribus laboriosam
+                        </p>
+                    </div>
+                    @else
                     <div class="col-md-10">
                         <h2>About the Author</h2>
                         <p class="small text-muted">
@@ -91,20 +98,63 @@
                             debitis ullam fugit ipsam iste, eaque aliquam doloribus! Omnis doloribus laboriosam
                         </p>
                     </div>
+                    @endif                    
                 </div>
 
 
-
-
-
-
                 <!-- comment system -->
-                <h1 class="lead mt-5"><span id="total_comments"></span> Comments</h1>
-                <div class="user_comments" id="__user_comments"></div>
+                <h1 class="lead mt-5"> {{sizeOf($comments)}} <strong id="total_comments"></strong> Comments</h1>
+                <div class="user_comments">
+                <!-- <div class="user_comments" id="__user_comments"> -->
+                
+
+                    @foreach($comments as $comment)
+                    <div class="row p-2 mt-2 bg-light">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between">
+                                <h5><strong style="font-size:1rem">{{$comment->name}}</strong> <span class="small" style="font-size:0.7rem;"> says</span></h5>
+                                <p style="font-size:0.7rem;" class="small text-muted m-0 mt-2 p-0"> {{$comment->created_at}} </p>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <p class="small m-0">
+                                {{$comment->comment}}
+                            </p>
+                            <a href="javascript:void(0)" onclick="commentReply(this,{{$comment->id}})" class="text-primary small mt-2">REPLY</a>
+                        </div>
+                    </div>
+
+                        @if($comment->comment_replies != null && $comment->comment_replies != "" && $comment->comment_replies != [])
+
+                            @foreach($comment->comment_replies as $reply)
+                            <div class="row p-2 ml-3 mt-2 bg-light">
+                                <div class="col-12">
+                                    <div class="d-flex justify-content-between">
+                                        <h5><strong style="font-size:1rem">{{$reply->name}}</strong> <span class="small" style="font-size:0.7rem;"> says</span></h5>
+                                        <p style="font-size:0.7rem;" class="small text-muted m-0 mt-2 p-0"> {{$reply->created_at}} </p>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <p class="small m-0">
+                                        {{$reply->comment}}
+                                    </p>
+                                    <!-- <a href="javascript:void(0)" onclick="commentReply(this,{{$reply->id}})" class="text-primary small mt-2">REPLY</a> -->
+                                </div>
+                            </div>
+                            @endforeach
+                            
+                        @endif
+                    @endforeach
+
+                </div>
                 <!-- comment ends -->
 
+
+
                 <!-- add comment form -->
-                <h2 class="lead font-weight-bold">Leave a Comment</h2>
+                <h2 class="lead font-weight-bold mt-4">Leave a Comment</h2>
                 <p class="small text-muted">Your email address will not be published</p>
                 <div class="row mt-4">
 
@@ -113,7 +163,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="msg" class="small">Comment</label>
-                                    <textarea cols="150" rows="5" name="comment" id="comment" class="form-control"></textarea>
+                                    <textarea cols="150" rows="4" name="comment" id="comment" class="form-control"></textarea>
                                     <span class="text-danger small" id="msg_error"></span>
                                 </div>
                             </div>
@@ -137,17 +187,18 @@
 
 
                 <!-- add reply comment form -->
-                <div class="row mt-4 replyComment" style="display:none">
-                    <h2 class="lead">Leave a Reply </h2>
+                <div class="row mt-4 replyComment m-0 p-3 bg-white" style="display:none">
+                   
+                    <form id="post_comment_reply">
+                    <h4> Leave a Reply  </h2>
                     <a onclick="$('.replyComment').hide();" href="javascript:void(0)" class="text-primary" style="font-size:0.8rem">CANCEL REPLY</a>
                     <p>Your email address will not be published</p>
-                    <form id="post_comment_reply">
 
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="msg" class="small">Comment</label>
-                                    <textarea style id="replycomment" cols="30" rows="6" class="form-control"></textarea>
+                                    <textarea style id="replycomment" cols="30" rows="4" class="form-control"></textarea>
                                     <span class="text-danger small" id="msg_error"></span>
                                 </div>
                             </div>
@@ -231,61 +282,12 @@
 
             });
 
-            getAllComments();
-
         });
 
-        function getAllComments() {
-            var post_id = $('#post_id').val();
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                },
-                url: '{{url("get_all_comment")}}',
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    post_id: post_id
-                },
-                success: function(data) {
-                    console.log(data, 'comments');
-                    var row = ``;
-                    $("#total_comments").text(data.length);
-
-                    for (var i = 0; i < data.length; i++) {
-
-                        row += `
-                    <div class="row p-2">
- 
-                        <div class="col-12">
-                            <div class="d-flex justify-content-between">
-                                <h5><strong style="font-size:1rem">` + data[i].name + `</strong> <span class="small" style="font-size:0.7rem;"> says</span></h5>
-                                <p style="font-size:0.7rem;" class="small text-muted m-0 mt-2 p-0">
-                                ` + moment(data[i].created_at).format("LL") + " @ " + moment(data[i].created_at).format(
-                            "LT") + `</p>
-                            </div>
-                        </div>
-
-                        <div class="col-12">
-                            <p class="small m-0">
-                            ` + data[i].comment + `
-                            </p>
-                            <a href="javascript:void(0)" onclick="commentReply(this, ` + data[i].id + `)" class="text-primary small mt-2">REPLY</a>
-                        </div>
-
-                    </div>
-                <hr>
-                    `;
-                        $('#__user_comments').html(row);
-                    }
-                },
-                error: function(error) {
-                    console.log(error)
-                },
-            });
-        }
 
         function commentReply(caller, id) {
+            console.log(caller , "caller");
+            console.log(id , "id");
             $('.replyComment').insertAfter($(caller));
             $('.replyComment').show();
 

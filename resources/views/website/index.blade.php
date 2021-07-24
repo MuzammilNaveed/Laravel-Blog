@@ -62,7 +62,7 @@
                         <div class="gradient"></div>
                         <img src="{{asset('images')}}/{{$singleheader['image']}}" style='height:420px; width: 100%; object-fit: cover; ' class="img-fluid" alt="">
                         <div class="header_content" style="position:absolute; bottom:4px;left:10px" class="img-fluid">
-                            <span class="badge bg-dark text-white badge-pill pt-1 pr-3 pl-3 pb-1">{{$singleheader['category']['name']}}</span>
+                            <span class="badge bg-dark text-white pt-1 pr-3 pl-3 pb-1">{{$singleheader['category']['name']}}</span>
                             <h5 class="bg-dark text-white p-2 mt-2">{{$singleheader['title']}}</h5>
                             <p class="small text-white"><i class="far fa-calendar-alt"></i> {{$singleheader['created_at']}} </p>
                         </div>
@@ -76,7 +76,7 @@
                         <div class="gradient"></div>
                         <img src="{{asset('images')}}/{{$post->image}}" style='height:205px; width: 100%; object-fit: cover' class="img-fluid" alt="">
                         <div class="header_content" style="position:absolute; bottom:4px;left:10px;">
-                            <span class="badge bg-dark text-white badge-pill pt-1 pr-3 pl-3 pb-1">{{$post['category']['name']}}</span>
+                            <span class="badge bg-dark text-white pt-1 pr-3 pl-3 pb-1">{{$post['category']['name']}}</span>
                             <h5 class="bg-dark text-white p-2 mt-2"> {{$post->title}} </h5>
                             <p class="small text-white"><i class="far fa-calendar-alt"></i> {{$post->created_at}} </p>
                         </div>
@@ -178,31 +178,31 @@
 
 
         // dark mode
-        // let darkMode = localStorage.getItem("darkMode");
-        // const darkModeToggle = document.querySelector("#dark-mode-btn");
+        let darkMode = localStorage.getItem("darkMode");
+        const darkModeToggle = document.querySelector("#dark-mode-btn");
 
-        // const enableDarkMode = () => {
-        //     document.body.classList.add("darkmode");
-        //     localStorage.setItem("darkMode", "enabled");
-        // }
+        const enableDarkMode = () => {
+            document.body.classList.add("darkmode");
+            localStorage.setItem("darkMode", "enabled");
+        }
 
-        // const disabledDarkMode = () => {
-        //     document.body.classList.remove("darkmode");
-        //     localStorage.setItem("darkMode", null);
-        // }
+        const disabledDarkMode = () => {
+            document.body.classList.remove("darkmode");
+            localStorage.setItem("darkMode", null);
+        }
 
-        // if (darkMode === "enabled") {
-        //     enableDarkMode();
-        // }
+        if (darkMode === "enabled") {
+            enableDarkMode();
+        }
 
-        // darkModeToggle.addEventListener("click", () => {
-        //     darkMode = localStorage.getItem("darkMode");
-        //     if (darkMode !== "enabled") {
-        //         enableDarkMode();
-        //     } else {
-        //         disabledDarkMode();
-        //     }
-        // });
+        darkModeToggle.addEventListener("click", () => {
+            darkMode = localStorage.getItem("darkMode");
+            if (darkMode !== "enabled") {
+                enableDarkMode();
+            } else {
+                disabledDarkMode();
+            }
+        });
     </script>
 </body>
 

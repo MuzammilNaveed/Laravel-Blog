@@ -146,19 +146,27 @@ function getAllCategories() {
                     },
                     {
                         "render": function(data, type, full, meta) {
-                            return (
-                                ` <div class="d-flex justify-content-center">
-                                    <button onclick="viewRecord(`+full.id + `, '` + full.name + `','` + full.description +`')" 
-                                        type="button" class="btn btn-primary text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Edit">
-                                        <i class="fas fa-pencil-alt"></i>
-                                    </button>
+                            let update_btn = `
+                                <button onclick="viewRecord(`+full.id + `, '` + full.name + `','` + full.description +`',`+full.parent_id+`)" 
+                                    type="button" class="btn btn-primary text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Edit">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </button>`;
+                            let del_btn = `
+                                <button  onclick="deleteRecord(`+ full.id + `)" type="button" 
+                                    class="btn btn-danger ml-2 text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>`;
 
-                                    <button  onclick="deleteRecord(`+ full.id + `)" type="button" 
-                                        class="btn btn-danger ml-2 text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Delete">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>`
-                            );
+                            var update = $("#update").text();
+                            var del = $("#delete").text();
+
+                            if(update == 1 && del == 1) {
+                                return update_btn + del_btn
+                            } else if(update == 1 && del == 0) {
+                                return update_btn;
+                            }else{
+                                return del_btn;
+                            }
                         }
                     }
                 ]
@@ -185,11 +193,12 @@ function getAllCategories() {
     });
 }
 
-function viewRecord(id, name, description) {
+function viewRecord(id, name, description,parent_id) {
     $("#updateModal").modal("show");
     $("#id").val(id);
     $("#name").val(name);
     $("#description").val(description);
+    $("#parent_id").val(parent_id).trigger('change');
 
     $("#catname").text(name);
 }
