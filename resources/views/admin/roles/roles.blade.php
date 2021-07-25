@@ -2,10 +2,12 @@
 @section('page_title','Manage Roles')
 @section('container')
 
-<p id="update" class="d-none"> {{str_contains($permission->action,'update') ? 1 : 0}} </p>
-<p id="delete" class="d-none"> {{str_contains($permission->action,'delete') ? 1 : 0}} </p>
+@if($permission != null && $permission != "")
+  <p id="update" class="d-none"> {{str_contains($permission->action,'update') ? 1 : 0}} </p>
+  <p id="delete" class="d-none"> {{str_contains($permission->action,'delete') ? 1 : 0}} </p>
+@endif
 
-<div class="row mt-2">
+<div class="row mt-2 add_margin">
   <div class="container-fluid p-0">
       <div class="card card_shadow">
         <div class="card-header d-flex justify-content-between">
@@ -13,8 +15,10 @@
           <div class="export-options-container">
             <div class="exportOptions">
               <div class="DTTT btn-group"> 
-              @if( str_contains($permission->action,'create') )  
-              <button data-toggle="modal" data-target="#addModal" class="btn btn-primary"><i class="material-icons">add</i> Add Role</button>
+              @if($permission != null && $permission != "")
+                @if( str_contains($permission->action,'create') )  
+                <button data-toggle="modal" data-target="#addModal" class="btn btn-primary"><i class="material-icons">add</i> Add Role</button>
+                @endif
               @endif
             </div>
             </div>

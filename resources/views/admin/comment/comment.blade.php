@@ -15,7 +15,7 @@
     }
 </style>
 
-<div class="row">
+<div class="row add_margin">
     <div class="container-fluid p-0">
         <div class="card card_shadow mt-4 border-0 rounded-0">
             <div class="card-header">

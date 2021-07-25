@@ -12,17 +12,151 @@
     <script src="https://kit.fontawesome.com/5fcfcbf541.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{asset('website/custom.css').'?ver='.rand()}}">
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-    <title>Post Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <meta name="cXenseParse:url" content="{{$setting->site_url}}" />
+    <meta name="cXenseParse:description" content="{{$setting->site_description}}" />
+    <meta property="og:description" content="{{$setting->site_description}}"/>
+
+    <meta property="og:image" content="{{asset('settings')}}/{{$setting->site_logo}}" />
+
+	<meta property="og:type" content="website" />
+    <meta name="description" content="{{$setting->site_description}}" />
+	<meta name="title" content="{{$setting->site_name}}" />
+
+    <meta name="keywords" content="{{$setting->site_keywords}}">
+    <link rel="icon" href="{{asset('settings')}}/{{$setting->site_favicon}}" sizes="32x32" />
+    <title>{{$setting->site_name}}</title>
+
 </head>
 
+<style>
+     .dropdown:hover>.dropdown-menu {
+        display: block;
+    }
+
+    .img {
+        width: 100%;
+        height: 100%;
+    }
+
+    .small_nav li {
+        display: inline;
+        margin-right: 20px;
+    }
+
+    .small_nav li a {
+        text-decoration: none;
+    }
+
+    .alltags:hover {
+        background-color: #282828 !important;
+        transition: 0.3s ease-in-out;
+        color: #fff;
+    }
+
+    .w-5 {
+        width: 12px;
+        height: 12px;
+    }
+    .leading-5 {
+        margin-top: 10px;
+    }
+</style>
 <body>
 
+<nav class="navbar navbar-expand-lg" id="navbar" style="border-bottom: 1px solid #eceff1;">
+    <div class="container">
+        <div class="mobile_menu" onclick="showSidebar()"><i class="fas fa-bars"></i></div>
+        <a class="navbar-brand  " href="{{url('/')}}">
+            @if($setting != null && $setting != "" && $setting->site_logo != null && $setting->site_logo != "")
+                <img src="{{asset('settings')}}/{{$setting->site_logo}}" style="width:45px" class="img-fluid"/> 
+            @else
+                <h5>My Blog</h5>     
+            @endif   
+        </a>
+        <ul class="navbar-nav mr-auto" id="navbar_links">
+            @foreach($menus as $menu)
+                <li class="nav-item dropdown">
+                    @if($menu->sub_menu != [] && $menu->sub_menu != null)
+                        <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{$menu->name}} <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        @foreach($menu->sub_menu as $submenu)
+                            <a class="dropdown-item" href="{{url('category')}}/{{$submenu['slug']}}">{{$submenu['name']}}</a>
+                        @endforeach
+                    </div>
+                    @else
+                        <a class="nav-link" href="{{url('category')}}/{{$menu->slug}}">{{$menu->name}}</a>
+                    @endif
+                </li>
+            @endforeach
+            <li class="nav-item">
+                <a href="{{url('contact_us')}}" class="nav-link">Contact Us</a>
+            </li>
+            
+        </ul>
+
+
+        <div class="" id="navbarSupportedContent">
+            <div class="form-inline my-2 my-lg-0">
+                <div class="nav-social ml-3">
+                    <!-- <a href=""><i class="fab fa-instagram text-dark ml-3  "></i></a>
+                    <i class="fas fa-moon text-dark ml-3" id="dark-mode-btn"></i> -->
+                </div>
+                <i class="fas fa-search  ml-3" style="cursor:pointer" id="p_search_icon"></i>
+            </div>
+        </div> 
+</nav>
+
+<div class="p_search_div w-100 bg-light" style="height:60%; display:none; box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);position:absolute;z-index:10">
+
+    <div class="container pt-1">
+        <form>
+            <div class="input-group mb-3">
+                <input type="text" autocomplete="off" placeholder="Search here" class="form-control bg-light" id="custom_search">
+            </div>
+        </form>
+        <div class="show_custom_results" style="display:none">
+        </div>
+    </div>
+</div>
+
+<div class="cs-site-overlay" style="display:none"></div>
+
+<div class="mobile_sidebar">
+    
+    <div class="d-flex justify-content-between mob_top">
+        <h4>Logo</h4>
+        <span style="margin:11px" onclick="closeSidebar()"><i class="fas fa-times"></i></span>
+    </div>
+    <ul class="menu-primary">
+        <li class="">
+            <a href="#" id="navbarDropdown">
+                Tutorial  <i class="fas fa-angle-down drpdown" style="float:right"></i>
+            </a>
+            <ul class="dropdown_menu">
+                @foreach($menus as $menu)
+                    <li>
+                        <a class="dropdown-item" href="{{url('category')}}/{{$menu->slug}}">{{$menu->name}}</a>
+                    </li>
+                @endforeach
+            </ul>
+        </li>
+
+        <li>
+            <a href="{{url('contact_us')}}">Contact Us</a>
+        </li>
+        
+    </ul>
+</div>
+
+
+
     <input type="hidden" id="post_id" value="{{$post->id}}">
-
-    @include('website/layout/navbar')
-
 
     <div class="container">
         <div class="row">
@@ -56,7 +190,7 @@
                         </p>
                     </div>
 
-                    <div class="__post_all_content" style="margin-top:30px">
+                    <div class="__post_all_content" style="margin-top:30px; font-family: 'Poppins', sans-serif !important;">
                         <?php echo $post->description; ?>
                     </div>
 
@@ -73,20 +207,19 @@
                 <button style="background:#1da1f2;border-radius:50px; padding:8px 12px" class="btn btn-light"><i class="fab fa-twitter text-white"></i></button>
 
 
-
                 <!-- about author -->
-                <div class="row mt-5 p-3 bg-light">
-                    @if($post_author != null && $post_author != "" && $post_author->profile_pic != null && $post_author->profile_pic != "")
+                <div class="row mt-5 p-3 bg-light author_row">
+                    @if($post_author != null && $post_author != "")
                     <div class="col-md-2">
+                        @if($post_author->profile_pic != null && $post_author->profile_pic != "")
                         <img style="width:100px;height:90px;border-radius:100px;" 
                             src="{{asset('users')}}/{{$post_author->profile_pic}}" class="img-fluid mx-auto mt-1 d-block" alt="">
+                        @endif
                     </div>
                     <div class="col-md-10">
                         <h2>{{$post_author->name}}</h2>
                         <p class="small text-muted">
-                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptates, omnis error. Quibusdam
-                            amet ea aliquid porro accusamus labore illum ratione, sed et, vitae quidem architecto id
-                            debitis ullam fugit ipsam iste, eaque aliquam doloribus! Omnis doloribus laboriosam
+                            {{$post_author->about}}
                         </p>
                     </div>
                     @else
@@ -100,10 +233,9 @@
                     </div>
                     @endif                    
                 </div>
-
-
+                
                 <!-- comment system -->
-                <h1 class="lead mt-5"> {{sizeOf($comments)}} <strong id="total_comments"></strong> Comments</h1>
+                <h1 class="small mt-5"> <strong id="total_comments"> {{$total_comments}} </strong> Comments</h1>
                 <div class="user_comments">
                 <!-- <div class="user_comments" id="__user_comments"> -->
                 
@@ -126,7 +258,7 @@
                     </div>
 
                         @if($comment->comment_replies != null && $comment->comment_replies != "" && $comment->comment_replies != [])
-
+ 
                             @foreach($comment->comment_replies as $reply)
                             <div class="row p-2 ml-3 mt-2 bg-light">
                                 <div class="col-12">
@@ -140,7 +272,6 @@
                                     <p class="small m-0">
                                         {{$reply->comment}}
                                     </p>
-                                    <!-- <a href="javascript:void(0)" onclick="commentReply(this,{{$reply->id}})" class="text-primary small mt-2">REPLY</a> -->
                                 </div>
                             </div>
                             @endforeach
@@ -156,6 +287,10 @@
                 <!-- add comment form -->
                 <h2 class="lead font-weight-bold mt-4">Leave a Comment</h2>
                 <p class="small text-muted">Your email address will not be published</p>
+
+                <div class="success_msg bg_cyan p-2 text-white border-white small" style="display:none">
+                    Success! Comment Posted After Admin approval... thanks.
+                </div>
                 <div class="row mt-4">
 
                     <form id="post_comment" enctype="multipart/form-data">
@@ -193,6 +328,10 @@
                     <h4> Leave a Reply  </h2>
                     <a onclick="$('.replyComment').hide();" href="javascript:void(0)" class="text-primary" style="font-size:0.8rem">CANCEL REPLY</a>
                     <p>Your email address will not be published</p>
+
+                    <div class="reply_success_msg bg_cyan p-2 text-white border-white small" style="display:none">
+                        Success! Comment Reply Posted After Admin approval... thanks.
+                    </div>
 
                         <div class="row">
                             <div class="col-12">
@@ -238,95 +377,16 @@
     </div>
 
     @include('website/layout/footer')
-
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>    
+    <script type="text/javascript" src="{{asset('website/js/menu.js')}}"></script>
+    <script type="text/javascript" src="{{asset('website/js/post.js')}}"></script>
+    
     <script>
-        $(document).ready(function() {
-
-            $("#search_icon").click(function() {
-                $(".search_div").slideToggle();
-            });
-
-            // post comment
-            $('#post_comment').submit(function(e) {
-                e.preventDefault();
-                var name = $('#name').val();
-                var email = $('#email').val();
-                var comment = $('#comment').val();
-                var post_id = $('#post_id').val();
-
-                var formData = {
-                    name: name,
-                    email: email,
-                    comment: comment,
-                    post_id: post_id
-                }
-
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                    },
-                    url: '{{url("post_comment")}}',
-                    type: 'POST',
-                    dataType: 'json',
-                    data: formData,
-                    success: function(data) {
-                        console.log(data, 'api call');
-                    },
-                    error: function(error) {
-                        console.log(error)
-                    },
-                });
-
-            });
-
+        $("#p_search_icon").click(function() {
+            $(".p_search_div").slideToggle();
         });
-
-
-        function commentReply(caller, id) {
-            console.log(caller , "caller");
-            console.log(id , "id");
-            $('.replyComment').insertAfter($(caller));
-            $('.replyComment').show();
-
-            $('#post_comment_reply').submit(function(e) {
-                e.preventDefault();
-                var name = $('#replyname').val();
-                var email = $('#replyemail').val();
-                var comment = $('#replycomment').val();
-                var post_id = $('#post_id').val();
-
-                var formData = {
-                    name: name,
-                    email: email,
-                    comment: comment,
-                    post_id: post_id,
-                    comment_id: id
-                }
-                console.log(formData, "form data");
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                    },
-                    url: '{{url("comment_reply")}}',
-                    type: 'POST',
-                    dataType: 'json',
-                    data: formData,
-                    success: function(data) {
-                        console.log(data, 'api call');
-                    },
-                    error: function(error) {
-                        console.log(error)
-                    },
-                });
-
-            });
-
-        }
     </script>
-
 </body>
-
 </html>

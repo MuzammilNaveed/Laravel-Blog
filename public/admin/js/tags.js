@@ -146,13 +146,14 @@ function getAllTags() {
 
                         var update = $("#update").text();
                         var del = $("#delete").text();
-
-                        if(update == 1 && del == 1) {
-                            return update_btn + del_btn
-                        } else if(update == 1 && del == 0) {
-                            return update_btn;
-                        }else if(update == 0 && del == 1) {
-                            return del_btn;
+                        if(update != "" && del != "") {
+                            if(update == 1 && del == 1) {
+                                return update_btn + del_btn
+                            } else if(update == 1 && del == 0) {
+                                return update_btn;
+                            }else if(update == 0 && del == 1) {
+                                return del_btn;
+                            }
                         }
                     }
                 },

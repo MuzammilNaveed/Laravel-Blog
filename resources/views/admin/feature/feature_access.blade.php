@@ -8,7 +8,12 @@
     height:48px;
 }
 </style>
-<div class="row mt-2">
+
+@if($permission != null && $permission != "")
+  <p id="update" class="d-none"> {{str_contains($permission->action,'update') ? 1 : 0}} </p>
+@endif
+
+<div class="row mt-2 add_margin">
   <div class="container-fluid p-0">
       <div class="card card_shadow">
         <div class="card-header d-flex justify-content-between">
@@ -16,7 +21,11 @@
           <div class="export-options-container">
             <div class="exportOptions">
               <div class="DTTT btn-group">
-                <button class="btn btn-primary" id="btn-add-new-user" data-toggle="modal" data-target="#addFeatureModal"><i class="material-icons">add</i> Add Feature</button>
+              @if($permission != null && $permission != "")
+                @if( str_contains($permission->action,'create') )
+                  <button class="btn btn-primary" id="btn-add-new-user" data-toggle="modal" data-target="#addFeatureModal"><i class="material-icons">add</i> Add Feature</button>
+                @endif
+              @endif
               </div>
             </div>
           </div>

@@ -8,6 +8,7 @@ use App\Models\Tags;
 use App\Models\Category;
 use App\Models\Comments;
 use App\Models\User;
+use App\Models\Role;
 use App\Models\CommentReplies;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -19,19 +20,38 @@ class postsControllers extends Controller
 {
     //
     public function index(Request $request) {
-        $posts =  Post::whereBetween('created_at', [$request->from, $request->to])->orderBy('id','desc')->get();
+        $role = Role::where('id',Auth::user()->role_id)->first();
+        $name = strtolower($role->name);
 
-        foreach($posts as $post) {
-            $post->category = Category::where("id",$post->cat_id)->select("name")->first();         
-            $post->tags = DB::table("post_tags")->where("post_id","=",$post->id)
-            ->join('tags','post_tags.tag_id','tags.id')
-            ->select('name')
-            ->get();
+        if( $name == "admin" || $name == "administrator" || $name == "super admin" || $name == "super administrator") {
+            $posts =  Post::whereBetween('created_at', [$request->from, $request->to])->orderBy('id','desc')->get();
 
-            $post->user = User::where('id',$post->meta_author_id)->first();
-            $post->comments = Comments::where('post_id',$post->id)->get();
+            foreach($posts as $post) {
+                $post->category = Category::where("id",$post->cat_id)->select("name")->first();         
+                $post->tags = DB::table("post_tags")->where("post_id","=",$post->id)
+                ->join('tags','post_tags.tag_id','tags.id')
+                ->select('name')
+                ->get();
+
+                $post->user = User::where('id',$post->meta_author_id)->first();
+                $post->comments = Comments::where('post_id',$post->id)->get();
+            }
+            return $posts;
+        }else{
+            $posts =  Post::whereBetween('created_at', [$request->from, $request->to])->where('created_by',Auth::id())->orderBy('id','desc')->get();
+
+            foreach($posts as $post) {
+                $post->category = Category::where("id",$post->cat_id)->select("name")->first();         
+                $post->tags = DB::table("post_tags")->where("post_id","=",$post->id)
+                ->join('tags','post_tags.tag_id','tags.id')
+                ->select('name')
+                ->get();
+
+                $post->user = User::where('id',$post->meta_author_id)->first();
+                $post->comments = Comments::where('post_id',$post->id)->get();
+            }
+            return $posts;
         }
-        return $posts;
 
     }
 
@@ -198,45 +218,11 @@ class postsControllers extends Controller
         
     }
 
-    public function postComment(Request $request) {
-        $comment = new Comments();
-        $comment->name = $request->name;
-        $comment->email = $request->email;
-        $comment->comment = $request->comment;
-        $comment->post_id = $request->post_id;
-        $comment->save();
+   
 
-        return response()->json([
-            'message' => 'Comment Posted',
-            'status' => 200,
-            'success' => true
-        ]);
-    }
-
-    public function getAllComments(Request $request) {
-        $comments =  Comments::where("post_id","=",$request->post_id)->get();
-
-        foreach($comments as $comment) {
-            $comment->comment_replies = CommentReplies::where('comment_id',$comment->id)->get();
-        }
-        return $comments;
-    }
+   
         
-    public function postCommentReply(Request $request) {
-        $comment = new CommentReplies();
-        $comment->name = $request->name;
-        $comment->email = $request->email;
-        $comment->comment = $request->comment;
-        $comment->post_id = $request->post_id;
-        $comment->comment_id = $request->comment_id;
-        $comment->save();
-
-        return response()->json([
-            'message' => 'Reply Posted',
-            'status' => 200,
-            'success' => true
-        ]);
-    }
+    
 
 
     // comment page
@@ -246,14 +232,28 @@ class postsControllers extends Controller
     }
 
     public function getComments() {
-        $comments =  Comments::all();
+        $role = Role::where('id',Auth::user()->role_id)->first();
+        $name = strtolower($role->name);
 
-        foreach($comments as $comment) {
-            $comment->post = DB::table("posts")->where("id",'=',$comment->post_id)->first();
-            $comment->replies = DB::table("comment_replies")->where("comment_id",'=',$comment->id)->get()->count();
+        if( $name == "admin" || $name == "administrator" || $name == "super admin" || $name == "super administrator") {
+            $comments =  Comments::all();
+
+            foreach($comments as $comment) {
+                $comment->post = Post::where("id",'=',$comment->post_id)->first();
+                $comment->replies = CommentReplies::where("comment_id",'=',$comment->id)->get()->count();
+            }
+
+            return $comments;
+        }else{
+            $comments =  Comments::all();
+
+            foreach($comments as $comment) {
+                $comment->post = Post::where("id",'=',$comment->post_id)->where('created_by',Auth::id())->first();
+                $comment->replies = CommentReplies::where("comment_id",'=',$comment->id)->get()->count();
+            }
+
+            return $comments;
         }
-
-        return $comments;
     }
 
     public function getCommentReplieByID($id) {

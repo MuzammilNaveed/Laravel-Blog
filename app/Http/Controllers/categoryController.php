@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -14,16 +15,38 @@ class categoryController extends Controller
 {
     
     public function index(Request $request) {
-        $categories = Category::where('is_deleted',0)->get();
-        foreach($categories as $category) {
-            $category->post_count = Post::where('cat_id',$category->id)->count();
-            $category->created_by = User::where('id',$category->created_by)->first();
-            $category->deleted_by = User::where('id',$category->deleted_by)->first();
+
+        $role = Role::where('id',Auth::user()->role_id)->first();
+        $name = strtolower($role->name);
+
+        if( $name == "admin" || $name == "administrator" || $name == "super admin" || $name == "super administrator") {
+
+            $categories = Category::where('is_deleted',0)->get();
+            foreach($categories as $category) {
+                $category->post_count = Post::where('cat_id',$category->id)->count();
+                $category->created_by = User::where('id',$category->created_by)->first();
+                $category->deleted_by = User::where('id',$category->deleted_by)->first();
+            }
+
+            return $categories;
+
+        }else{
+
+            $categories = Category::where('is_deleted',0)->where('created_by',Auth::id())->get();
+            foreach($categories as $category) {
+                $category->post_count = Post::where('cat_id',$category->id)->where('created_by',Auth::id())->count();
+                $category->created_by = User::where('id',Auth::id())->first();
+                $category->deleted_by = User::where('id',$category->deleted_by)->first();
+            }
+
+            return $categories;
         }
-        return $categories;
+
     }
 
     public function categoryPage() {
+    
+
         $permission = DB::table("permissions")->where("created_by",Auth::id())->where('title','category')->first();
         $categories = Category::where('is_deleted',0)->get();
         return view('admin.category.category', compact('categories','permission'));

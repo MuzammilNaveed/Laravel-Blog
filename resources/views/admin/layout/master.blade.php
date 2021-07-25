@@ -140,7 +140,7 @@
         <div class="brand inline  m-l-10 ">
           <img src="{{asset('admin/assets/img/logo.png')}}" alt="logo"  width="78" height="22">
         </div>
-        <span class="ml-3 font-weight-bold" id="showDateTime"></span>
+        <span class="ml-3 font-weight-bold" id="showDateTime"></span>        
         
       </div>
       <div class="d-flex align-items-center">
@@ -151,7 +151,9 @@
             </span>
           </button>
           <div class="dropdown-menu dropdown-menu-right profile-dropdown" role="menu">
-            <a href="#" class="dropdown-item"><span>Signed in as <br /><b>{{Auth::user()->name}}</b></span></a>
+            <a href="#" class="dropdown-item">
+              <span>Signed in as <br /> <b>{{Auth::user()->name}}</b> </span>
+            </a>
             <div class="dropdown-divider"></div>
             <a href="{{route('setting.index')}}" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
             <a href="{{route('logout.user')}}" class="dropdown-item text-danger"><i class="fas fa-power-off"></i> Logout</a>
@@ -164,7 +166,7 @@
 
     <!-- main content -->
     <div class="page-content-wrapper ">
-      <div class="content ">
+      <div class="content">
         <div class=" container-fluid ">
           @section('container')
 

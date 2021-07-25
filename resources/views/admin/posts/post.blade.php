@@ -7,8 +7,10 @@
     line-height: 0px;
   }
 </style>
-<p id="update" class="d-none"> {{str_contains($permission->action,'update') ? 1 : 0}} </p>
-<p id="delete" class="d-none"> {{str_contains($permission->action,'delete') ? 1 : 0}} </p>
+@if($permission != null && $permission != "")
+  <p id="update" class="d-none"> {{str_contains($permission->action,'update') ? 1 : 0}} </p>
+  <p id="delete" class="d-none"> {{str_contains($permission->action,'delete') ? 1 : 0}} </p>
+@endif
 
 <div class="d-md-flex justify-content-between mt-2 ml-0">
   <div class="row">
@@ -81,7 +83,7 @@
   <strong class="text-primary font-weight-bold">Current Record </strong> &nbsp; from: &nbsp; <span class="text-primary font-weight-bold" id="from_date"></span> &nbsp; to:&nbsp; <span id="to_date" class="text-primary font-weight-bold"></span>
 </div>
 
-<div class="row mt-2">
+<div class="row mt-2 add_margin">
   <div class="container-fluid p-0">
     <div class="card card_shadow">
       <div class="card-header d-flex justify-content-between">
@@ -89,9 +91,11 @@
         <div class="export-options-container">
           <div class="exportOptions">
             <div class="DTTT btn-group">
-            @if( str_contains($permission->action,'create') )  
-              <button type="button" class="btn btn-primary btn-sm rounded"><a href="{{route('add_post.index')}}">
-                  <i class="fas fa-plus-circle"></i> Add Post</a></button>
+            @if($permission != null && $permission != "")
+              @if( str_contains($permission->action,'create') )  
+                <button type="button" class="btn btn-primary btn-sm rounded"><a href="{{route('add_post.index')}}">
+                    <i class="fas fa-plus-circle"></i> Add Post</a></button>
+              @endif
             @endif
             </div>
           </div>

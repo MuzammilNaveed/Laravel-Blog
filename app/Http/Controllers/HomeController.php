@@ -30,104 +30,49 @@ class HomeController extends Controller
 
     public static $setting = '';
 
-    public function index()
-    {
-        return view('auth.login');
-    }
+
 
     public function userHomePage(Request $request) {
-        if (Auth::user()) {
-            return redirect()->intended('/dashboard');
-        } else {
-            
-            $singleheader = Post::where('section',1)->inRandomOrder()->limit(1)->first()->toArray();
-            $singleheader['category']  = Category::where('id',$singleheader['cat_id'])->first()->toArray();
+        $singleheader = Post::where('section',1)->inRandomOrder()->limit(1)->first();
+        $singleheader['category']  = Category::where('id',$singleheader->cat_id)->first();
 
 
-            $posts = Post::where('section',1)->where('id','!=',$singleheader['id'])->inRandomOrder()->limit(2)->get();
-            foreach($posts as $post) {
-                $post->category  = Category::where('id',$post['cat_id'])->first()->toArray();
-            } 
-            
+        $posts = Post::where('section',1)->where('id','!=',$singleheader->id)->inRandomOrder()->limit(2)->get();
+        foreach($posts as $post) {
+            $post->category  = Category::where('id',$post['cat_id'])->first()->toArray();
+        } 
+        
 
-            $feature_posts = Post::where('section',2)->inRandomOrder()->limit(4)->get();
-            foreach($feature_posts as $feature_post) {
-                $feature_post->category  = Category::where('id',$feature_post['cat_id'])->first()->toArray();
-            } 
+        $feature_posts = Post::where('section',2)->inRandomOrder()->limit(4)->get();
+        foreach($feature_posts as $feature_post) {
+            $feature_post->category  = Category::where('id',$feature_post['cat_id'])->first()->toArray();
+        } 
 
-            $tutorial_posts = Post::where('section',3)->inRandomOrder()->paginate(4);
-            
-            foreach($tutorial_posts as $post) {
-                $post->category  = Category::where('id',$post['cat_id'])->first()->toArray();
-            } 
-
-            if(!isset($_COOKIE['visitors'])) {
-                SetCookie('visitors', 'yes' , time() + (60*60*24*1));
-                $this->gatherUserInfo();
-            }
-
-            $tags = Tags::where('is_deleted',0)->get();
-            $categories = Category::where('is_deleted',0)->inRandomOrder()->limit(10)->get();
-            
-            $menus = Category::where('is_deleted',0)->where('parent_id',0)->get();
-
-            $setting = Settings::first();
-            $popular_posts = Post::orderBy('view_count','desc')->where('is_deleted',0)->limit(5)->get();
-
-            $pages = DB::table("pages")->get();
-            
-            return view("website.index", compact('posts','setting','singleheader','feature_posts','tags','categories','popular_posts','tutorial_posts','pages','menus'));
-        }
-    }
-
-    public function showSinglePost($slug) {
-        $post = Post::where('is_deleted',0)->where("slug", $slug)->first();
-        $post_category = Category::where('id',$post->cat_id)->where('is_deleted',0)->first();
-        $post_author = User::where('is_deleted',0)->where('is_author',1)->where('id',$post->meta_author_id)->select('id','name','profile_pic')->first();
-
-        $categories = Category::where('is_deleted',0)->inRandomOrder()->get();
-        $menus = Category::where('is_deleted',0)->get();
-        $posts = Post::where('is_deleted',0)->inRandomOrder()->limit(5)->get();
+        $tutorial_posts = Post::where('section',3)->inRandomOrder()->paginate(4);
+        
+        foreach($tutorial_posts as $post) {
+            $post->category  = Category::where('id',$post['cat_id'])->first()->toArray();
+        } 
 
         if(!isset($_COOKIE['visitors'])) {
             SetCookie('visitors', 'yes' , time() + (60*60*24*1));
             $this->gatherUserInfo();
         }
 
-        $post->increment('view_count');
-
-        $popular_posts = Post::orderBy('view_count','desc')->where('is_deleted',0)->inRandomOrder()->limit(5)->get();
-        $setting = Settings::first();
-        $pages = DB::table("pages")->get();
-
-        $comments =  Comments::where("post_id","=",$post->id)->get();
-
-        foreach($comments as $comment) {
-            $comment->comment_replies = CommentReplies::where('comment_id',$comment->id)->get();
-        }
+        $tags = Tags::where('is_deleted',0)->get();
+        $categories = Category::where('is_deleted',0)->where('parent_id','!=',0)->inRandomOrder()->limit(10)->get();
         
-        return view("website.post", compact('post', 'categories','setting', 'posts','popular_posts','post_author','post_category','pages','menus','comments'));
-    }
-
-    public function showCategory($slug) {
-
-        $category = Category::where('is_deleted',0)->inRandomOrder()->where("slug", $slug)->first();
-        $posts = Post::where('is_deleted',0)->where("cat_id",$category->id)->paginate(4);
-        $post_count = sizeof($posts);
-
-        $categories = Category::where('is_deleted',0)->inRandomOrder()->get();
-        $menus = Category::where('is_deleted',0)->get();
-        
-        if(!isset($_COOKIE['visitors'])) {
-            SetCookie('visitors', 'yes' , time() + (60*60*24*1));
-            $this->gatherUserInfo();
+        $menus = Category::where('is_deleted',0)->where('parent_id',0)->get();
+        foreach($menus as $menu) {
+            $menu->sub_menu = Category::where("parent_id",$menu->id)->get()->toArray();
         }
 
-        $popular_posts = Post::orderBy('view_count','desc')->where('is_deleted',0)->inRandomOrder()->limit(5)->get();
         $setting = Settings::first();
-        $pages = DB::table("pages")->get();
-        return view('website.category', compact('category','setting', 'posts', 'post_count', 'categories','popular_posts','pages','menus'));
+        $popular_posts = Post::orderBy('view_count','desc')->where('is_deleted',0)->limit(5)->get();
+
+        return view("website.index", compact('posts','setting','singleheader','feature_posts','tags','categories','popular_posts','tutorial_posts','menus'));
     }
+
 
     public function gatherUserInfo() {
 
@@ -157,101 +102,116 @@ class HomeController extends Controller
 
     }
 
-    public function viewAuthorPage($id) {
-        $posts = Post::where('created_by',$id)->paginate(6);
-        foreach($posts as $post) {
-            $post->post_category = Category::where('id',$post->cat_id)->where('is_deleted',0)->first();
-        }
-        $user = User::where('id',$id)->first();
-        $categories = Category::where('is_deleted',0)->inRandomOrder()->get();
-        $menus = Category::where('is_deleted',0)->get();
-        $setting = Settings::first();
-        $popular_posts = Post::orderBy('view_count','desc')->where('is_deleted',0)->inRandomOrder()->limit(5)->get();
-        $pages = DB::table("pages")->get();
-        return view('website.author',compact('categories','setting','popular_posts','posts','user','pages','menus'));
-
-    }
-
-
-
+    
     // for dashboard create user
     public function dashboard() {
 
-        $post_count = Post::count();
-        $category_count = Category::count();
-        $tag_count = Tags::count();
-        $user_count = User::count();
-        $comment_count = Comments::count();
-        $reply_count = CommentReplies::count();
-        $active_post = Post::where('is_active', 1)->count();
-        $inactive_post = Post::where('is_active', 0)->count();
+        $role = Role::where('id',Auth::user()->role_id)->first();
 
-        $browser_arry  = array();
-        $browser_arry_count  = array();
+        $name = strtolower($role->name);
 
-        // browser 
-        $browsers = DB::table("usrr_info")->select('browser')->distinct()->get();
-        foreach($browsers as $browser) {
+        if( $name == "admin" || $name == "administrator" || $name == "super admin" || $name == "super administrator") {
 
-            $browser_conut = DB::table("usrr_info")
-                ->where('browser',$browser->browser)->count();
-            
-            array_push($browser_arry , $browser->browser);
-            array_push($browser_arry_count , $browser_conut);
+            $post_count = Post::where('is_deleted',0)->count();
+            $category_count = Category::where('is_deleted',0)->count();
+            $tag_count = Tags::where('is_deleted',0)->count();
+            $user_count = User::where('is_deleted',0)->count();
+            $comment_count = Comments::where('is_deleted',0)->count();
+            $reply_count = CommentReplies::where('is_deleted',0)->count();
+            $active_post = Post::where('is_active', 1)->where('is_deleted',0)->count();
+            $inactive_post = Post::where('is_active', 0)->where('is_deleted',0)->count();
+
+            $browser_arry  = array();
+            $browser_arry_count  = array();
+
+            // browser 
+            $browsers = DB::table("usrr_info")->select('browser')->distinct()->get();
+            foreach($browsers as $browser) {
+
+                $browser_conut = DB::table("usrr_info")
+                    ->where('browser',$browser->browser)->count();
+                
+                array_push($browser_arry , $browser->browser);
+                array_push($browser_arry_count , $browser_conut);
+            }
+
+            $browser_names = json_encode($browser_arry);
+            $browser_counts = json_encode($browser_arry_count);
+
+
+            $platform_arry  = array();
+            $platform_arry_count  = array();
+
+            $platforms = DB::table("usrr_info")->select('pltform')->distinct()->get();
+            foreach($platforms as $platform) {
+
+                $platform_count = DB::table("usrr_info")
+                    ->where('pltform',$platform->pltform)->count();
+                
+                array_push($platform_arry , $platform->pltform);
+                array_push($platform_arry_count , $platform_count);
+            }
+
+            $platform_names = json_encode($platform_arry);
+            $platform_counts = json_encode($platform_arry_count);
+
+
+
+            $country_arry  = array();
+            $country_arry_count  = array();
+
+            $countries = DB::table("usrr_info")->select('country')->distinct()->get();
+            foreach($countries as $country) {
+
+                $country_count = DB::table("usrr_info")
+                    ->where('country',$country->country)->count();
+                
+                array_push($country_arry , $country->country);
+                array_push($country_arry_count , $country_count);
+            }
+
+            $country_names = json_encode($country_arry);
+            $country_counts = json_encode($country_arry_count);
+
+            $visitors = DB::table('usrr_info')->select(DB::raw("(COUNT(*)) as visitors"),DB::raw("MONTHNAME(date) as month"))
+            ->whereYear('date', date('Y'))
+            ->groupBy('month')
+            ->get()->toArray();
+
+
+            return view('admin.dashboard.index', compact('post_count','browser_names','browser_counts','category_count', 'tag_count', 'user_count', 'comment_count', 'reply_count', 'active_post', 'inactive_post','platform_names','platform_counts','country_names','country_counts','name'));
+
+        }else{
+
+            $posts = Post::where('created_by',Auth::id())->where('is_deleted',0)->get();
+            $category_count = Category::where('created_by',Auth::id())->where('is_deleted',0)->count();
+            $tag_count = Tags::where('created_by',Auth::id())->where('is_deleted',0)->count();
+            $user_count = User::where('created_by',Auth::id())->where('is_deleted',0)->count();
+
+            $comment_count = 0;
+            $reply_count = 0;
+
+            foreach($posts as $post) {
+                $comment_count = Comments::where('post_id',$post->id)->where('is_deleted',0)->count();
+                $reply_count = CommentReplies::where('post_id',$post->id)->where('is_deleted',0)->count();
+            }
+
+            $active_post = Post::where('is_active', 1)->where('created_by',Auth::id())->where('is_deleted',0)->count();
+            $inactive_post = Post::where('is_active', 0)->where('created_by',Auth::id())->where('is_deleted',0)->count();
+
+            $post_count = sizeof($posts);
+
+
+            return view('admin.dashboard.index', compact('post_count','category_count', 'tag_count', 'user_count', 'comment_count', 'reply_count', 'active_post', 'inactive_post','name'));
         }
-
-        $browser_names = json_encode($browser_arry);
-        $browser_counts = json_encode($browser_arry_count);
-
-
-        $platform_arry  = array();
-        $platform_arry_count  = array();
-
-        $platforms = DB::table("usrr_info")->select('pltform')->distinct()->get();
-        foreach($platforms as $platform) {
-
-            $platform_count = DB::table("usrr_info")
-                ->where('pltform',$platform->pltform)->count();
-            
-            array_push($platform_arry , $platform->pltform);
-            array_push($platform_arry_count , $platform_count);
-        }
-
-        $platform_names = json_encode($platform_arry);
-        $platform_counts = json_encode($platform_arry_count);
-
-
-
-        $country_arry  = array();
-        $country_arry_count  = array();
-
-        $countries = DB::table("usrr_info")->select('country')->distinct()->get();
-        foreach($countries as $country) {
-
-            $country_count = DB::table("usrr_info")
-                ->where('country',$country->country)->count();
-            
-            array_push($country_arry , $country->country);
-            array_push($country_arry_count , $country_count);
-        }
-
-        $country_names = json_encode($country_arry);
-        $country_counts = json_encode($country_arry_count);
-
-        $visitors = DB::table('usrr_info')->select(DB::raw("(COUNT(*)) as visitors"),DB::raw("MONTHNAME(date) as month"))
-        ->whereYear('date', date('Y'))
-        ->groupBy('month')
-        ->get()->toArray();
-
-
-        return view('admin.dashboard.index', compact('post_count','browser_names','browser_counts','category_count', 'tag_count', 'user_count', 'comment_count', 'reply_count', 'active_post', 'inactive_post','platform_names','platform_counts','country_names','country_counts'));
     }
 
 
     public function manageUserPage() {
 
         $roles = Role::all();
-        return view("admin.users.users", compact('roles'));
+        $permission = DB::table("permissions")->where("created_by",Auth::id())->where('title','user')->first();
+        return view("admin.users.users", compact('roles','permission'));
     }
 
     public function UserLogin(Request $request) {
@@ -317,7 +277,7 @@ class HomeController extends Controller
         session()->flush();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/');
+        return redirect('/login');
 
     }
 
@@ -354,11 +314,22 @@ class HomeController extends Controller
     }
 
     public function getAllUsers() {
-        $users =  User::where('is_deleted',0)->get();
-        foreach($users as $user) {
-            $user->role = Role::where('id',$user->role_id)->select('name')->first();
+        $role = Role::where('id',Auth::user()->role_id)->first();
+        $name = strtolower($role->name);
+
+        if( $name == "admin" || $name == "administrator" || $name == "super admin" || $name == "super administrator") {
+            $users =  User::where('is_deleted',0)->get();
+            foreach($users as $user) {
+                $user->role = Role::where('id',$user->role_id)->select('name')->first();
+            }
+            return $users;
+        }else{
+            $users =  User::where('is_deleted',0)->where('created_by',Auth::id())->get();
+            foreach($users as $user) {
+                $user->role = Role::where('id',$user->role_id)->select('name')->first();
+            }
+            return $users;
         }
-        return $users;
     }
 
     public function updateUser(Request $request){
@@ -429,19 +400,4 @@ class HomeController extends Controller
         }
     }
 
-
-    // contact us page 
-    public function contactUsPage() {
-        $setting = Settings::first();
-        $pages = DB::table("pages")->get();
-        return view('website.pages.contact_us',compact('setting','pages'));
-    }
-
-    public function showPages($slug) {
-        $setting = Settings::first();
-        $pages = DB::table("pages")->get();
-
-        $page_data = DB::table('pages')->where('page_slug',$slug)->first();
-        return view('website.pages.pages',compact('setting','pages','page_data'));
-    }
 }

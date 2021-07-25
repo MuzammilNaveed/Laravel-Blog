@@ -8,11 +8,11 @@
   }
 </style>
 
-<div class="row mt-2">
-
-  <p id="update" class="d-none"> {{str_contains($permission->action,'update') ? 1 : 0}} </p>
-  <p id="delete" class="d-none"> {{str_contains($permission->action,'delete') ? 1 : 0}} </p>
-
+<div class="row mt-2 add_margin">
+  @if($permission != null && $permission != "")
+    <p id="update" class="d-none"> {{str_contains($permission->action,'update') ? 1 : 0}} </p>
+    <p id="delete" class="d-none"> {{str_contains($permission->action,'delete') ? 1 : 0}} </p>
+  @endif
   <div class="container-fluid p-0">
       <div class="card card_shadow">
         <div class="card-header d-flex justify-content-between">
@@ -20,9 +20,11 @@
           <div class="export-options-container">
             <div class="exportOptions">
               <div class="DTTT btn-group">
-              @if( str_contains($permission->action,'create') )  
-                <button data-toggle="modal" data-target="#addModal" class="btn btn-primary">
-                  <i class="material-icons">add</i> Add Tag</button>
+              @if($permission != null && $permission != "")
+                @if( str_contains($permission->action,'create') )  
+                  <button data-toggle="modal" data-target="#addModal" class="btn btn-primary">
+                    <i class="material-icons">add</i> Add Tag</button>
+                @endif
               @endif
               </div>
             </div>
@@ -53,6 +55,7 @@
 </div>
 
 
+<!-- add tag modal -->
 <div class="modal fade stick-up" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -86,6 +89,7 @@
 </div>
 
 
+<!-- update tag modal -->
 <div class="modal fade stick-up" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">

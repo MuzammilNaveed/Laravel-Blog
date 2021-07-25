@@ -1,8 +1,4 @@
-/*
 
-* Override Pages default styles or create your own styles here
-
-*/
 .jumbotron h1.large-demo-text{
 	font-size: 150px;
 }
@@ -10,4 +6,19 @@
 .icon-text-search{
 	font-size: 42px;
 	width: 150%;
+}
+
+@media only screen and (max-width:768px) {
+	.dashboard_cards {
+		margin-top: 1px;
+	}
+	#showDateTime {
+		font-size: 0.6rem;
+	}
+    .header{
+		padding:0px;
+	}
+	.add_margin {
+		margin:8px !important;
+	}
 }

@@ -189,12 +189,21 @@ function get_all_feature_list() {
                 },
                 {
                     "render": function (data, type, full, meta) {
-                        return `
+                        let update_btn =  `
                         <div class="d-flex justify-content-center">
                             <button data-toggle="tooltip" data-placement="top" title="Edit Feature"  onclick="showFeature(` + full.id + `)" class="btn btn-warning" style="border-radius: 100%; padding: 8px 10px;">
                             <i class="material-icons" style="font-size:15px">edit</i></button></button>
-                        </div>
-                        `;
+                        </div>`;
+
+                        var update = $("#update").text();
+
+                        if(update != "") {
+                            if(update == 1) {
+                                return update_btn;
+                            }else{
+                                return '-';
+                            }
+                        }
                     }
                 },
                

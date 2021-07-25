@@ -7,17 +7,17 @@ use App\Models\Role_has_Permission;
 use App\Models\Role;
 use App\Models\Feature;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class FeatureController extends Controller
 {
-    public function index()
-    {
+    public function index() {
         $roles = Role::all();
-        return view('admin.feature.feature_access', compact('roles'));
+        $permission = DB::table("permissions")->where("created_by",Auth::id())->where('title','feature_access')->first();
+        return view('admin.feature.feature_access', compact('roles','permission'));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $fl = new Feature();
         $fl->title = $request->title;
         $fl->route = $request->menu_routes;
@@ -87,9 +87,7 @@ class FeatureController extends Controller
         ]);
     }
 
-    public function destroy($id)
-    {
-
+    public function destroy($id){
         DB::table("ac_features")->where('id', $id)->delete();
         return response()->json([
             'message' => 'Role deleted successfully',
@@ -98,8 +96,7 @@ class FeatureController extends Controller
         ]);
     }
 
-    public function getFeaturesByID($id)
-    {
+    public function getFeaturesByID($id) {
         return Feature::find($id);
     }
 }

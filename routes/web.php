@@ -32,29 +32,28 @@ Route::get('/', [HomeController::class,'userHomePage']);
 //     return view('website.category');
 // })->name("cat.index");
 
-    Route::get('category/{slug}',[HomeController::class,'showCategory']);
-    Route::get('post/{slug}',[HomeController::class,'showSinglePost']);
+    Route::get('category/{slug}',[siteController::class,'showCategory']);
+    Route::get('post/{slug}',[siteController::class,'showSinglePost']);
 
 
-    Route::get('/login',[HomeController::class,'index'])->name('login');
-    // Auth::routes();
+    Route::get('/login',[siteController::class,'index'])->name('login');
 
     Route::post('/login_user',[HomeController::class,'UserLogin']);
     Route::get('/logout',[HomeController::class,'logout'])->name('logout.user');
-    Route::get('/contact_us',[HomeController::class,'contactUsPage']);
-    // Route::get('/{slug}',[HomeController::class,'showPages']);
 
-
-    // save contact form
-    Route::post('/save_contact',[siteController::class,'saveContactUs']);
+    Route::get('/contact_us',[siteController::class,'staticPages']);
+    Route::get('/about_us',[siteController::class,'staticPages']);
 
     // post comment
-    Route::post('/post_comment',[postsControllers::class, 'postComment']);
-    Route::post('/get_all_comment',[postsControllers::class, 'getAllComments']);
-    Route::post('/comment_reply',[postsControllers::class, 'postCommentReply']);
+    Route::post('/post_comment',[siteController::class, 'postComment']);
+    Route::post('/get_all_comment',[siteController::class, 'getAllComments']);
+    Route::post('/comment_reply',[siteController::class, 'postCommentReply']);
 
     // authour
-    Route::get('/author/{id}', [HomeController::class, 'viewAuthorPage']);
+    Route::get('/author/{id}', [siteController::class, 'viewAuthorPage']);
+
+    Route::post('/search_post', [siteController::class, 'searchPosts']);
+    Route::get('/tag/{slug}', [siteController::class, 'showTagPage']);
 
 Route::group(['middleware' => ['auth']], function() {
 
@@ -136,12 +135,5 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/visitors', [adminController::class, 'index'])->name('visitor.index');
     Route::get('/get_usrr_info', [adminController::class, 'getUserInfo']);
 
-    // pages
-    Route::get('/manage_pages', [adminController::class, 'managePages'])->name('pages.index');
-    Route::get('/add_page', [adminController::class, 'addPages']);
-    Route::post('/insert_page_data', [adminController::class, 'insertPageData']);
-    Route::get('/get_all_pages', [adminController::class, 'getAllPages']);
-    Route::get('/edit_page/{slug}', [adminController::class, 'editPage']);
-    Route::post('/save_edit_page', [adminController::class, 'saveEditPage']); 
 });
 

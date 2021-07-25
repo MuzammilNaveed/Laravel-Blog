@@ -1,56 +1,4 @@
-<!doctype html>
-<html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-    <script src="https://kit.fontawesome.com/5fcfcbf541.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{{asset('website/custom.css').'?ver='.rand()}}">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-    <title>Home Page</title>
-</head>
-<style>
-    .dropdown:hover>.dropdown-menu {
-        display: block;
-    }
-
-    .img {
-        width: 100%;
-        height: 100%;
-    }
-
-    .small_nav li {
-        display: inline;
-        margin-right: 20px;
-    }
-
-    .small_nav li a {
-        text-decoration: none;
-    }
-
-    .alltags:hover {
-        background-color: #282828 !important;
-        transition: 0.3s ease-in-out;
-        color: #fff;
-    }
-
-    .w-5 {
-        width: 12px;
-        height: 12px;
-    }
-    .leading-5 {
-        margin-top: 10px;
-    }
-</style>
-
-<body>
 
    @include('website/layout/navbar')
 
@@ -64,7 +12,7 @@
                         <div class="header_content" style="position:absolute; bottom:4px;left:10px" class="img-fluid">
                             <span class="badge bg-dark text-white pt-1 pr-3 pl-3 pb-1">{{$singleheader['category']['name']}}</span>
                             <h5 class="bg-dark text-white p-2 mt-2">{{$singleheader['title']}}</h5>
-                            <p class="small text-white"><i class="far fa-calendar-alt"></i> {{$singleheader['created_at']}} </p>
+                            <p class="small text-white"><i class="far fa-calendar-alt"></i>  {{date_format($singleheader['created_at'],"d-m-Y")}} </p>
                         </div>
                     </div>
                 </a>
@@ -78,7 +26,7 @@
                         <div class="header_content" style="position:absolute; bottom:4px;left:10px;">
                             <span class="badge bg-dark text-white pt-1 pr-3 pl-3 pb-1">{{$post['category']['name']}}</span>
                             <h5 class="bg-dark text-white p-2 mt-2"> {{$post->title}} </h5>
-                            <p class="small text-white"><i class="far fa-calendar-alt"></i> {{$post->created_at}} </p>
+                            <p class="small text-white"><i class="far fa-calendar-alt"></i>  {{date_format($post->created_at,"d-m-Y")}} </p>
                         </div>
                     </div>
                 </a>
@@ -104,11 +52,17 @@
 
                         <div class="project_img" style="position:relative">
                             <img src="{{asset('images')}}/{{$post->image}}" style="width:100%; min-height:150px; height:100px" class="img-fluid" alt="">
-                            <span style="position:absolute;top:5px;left:5px;" class="badge bg-dark badge-pill text-white pt-1 pr-3 pl-3 pb-1">{{$post['category']['name']}}</span>
                         </div>
-                        <div class="project_content p-0">
-                            <h5 class="pt-2"><?php echo substr($post->title . '...', 0, 50); ?> </h5>
-                            <p class="small text-dark m-0"><i class="far fa-calendar-alt"></i> {{$post->created_at}}</p>
+                        <div class="project_content p-0" style="position:relative">
+                            <ul class="p-0 m-0">
+                                <li>
+                                    <span class="pst_category small text-dark">{{$post['category']['name']}}</span>
+                                </li>
+                            </ul>
+                            <div style="position:relative">
+                                <h5 class="pt-2">{{ substr($post->title.'...' , 0,40) }} </h5>
+                                <p class="small text-muted m-0"><i class="far fa-calendar-alt"></i> {{date_format($post->created_at,"d-m-Y")}} </p>
+                            </div>
                         </div>
                     </div>
                 </a>
@@ -134,9 +88,13 @@
                             <img src="{{asset('images')}}/{{$post->image}}" style="width:100%; height:auto" class="img-fluid" alt="">
                         </div>
                         <div class="col-md-6 tutorial_content">
-                            <span class="badge bg-dark text-white badge-pill pt-1 pr-3 pl-3 pb-1">{{$post['category']['name']}}</span>
+                            <ul class="p-0 m-0">
+                                <li>
+                                    <span class="pst_category small text-dark">{{$post['category']['name']}}</span>
+                                </li>
+                            </ul>
                             <h2>{{$post->title}}</h2>
-                            <span class="small text-muted m-0 p-0"><i class="far fa-calendar-alt"></i> {{$post->created_at}}</span>
+                            <span class="small text-muted m-0 p-0"><i class="far fa-calendar-alt"></i>  {{date_format($post->created_at,"d-m-Y")}}</span>
                         </div>
                     </div>
                 </a>
@@ -157,53 +115,10 @@
     </div>
 
     @include('website/layout/footer')
-
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('.dropdown_menu').css('display','none');
-        });
-        
+    <script type="text/javascript" src="{{asset('website/js/menu.js')}}"></script>
 
-        $("#search_icon").click(function() {
-            $(".search_div").slideToggle();
-        });
-
-        $(".drpdown").click(function() {
-            $(this).toggleClass("fas fas fa-angle-up");
-            $(".dropdown_menu").slideToggle();
-        })
-
-
-        // dark mode
-        let darkMode = localStorage.getItem("darkMode");
-        const darkModeToggle = document.querySelector("#dark-mode-btn");
-
-        const enableDarkMode = () => {
-            document.body.classList.add("darkmode");
-            localStorage.setItem("darkMode", "enabled");
-        }
-
-        const disabledDarkMode = () => {
-            document.body.classList.remove("darkmode");
-            localStorage.setItem("darkMode", null);
-        }
-
-        if (darkMode === "enabled") {
-            enableDarkMode();
-        }
-
-        darkModeToggle.addEventListener("click", () => {
-            darkMode = localStorage.getItem("darkMode");
-            if (darkMode !== "enabled") {
-                enableDarkMode();
-            } else {
-                disabledDarkMode();
-            }
-        });
-    </script>
 </body>
-
 </html>

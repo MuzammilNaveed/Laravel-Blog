@@ -2,7 +2,7 @@
 @section('page_title','Manage Permissions')
 @section('container')
 
-<div class="row mt-2">
+<div class="row mt-2 add_margin">
   <div class="container-fluid p-0">
       <div class="card card_shadow">
         
@@ -25,6 +25,9 @@
                       <option value="tags">Tags</option>
                       <option value="post">Post</option>
                       <option value="role">Role</option>
+                      <option value="user">User</option>
+                      <option value="feature_access">Feature Access</option>
+                      <option value="permission">Permission</option>
                   </select>
               </div>
             </div>
@@ -54,9 +57,11 @@
             </div>
           </div>
 
-          <button onclick="savePermissions()" class="btn btn-success btn-lg rounded text-white"> <i class="fas fa-check-circle"></i> &nbsp; Save</button>
-
-
+          @if($permission != null && $permission != "")
+            @if( str_contains($permission->action,'create') )
+              <button onclick="savePermissions()" class="btn btn-success btn-lg rounded text-white"> <i class="fas fa-check-circle"></i> &nbsp; Save</button>
+            @endif
+          @endif
 
           <div class="loader_container" id="loader" style="display:none">
               <div class="loader"></div>

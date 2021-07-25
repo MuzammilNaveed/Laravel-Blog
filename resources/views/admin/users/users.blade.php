@@ -12,9 +12,12 @@
   }
 </style>
 
+@if($permission != null && $permission != "")
+  <p id="update" class="d-none"> {{str_contains($permission->action,'update') ? 1 : 0}} </p>
+  <p id="delete" class="d-none"> {{str_contains($permission->action,'delete') ? 1 : 0}} </p>
+@endif
 
-
-<div class="row mt-2">
+<div class="row mt-2 add_margin">
 
   <div class="container-fluid p-0">
 
@@ -36,8 +39,11 @@
           <div class="export-options-container">
             <div class="exportOptions">
               <div class="DTTT btn-group">
+              @if($permission != null && $permission != "")
+                @if( str_contains($permission->action,'create') )
                 <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addRecordModal"><i class="material-icons">add</i> Add User</button>
-
+                @endif
+              @endif
               </div>
             </div>
           </div>

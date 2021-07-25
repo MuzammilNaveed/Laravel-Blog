@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Tags;
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -12,11 +13,22 @@ use Illuminate\Support\Str;
 class TagsController extends Controller
 {
     public function index(Request $request) {
-        $tags = Tags::where("is_deleted",0)->get();
-        foreach($tags as $tag) {
-            $tag->created_by = User::where('id',$tag->created_by)->first();
+        $role = Role::where('id',Auth::user()->role_id)->first();
+        $name = strtolower($role->name);
+
+        if( $name == "admin" || $name == "administrator" || $name == "super admin" || $name == "super administrator") {
+            $tags = Tags::where("is_deleted",0)->get();
+            foreach($tags as $tag) {
+                $tag->created_by = User::where('id',$tag->created_by)->first();
+            }
+            return $tags;
+        }else{
+            $tags = Tags::where("is_deleted",0)->where('created_by',Auth::id())->get();
+            foreach($tags as $tag) {
+                $tag->created_by = User::where('id',$tag->created_by)->first();
+            }
+            return $tags;
         }
-        return $tags;
     }
 
     public function tagPage() {

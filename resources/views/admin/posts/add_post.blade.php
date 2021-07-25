@@ -32,7 +32,7 @@
     </ul>
 </div>
 
-<div class="mb-5">
+<div class="mb-5 add_margin">
 
     <form id="addRecord" enctype="multipart/form-data">
 

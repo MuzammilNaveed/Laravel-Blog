@@ -151,15 +151,17 @@ function getAllPosts(from,to) {
                             
                             var update = $("#update").text();
                             var del = $("#delete").text();
-
-                            if(update == 1 && del == 1) {
-                                return view_btn + update_btn + del_btn
-                            } else if(update == 1 && del == 0) {
-                                return view_btn + update_btn;
-                            }else if(update == 0 && del == 1) {
-                                return view_btn + del_btn;
-                            }else{
-                                return view_btn;
+                            
+                            if(update != "" && del != "") {
+                                if(update == 1 && del == 1) {
+                                    return view_btn + update_btn + del_btn
+                                } else if(update == 1 && del == 0) {
+                                    return view_btn + update_btn;
+                                }else if(update == 0 && del == 1) {
+                                    return view_btn + del_btn;
+                                }else{
+                                    return view_btn;
+                                }
                             }
                         
                         }

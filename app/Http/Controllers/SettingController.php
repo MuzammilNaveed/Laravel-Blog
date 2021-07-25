@@ -31,6 +31,7 @@ class SettingController extends Controller
         $user->instagram = $request->instagram;
         $user->linkedin = $request->linkedin;
         $user->twitter = $request->twitter;
+        $user->about = $request->about;
 
         if($request->hasFile('profile_pic')) {
 

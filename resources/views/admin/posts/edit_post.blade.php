@@ -21,7 +21,7 @@
 </style>
 <link href="https://cdn.jsdelivr.net/npm/froala-editor@3.1.0/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
 
-<div class="mt-1 mb-5">
+<div class="mt-1 mb-5 add_margin">
     <div class="">
         <ul class="breadcrumb p-l-0">
             <li class="breadcrumb-item"><a href="{{route('post.index')}}">Post</a>

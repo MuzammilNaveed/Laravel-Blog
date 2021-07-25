@@ -21,12 +21,25 @@ class RoleController extends Controller
     }
 
     public function index(Request $request) {
-        $roles = Role::all();
-        foreach($roles as $role) {
-            $role->user_count = User::where('role_id',$role->id)->count();
+        $role = Role::where('id',Auth::user()->role_id)->first();
+        $name = strtolower($role->name);
+
+        if( $name == "admin" || $name == "administrator" || $name == "super admin" || $name == "super administrator") {
+
+            $roles = Role::all();
+            foreach($roles as $role) {
+                $role->user_count = User::where('role_id',$role->id)->count();
+            }
+            
+            return $roles;
+        }else{
+            $roles = Role::where('id',Auth::user()->role_id);
+            foreach($roles as $role) {
+                $role->user_count = User::where('role_id',$role->id)->count();
+            }
+            
+            return $roles;
         }
-        
-        return $roles;
     }
 
     public function store(Request $request) {
@@ -99,7 +112,8 @@ class RoleController extends Controller
 
     public function managePermission() {
         $roles = Role::all();
-        return view("admin.permission.permissions" ,compact('roles'));
+        $permission = DB::table("permissions")->where("created_by",Auth::id())->where('title','role')->first();
+        return view("admin.permission.permissions" ,compact('roles','permission'));
 
     }
 

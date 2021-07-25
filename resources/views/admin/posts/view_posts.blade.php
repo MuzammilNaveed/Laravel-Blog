@@ -7,7 +7,7 @@
     $cancel = '<i class="fas fa-times text-danger"></i>';
 ?>
 
-    <div class="row mt-4">
+    <div class="row mt-4 add_margin">
 
 
         <div class="col-md-4">

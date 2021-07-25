@@ -21,7 +21,7 @@
     }
 </style>
 
-<div class="row mt-3">
+<div class="row mt-3 add_margin">
     <div class="col-md-4">
         <div class="card p-3">
             <img src="{{asset('users')}}/{{$user->profile_pic}}" style="border-radius:100%; width:120px;height:100px" class="img-fluid d-block mx-auto" alt="">
@@ -130,6 +130,12 @@
                                     <div class="form-group">
                                         <input type="file" class="form-control dropify" data-default-file="{{asset('users')}}/{{$user->profile_pic}}" name="profile_pic" data-allowed-file-extensions="png jpg jpeg">
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group form-group-default mb-0">
+                                    <label class="small text-muted">About</label>
+                                        <textarea cols="30" rows="10" name="about" type="text" class="form-control" style="height:80px" placeholder="About your self">{{$user->about}}</textarea>
                                 </div>
                             </div>
                             <div class="row mt-2">

@@ -3,15 +3,28 @@
     --lightgray: #f1f5f9;
     --white : #fff;
     --black : #212121;
+    --cyan : #4dd0e1;
+    --light_grey : #a8b2d1;
 }
 .darkmode {
     background-color: var(--black);
     color:var(--white);
 }
 
+.bg_cyan {
+    background-color: var(--cyan);
+}
+
 body {
     background-color: var(--white);
+    font-family: 'Poppins', sans-serif !important;
     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+p,h1,h2,h3,h4,h5,h6,span,div {
+    font-family: 'Poppins', sans-serif !important;
+}
+.w-800 {
+    font-weight: 800;
 }
 a:hover {
     text-decoration: none;
@@ -24,9 +37,9 @@ a:hover {
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
 }
-#search {
+#custom_search {
     border:none;
-    height:100px;
+    height:70px;
     font-size:2rem;
     font-weight: 800;
     color: black;
@@ -34,15 +47,42 @@ a:hover {
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
 }
-#search:focus {
+#custom_search:focus {
     outline: none !important;
     box-shadow: none;
 }
-#search::placeholder {
+#custom_search::placeholder {
     font-size:2rem;
     font-weight: 800;
     color: var(--black);
     opacity: 0.8;
+}
+
+.show_custom_results {
+    background-color:#eeeeee;
+    list-style: none;
+    width: 80%;
+    max-width: 100%;
+    border-radius: 2px;
+    min-height: auto;
+    max-height: 234px;
+    box-shadow: none;
+    z-index: 10;
+    overflow: hidden;
+    overflow-y: scroll;
+    position: absolute;
+    top: 80px;
+}
+
+.show_custom_results li a {
+    display: block;
+    padding: 12px;
+    border-bottom: 1px solid var(--lightgray);
+    color:var(--black);
+    transition: 0.3s ease-in-out;
+}
+.show_custom_results li a:hover {
+    background-color: var(--lightgray);
 }
 
 
@@ -82,6 +122,7 @@ header post
     padding: 8px 12px;
     border-radius: 50px;
     color: var(--black);
+    font-weight: 500;
 }
 
 
@@ -99,12 +140,27 @@ header post
     opacity: 0.8;
     transition: 0.3s ease-in-out;
 }
+.pst_category {
+    font-weight:500;
+    text-decoration-line: underline;
+    text-decoration-color: var(--cyan);
+    text-decoration-style: solid;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 1px;
+}
+.project_content ul li, .tutorial_content ul li{
+    list-style: none;
+}
 
 .project_content h5 {
     font-size:1.19rem;
     font-weight: 800;
     color:var(--black);
 } 
+.project_content p {
+    color:var(--light_grey);
+    font-weight: 400;
+}
 .headers_content h2 {
     font-size: 0.9rem;
     color:var(--black);
@@ -129,6 +185,12 @@ header post
     word-spacing: 2px;
     color:var(--black)
 }
+
+#navbar #navbar_links .nav-item a:hover{
+    color: var(--cyan);
+}
+
+
 .mobile_menu {
     display: none;
 }
@@ -138,8 +200,32 @@ header post
     }
     .mobile_menu {
         display: block;
+        cursor: pointer;
     }
-  }
+}
+
+@media only screen and (max-width:768px) {
+    .header_content h1 {
+        font-weight: 800;
+        font-size: 1rem;
+    }
+    .header_content {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+    }
+    .header_content span {
+        font-weight: normal;
+    }
+    .author_row{
+        text-align: center !important;
+    }
+    .author_row h2 {
+        font-size: 1.2rem;
+        margin-top: 12px;
+    }
+}
 
 
   /* mobile */
@@ -190,7 +276,54 @@ header post
     padding:10px;
 }
 
+.mobile_sidebar ul li ul li a {
+    text-decoration: none;
+    color: #1b1b1b;
+    font-weight: 500;
+    font-size: 1rem;
+    display: inherit;
+    padding:10px;
+}
+
 .mobile_sidebar .menu-primary {
     margin:20px;
     padding: 0px;
 }
+.footer_links ul {
+    margin-top: 20px;
+}
+.footer_links ul li{
+    display: inline-block;
+}
+.footer_links ul li a {
+    color:var(--white);
+    font-size: 0.9rem;
+    margin-left:16px;
+    transition: 0.3s ease-in-out;
+}
+
+.footer_links ul li a:hover{
+    color:var(--cyan);
+    font-size: 0.88rem;
+}
+
+/* scroll bar */
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #b5b5b5;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }

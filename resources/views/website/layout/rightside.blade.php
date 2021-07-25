@@ -1,5 +1,5 @@
 <div class="right-category bg-light p-3">
-    <h5 class="p-0">Categories</h5>
+    <h5 class="p-0 w-800">Categories</h5>
     <div class="category" id="__categories">
         @foreach($categories as $category)
         <a href="{{url('category')}}/{{$category->slug}}" class="badge bg-light __category_badge text-dark mt-2">{{$category->name}}</a>
@@ -9,7 +9,7 @@
 
 <!-- popular posts -->
 <div class="recent mt-3 bg-light p-3">
-    <h5 class="p-0">Popular Posts</h5>
+    <h5 class="p-0 w-800">Popular Posts</h5>
     <div class="__recent_post mt-3" id="__recent_post">
         @foreach($popular_posts as $post)
         <a href="{{url('post')}}/{{$post->slug}}">
@@ -18,7 +18,7 @@
                 <div class="col-8">
                     <div class="headers_content">
                         <h2><?php echo substr($post->title . '...', 0, 40); ?></h2>
-                        <p class="small text-dark"><i class="far fa-calendar-alt"></i> {{$post->created_at}}</p>
+                        <p class="small text-dark"><i class="far fa-calendar-alt"></i>  {{date_format($post->created_at,"d-m-Y")}} </p>
                     </div>
                 </div>
             </div>
