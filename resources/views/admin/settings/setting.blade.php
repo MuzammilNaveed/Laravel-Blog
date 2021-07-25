@@ -25,7 +25,7 @@
     <div class="col-md-4">
         <div class="card p-3">
             <img src="{{asset('users')}}/{{$user->profile_pic}}" style="border-radius:100%; width:120px;height:100px" class="img-fluid d-block mx-auto" alt="">
-            <span class="badge bg-primary text-white" style="position:absolute; top:20px;right:20px;">Admin</span>
+            <span class="badge bg-primary text-white" style="position:absolute; top:20px;right:20px;">{{Session('role_name')}}</span>
             <h4 class="text-center m-0 p-0">{{$user->name}}</h4>
 
             <hr class="m-0 p-0">

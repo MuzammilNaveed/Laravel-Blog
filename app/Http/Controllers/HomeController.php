@@ -33,22 +33,22 @@ class HomeController extends Controller
 
 
     public function userHomePage(Request $request) {
-        $singleheader = Post::where('section',1)->inRandomOrder()->limit(1)->first();
+        $singleheader = Post::where('is_active',1)->where('section',1)->inRandomOrder()->limit(1)->first();
         $singleheader['category']  = Category::where('id',$singleheader->cat_id)->first();
 
 
-        $posts = Post::where('section',1)->where('id','!=',$singleheader->id)->inRandomOrder()->limit(2)->get();
+        $posts = Post::where('is_active',1)->where('section',1)->where('id','!=',$singleheader->id)->inRandomOrder()->limit(2)->get();
         foreach($posts as $post) {
             $post->category  = Category::where('id',$post['cat_id'])->first()->toArray();
         } 
         
 
-        $feature_posts = Post::where('section',2)->inRandomOrder()->limit(4)->get();
+        $feature_posts = Post::where('is_active',1)->where('section',2)->inRandomOrder()->limit(4)->get();
         foreach($feature_posts as $feature_post) {
             $feature_post->category  = Category::where('id',$feature_post['cat_id'])->first()->toArray();
         } 
 
-        $tutorial_posts = Post::where('section',3)->inRandomOrder()->paginate(4);
+        $tutorial_posts = Post::where('is_active',1)->where('section',3)->inRandomOrder()->paginate(4);
         
         foreach($tutorial_posts as $post) {
             $post->category  = Category::where('id',$post['cat_id'])->first()->toArray();
@@ -68,7 +68,7 @@ class HomeController extends Controller
         }
 
         $setting = Settings::first();
-        $popular_posts = Post::orderBy('view_count','desc')->where('is_deleted',0)->limit(5)->get();
+        $popular_posts = Post::where('is_active',1)->orderBy('view_count','desc')->where('is_deleted',0)->limit(5)->get();
 
         return view("website.index", compact('posts','setting','singleheader','feature_posts','tags','categories','popular_posts','tutorial_posts','menus'));
     }
@@ -259,6 +259,11 @@ class HomeController extends Controller
                     $setting = Settings::where('created_by', Auth::user()->id)->first();
                     if($setting) {
                         Session::put('dashboard_logo', $setting->dashboard_logo);
+                    }
+
+                    $role_name = Role::where('id',Auth::user()->role_id)->select('name')->first();
+                    if($role_name) {
+                        Session::put('role_name', $role_name->name);
                     }
 
                     return redirect()->intended('/dashboard');

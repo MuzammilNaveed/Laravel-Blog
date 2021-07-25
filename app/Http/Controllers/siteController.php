@@ -26,24 +26,6 @@ class siteController extends Controller
         return view('auth.login');
     }
 
-    public function saveContactUs(Request $request) {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'subject' => 'required',
-            'message' => 'required',
-        ]);
-
-        DB::table("contact_us")->insert([
-            "name" => $request->name,
-            "email" => $request->email,
-            "subject" => $request->subject,
-            "message" => $request->message,
-        ]);
-
-        return redirect()->back()->with(["success" => "Your query submitted successfully .. admin will contact you shorly"]);
-    }
-
     public function searchPosts(Request $request) {
         
         $result = Post::where("title","LIKE","%{$request->data}%")->get();
@@ -63,6 +45,7 @@ class siteController extends Controller
             $all_posts[0]['category_name'] = Category::where('id',$all_posts[0]['cat_id'])->first()->toArray();
             array_push($posts,$all_posts);
         }
+        
 
      
         $categories = Category::where('is_deleted',0)->where('parent_id','!=',0)->inRandomOrder()->limit(10)->get();
@@ -79,7 +62,7 @@ class siteController extends Controller
         }
 
         $tags = Tags::where('is_deleted',0)->get();
-        $popular_posts = Post::orderBy('view_count','desc')->where('is_deleted',0)->inRandomOrder()->limit(5)->get();
+        $popular_posts = Post::where('is_active',1)->orderBy('view_count','desc')->where('is_deleted',0)->inRandomOrder()->limit(5)->get();
         $setting = Settings::first();
 
         return view('website.tags', compact('tag','setting','categories','popular_posts','menus','tags','posts'));
@@ -88,7 +71,7 @@ class siteController extends Controller
     public function showCategory($slug) {
 
         $category = Category::where('is_deleted',0)->inRandomOrder()->where("slug", $slug)->first();
-        $posts = Post::where('is_deleted',0)->where("cat_id",$category->id)->paginate(4);
+        $posts = Post::where('is_active',1)->where('is_deleted',0)->where("cat_id",$category->id)->paginate(4);
         $post_count = sizeof($posts);
 
         $categories = Category::where('is_deleted',0)->where('parent_id','!=',0)->inRandomOrder()->limit(10)->get();
@@ -102,7 +85,7 @@ class siteController extends Controller
             $this->gatherUserInfo();
         }
         $tags = Tags::where('is_deleted',0)->get();
-        $popular_posts = Post::orderBy('view_count','desc')->where('is_deleted',0)->inRandomOrder()->limit(5)->get();
+        $popular_posts = Post::where('is_active',1)->orderBy('view_count','desc')->where('is_deleted',0)->inRandomOrder()->limit(5)->get();
         $setting = Settings::first();
         
         return view('website.category', compact('category','setting', 'posts','tags','post_count', 'categories','popular_posts','menus'));
@@ -180,10 +163,10 @@ class siteController extends Controller
     }
 
     public function getAllComments(Request $request) {
-        $comments =  Comments::where("post_id","=",$request->post_id)->get();
+        $comments =  Comments::where("post_id","=",$request->post_id)->where('status',1)->get();
 
         foreach($comments as $comment) {
-            $comment->comment_replies = CommentReplies::where('comment_id',$comment->id)->get();
+            $comment->comment_replies = CommentReplies::where('comment_id',$comment->id)->where('status',1)->get();
         }
         return $comments;
     }
@@ -205,7 +188,8 @@ class siteController extends Controller
     }
 
     public function viewAuthorPage($id) {
-        $posts = Post::where('created_by',$id)->paginate(6);
+
+        $posts = Post::where('is_active',1)->where('created_by',$id)->where('is_active',1)->paginate(6);
         foreach($posts as $post) {
             $post->post_category = Category::where('id',$post->cat_id)->where('is_deleted',0)->first();
         }
@@ -218,7 +202,7 @@ class siteController extends Controller
         }
         $tags = Tags::where('is_deleted',0)->get();
         $setting = Settings::first();
-        $popular_posts = Post::orderBy('view_count','desc')->where('is_deleted',0)->inRandomOrder()->limit(5)->get();
+        $popular_posts = Post::where('is_active',1)->orderBy('view_count','desc')->where('is_deleted',0)->where('is_active',1)->inRandomOrder()->limit(5)->get();
 
         return view('website.author',compact('categories','setting','popular_posts','tags','posts','user','menus'));
 

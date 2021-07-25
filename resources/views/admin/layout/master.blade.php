@@ -138,7 +138,12 @@
         menu</a>
       <div class="">
         <div class="brand inline  m-l-10 ">
-          <img src="{{asset('admin/assets/img/logo.png')}}" alt="logo"  width="78" height="22">
+        @if( Session('dashboard_logo') != null && Session('dashboard_logo') != '' )
+          <img src="{{asset('settings')}}/{{Session('dashboard_logo')}}" alt="logo" class="brand" data-src="{{asset('settings')}}/{{Session('dashboard_logo')}}" data-src-retina="{{asset('settings')}}/{{Session('dashboard_logo')}}" style="width:50px">
+        @else
+          <strong>Dashboard</strong>
+        @endif
+          <!-- <img src="{{asset('admin/assets/img/logo.png')}}" alt="logo"  width="78" height="22"> -->
         </div>
         <span class="ml-3 font-weight-bold" id="showDateTime"></span>        
         
@@ -155,7 +160,11 @@
               <span>Signed in as <br /> <b>{{Auth::user()->name}}</b> </span>
             </a>
             <div class="dropdown-divider"></div>
-            <a href="{{route('setting.index')}}" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+              @if( strtolower(Session('role_name')) == "admin" || strtolower(Session('role_name')) == "administrator" || 
+                  strtolower(Session('role_name')) == "super admin" || strtolower(Session('role_name')) == "super administrator") 
+                <a href="{{route('setting.index')}}" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+              @endif
+
             <a href="{{route('logout.user')}}" class="dropdown-item text-danger"><i class="fas fa-power-off"></i> Logout</a>
             
           </div>

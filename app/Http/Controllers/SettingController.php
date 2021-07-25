@@ -16,7 +16,7 @@ class SettingController extends Controller
     public function index() {
         $user = User::where("id", Auth::user()->id)->first();
         $setting = Settings::where('created_by', Auth::user()->id)->first();
-        return view('admin.settings.setting', compact('user','setting'));
+        return view('admin.settings.setting', compact('user','setting',));
     }
 
     public function updateProfile(Request $request) {

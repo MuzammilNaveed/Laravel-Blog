@@ -16,6 +16,7 @@ class Post extends Model
         'cat_id',
         'section',
         'image',
+        'is_active',
         'image_alt_tag',
         'dscription',
         'meta_title',
