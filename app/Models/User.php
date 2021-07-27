@@ -19,8 +19,10 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'role_id',
         'password',
         'status',
+        'is_author',
         'phone',
         'address',
         'facebook',
@@ -29,6 +31,9 @@ class User extends Authenticatable
         'twitter',
         'profile_pic',
         'about',
+        'created_by',
+        'is_deleted',
+        'deleted_by',
     ];
 
     /**

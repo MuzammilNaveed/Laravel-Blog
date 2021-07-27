@@ -19,6 +19,7 @@ class CreateTagsTable extends Migration
             $table->string("slug")->nullable();
             $table->integer("is_deleted")->default('0');
             $table->integer("deleted_by")->nullable();
+            $table->integer("created_by")->nullable();
             $table->timestamps();
         });
     }

@@ -15,17 +15,18 @@ class CreateSettingsTable extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('site_name');
-            $table->string('site_url');
-            $table->string('site_keywords');
-            $table->string('site_description');
-            $table->string('site_logo');
-            $table->string('site_favicon');
-            $table->string('dashboard_logo');
-            $table->string('facebook');
-            $table->string('linkedin');
-            $table->string('instagram');
-            $table->string('twitter');
+            $table->string('site_name')->nullable();
+            $table->string('site_url')->nullable();
+            $table->string('site_keywords')->nullable();
+            $table->string('site_description')->nullable();
+            $table->string('site_logo')->nullable();
+            $table->string('site_favicon')->nullable();
+            $table->string('dashboard_logo')->nullable();
+            $table->string('facebook')->nullable();
+            $table->string('linkedin')->nullable();
+            $table->string('instagram')->nullable();
+            $table->string('twitter')->nullable();
+            $table->integer('twitter')->nullable();
             $table->timestamps();
         });
     }

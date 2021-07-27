@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->integer("status")->default('0');
+            $table->integer("is_author")->default('0');
             $table->double('phone')->nullable();
             $table->string('address')->nullable();
             $table->string('facebook')->nullable();
@@ -29,9 +30,10 @@ class CreateUsersTable extends Migration
             $table->string('instafram')->nullable();
             $table->string('twitter')->nullable();
             $table->string('profile_pic')->nullable();
+            $table->text("about")->nullable();
+            $table->integer("created_by")->nullable();
             $table->integer("is_deleted")->default('0');
             $table->integer("deleted_by")->nullable();
-            $table->text("about")->nullable();
             $table->timestamps();
         });
     }
