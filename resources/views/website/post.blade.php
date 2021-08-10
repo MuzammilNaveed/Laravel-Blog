@@ -161,7 +161,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 p-4">
-                <section class="" id="__post_content">
+                <section class="bg-white p-3 shadow-sm" id="__post_content">
 
                     <div class="__post_head_with_img __overlay" style="position:relative; z-index:1">
                         <img src="{{asset('images')}}/{{$post->image}}" style="width:100%" class="img-fluid" alt="">
@@ -190,7 +190,7 @@
                         </p>
                     </div>
 
-                    <div class="__post_all_content" style="margin-top:30px; font-family: 'Poppins', sans-serif !important;">
+                    <div class="__post_all_content" style="margin-top:15px; font-family: 'Poppins', sans-serif !important;">
                         <?php echo $post->description; ?>
                     </div>
 
@@ -208,7 +208,7 @@
 
 
                 <!-- about author -->
-                <div class="row mt-5 p-3 bg-light author_row">
+                <div class="row mt-5 p-3 bg-white border author_row">
                     @if($post_author != null && $post_author != "")
                     <div class="col-md-2">
                         @if($post_author->profile_pic != null && $post_author->profile_pic != "")
@@ -217,7 +217,7 @@
                         @endif
                     </div>
                     <div class="col-md-10">
-                        <h2>{{$post_author->name}}</h2>
+                        <h5>{{$post_author->name}}</h5>
                         <p class="small text-muted">
                             {{$post_author->about}}
                         </p>
@@ -241,7 +241,7 @@
                 
 
                     @foreach($comments as $comment)
-                    <div class="row p-2 mt-2 bg-light">
+                    <div class="row p-2 mt-2 bg-white shadow-sm">
                         <div class="col-12">
                             <div class="d-flex justify-content-between">
                                 <h5><strong style="font-size:1rem">{{$comment->name}}</strong> <span class="small" style="font-size:0.7rem;"> says</span></h5>
@@ -260,7 +260,7 @@
                         @if($comment->comment_replies != null && $comment->comment_replies != "" && $comment->comment_replies != [])
  
                             @foreach($comment->comment_replies as $reply)
-                            <div class="row p-2 ml-3 mt-2 bg-light">
+                            <div class="row p-2 ml-3 mt-2 bg-white shadow-sm">
                                 <div class="col-12">
                                     <div class="d-flex justify-content-between">
                                         <h5><strong style="font-size:1rem">{{$reply->name}}</strong> <span class="small" style="font-size:0.7rem;"> says</span></h5>
@@ -387,6 +387,8 @@
         $("#p_search_icon").click(function() {
             $(".p_search_div").slideToggle();
         });
+        var post_comments = '{{url("post_comment")}}';
+        var comment_replies = '{{url("comment_reply")}}';
     </script>
 </body>
 </html>

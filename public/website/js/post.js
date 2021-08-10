@@ -25,7 +25,7 @@ $(document).ready(function() {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
             },
-            url: '{{url("post_comment")}}',
+            url: post_comments,
             type: 'POST',
             dataType: 'json',
             data: formData,
@@ -74,7 +74,7 @@ function commentReply(caller, id) {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
             },
-            url: '{{url("comment_reply")}}',
+            url: comment_replies,
             type: 'POST',
             dataType: 'json',
             data: formData,

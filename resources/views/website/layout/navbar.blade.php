@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <script src="https://kit.fontawesome.com/5fcfcbf541.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{asset('website/custom.css').'?ver='.rand()}}">
+    <link rel="stylesheet" href="{{asset('website/glide.core.min.css')}}">
+    <link rel="stylesheet" href="{{asset('website/glide.theme.min.css')}}">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet">
