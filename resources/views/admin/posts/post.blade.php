@@ -1,5 +1,8 @@
 @extends('admin.layout.master')
 @section('page_title','Manage Posts')
+@section('brand_menu','active')
+@section('blog','open active')
+@section('post','active')
 @section('container')
 
 <style>
@@ -12,76 +15,6 @@
   <p id="delete" class="d-none"> {{str_contains($permission->action,'delete') ? 1 : 0}} </p>
 @endif
 
-<div class="d-md-flex justify-content-between mt-2 ml-0">
-  <div class="row">
-    <div class="custom-control custom-radio ml-0 ">
-      <input type="radio" onclick="filterData('current_month')" class="custom-control-input" id="current_month" name="radio-stacked" checked>
-      <label class="custom-control-label" for="current_month">Current Month</label>
-    </div>
-    <div class="custom-control custom-radio ml-0 ml-md-3">
-      <input type="radio" onclick="filterData('previous_month')" class="custom-control-input" id="previous_month" name="radio-stacked">
-      <label class="custom-control-label" for="previous_month">Previous Month</label>
-    </div>
-    <div class="custom-control custom-radio ml-0 ml-md-3">
-      <input type="radio" onclick="filterData('all_time')" class="custom-control-input" id="all_time" name="radio-stacked">
-      <label class="custom-control-label" for="all_time">All Time</label>
-    </div>
-    <div class="custom-control custom-radio ml-0 ml-md-3">
-      <input type="radio" onclick="filterData('date_range')" class="custom-control-input" id="date_range" name="radio-stacked">
-      <label class="custom-control-label" for="date_range">Date Range</label>
-    </div>
-  </div>
-
-  <div class="d-flex">
-
-    <div class="form-group form-group-default form-group-default-select2 ml-3" style="width:150px">
-        <label class="">Category</label>
-        <select class="full-width select2-hidden-accessible" id='category_id' name="category" data-placeholder="Select Category" data-init-plugin="select2" tabindex="-1" aria-hidden="true">
-            <option value=" ">All</option>
-            @foreach($categories as $category) 
-              <option value="{{$category->name}}"> {{$category->name}} </option>
-            @endforeach
-        </select>
-    </div>
-    <div class="form-group form-group-default form-group-default-select2 ml-3" style="width:150px">
-        <label class="">Author</label>
-        <select class="full-width select2-hidden-accessible" name="category" data-placeholder="Select Category" data-init-plugin="select2" tabindex="-1" aria-hidden="true">
-            <option>All</option>
-            @foreach($authors as $author) 
-              <option value="{{$author->name}}"> {{$author->name}} </option>
-            @endforeach
-        </select>
-    </div>
-
-    <div class="form-group form-group-default form-group-default-select2 ml-3" style="width:150px">
-        <label class="">Section</label>
-        <select class="full-width select2-hidden-accessible" id="sections" data-placeholder="Select Section" data-init-plugin="select2" tabindex="-1" aria-hidden="true">
-            <option value=" ">All</option>
-            <option value="Header">Header</option>
-            <option value="Project">Project</option>
-            <option value="Tutorials">Tutorials</option>
-        </select>
-    </div>
-
-  </div>
-</div>
-
-<div class="d-md-flex mt-3" id="date_range_filter" style="display: none !important;">
-  <div class="form-group">
-    <input type="date" id="start" class="form-control">
-  </div>
-  <div class="form-group ml-0 ml-md-4">
-    <input type="date" id="end" class="form-control">
-  </div>
-  <div class="form-group ml-0 ml-md-4">
-    <button onclick="dateWiseData()" class="btn btn-primary card_shadow" style="border-radius:50px;padding:10px 10px"><i class="fas fa-search"></i></button>
-  </div>
-</div>
-
-
-<div class="row">
-  <strong class="text-primary font-weight-bold">Current Record </strong> &nbsp; from: &nbsp; <span class="text-primary font-weight-bold" id="from_date"></span> &nbsp; to:&nbsp; <span id="to_date" class="text-primary font-weight-bold"></span>
-</div>
 
 <div class="row mt-2 add_margin">
   <div class="container-fluid p-0">
@@ -187,6 +120,7 @@
   var view_post = "{{url('view_post')}}";
   var user_detail = "{{url('user_detail')}}";
   var comment_details = "{{url('comment_details')}}"
+  var posts = "{{url('posts')}}";
 </script>
 <script src="{{asset('admin/js/posts.js')}}"></script>
 @show

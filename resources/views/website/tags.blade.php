@@ -25,10 +25,10 @@
                     @foreach($posts as $post)
                     <div class="col-md-4 mt-2 p-1">
                         <a href="{{url('post')}}/{{$post[0]['slug']}}">
-                            <div class="card mt-2">
+                            <div class="card card_shadow border-0 mt-2">
                                 <div class="project_post">
                                     <div class="project_img">
-                                        <img src="{{asset('images')}}/{{$post[0]['image']}}" style="width:100%; min-height:200px; height:100px" class="img-fluid" alt="">
+                                        <img src="{{asset('images')}}/{{$post[0]['image']}}" style="width:100%; min-height:150px; height:100px" class="img-fluid" alt="">
                                     </div>
                                     <div class="project_content">
                                         <ul class="p-0 m-0">

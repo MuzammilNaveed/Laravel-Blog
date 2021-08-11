@@ -1,5 +1,7 @@
 @extends('admin.layout.master')
 @section('page_title','Manage Categories')
+@section('blog','active')
+@section('category','active')
 @section('container')
 
 <style>
@@ -105,9 +107,9 @@
           </div>
         </form>
 
-        <div class="loader_container" id="add_loader">
+        <!-- <div class="loader_container" id="add_loader">
             <div class="loader"></div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -158,9 +160,9 @@
           </div>
         </form>
 
-        <div class="loader_container" id="edit_loader">
+        <!-- <div class="loader_container" id="edit_loader">
             <div class="loader"></div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

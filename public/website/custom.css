@@ -14,6 +14,16 @@
 .bg_cyan {
     background-color: var(--cyan);
 }
+.project_content a {
+    border:2px solid var(--cyan);
+    color:var(--black);
+    padding: 4px 12px 4px 12px;
+    font-size: 0.9rem;
+}
+.card_shadow {
+    /* box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
 
 body {
     background-color: #fafafa;
@@ -113,8 +123,8 @@ header post
     padding:8px
 }
 .project_content h2 {
-    font-size: 1.125rem;
-    font-weight: 700;
+    font-size: 1.4rem;
+    font-weight: 800;
 }
 
 
@@ -136,10 +146,11 @@ header post
     width: 100%;
     opacity: 0.9;
 }
-
+.project_post {
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
 .header_post:hover , .project_post:hover, .singlePopularPost:hover , .tutorial:hover {
-    opacity: 0.8;
-    transition: 0.3s ease-in-out;
+    opacity: 0.8;    
 }
 .pst_category {
     font-weight:500;

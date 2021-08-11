@@ -13,24 +13,7 @@ use App\Http\Controllers\siteController;
 
 
 
-Route::get('/', [HomeController::class,'userHomePage']);
-
-// Route::get('/', function () {
-//     if (Auth::user()) {
-//       return redirect()->intended('/dashboard');
-//     } else {
-//         // return redirect()->intended('/login');
-//         return view("website.index");
-//     }
-// });
-
-
-
-
-
-// Route::get('category', function () {
-//     return view('website.category');
-// })->name("cat.index");
+    Route::get('/', [HomeController::class,'userHomePage']);
 
     Route::get('category/{slug}',[siteController::class,'showCategory']);
     Route::get('post/{slug}',[siteController::class,'showSinglePost']);

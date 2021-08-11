@@ -161,7 +161,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 p-4">
-                <section class="bg-white p-3 shadow-sm" id="__post_content">
+                <section class="bg-white p-3 card_shadow" id="__post_content">
 
                     <div class="__post_head_with_img __overlay" style="position:relative; z-index:1">
                         <img src="{{asset('images')}}/{{$post->image}}" style="width:100%" class="img-fluid" alt="">
@@ -208,7 +208,7 @@
 
 
                 <!-- about author -->
-                <div class="row mt-5 p-3 bg-white border author_row">
+                <div class="row mt-5 p-3 bg-white card_shadow author_row">
                     @if($post_author != null && $post_author != "")
                     <div class="col-md-2">
                         @if($post_author->profile_pic != null && $post_author->profile_pic != "")
@@ -241,7 +241,7 @@
                 
 
                     @foreach($comments as $comment)
-                    <div class="row p-2 mt-2 bg-white shadow-sm">
+                    <div class="row p-2 mt-2 bg-white card_shadow">
                         <div class="col-12">
                             <div class="d-flex justify-content-between">
                                 <h5><strong style="font-size:1rem">{{$comment->name}}</strong> <span class="small" style="font-size:0.7rem;"> says</span></h5>
@@ -260,7 +260,7 @@
                         @if($comment->comment_replies != null && $comment->comment_replies != "" && $comment->comment_replies != [])
  
                             @foreach($comment->comment_replies as $reply)
-                            <div class="row p-2 ml-3 mt-2 bg-white shadow-sm">
+                            <div class="row p-2 ml-3 mt-2 bg-white card_shadow">
                                 <div class="col-12">
                                     <div class="d-flex justify-content-between">
                                         <h5><strong style="font-size:1rem">{{$reply->name}}</strong> <span class="small" style="font-size:0.7rem;"> says</span></h5>
@@ -325,9 +325,9 @@
                 <div class="row mt-4 replyComment m-0 p-3 bg-white" style="display:none">
                    
                     <form id="post_comment_reply">
-                    <h4> Leave a Reply  </h2>
-                    <a onclick="$('.replyComment').hide();" href="javascript:void(0)" class="text-primary" style="font-size:0.8rem">CANCEL REPLY</a>
-                    <p>Your email address will not be published</p>
+                    <h4 class="lead"> Leave a Reply  </h2>
+                    <a onclick="$('.replyComment').hide();" href="javascript:void(0)" class="text-danger font-weight-bold" style="font-size:0.8rem">CANCEL REPLY</a>
+                    <p class="small text-muted">Your email address will not be published</p>
 
                     <div class="reply_success_msg bg_cyan p-2 text-white border-white small" style="display:none">
                         Success! Comment Reply Posted After Admin approval... thanks.
@@ -336,20 +336,20 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label for="msg" class="small">Comment</label>
-                                    <textarea style id="replycomment" cols="30" rows="4" class="form-control"></textarea>
+                                    <label for="msg" class="small">Comment <span class="text-danger">*</span> </label>
+                                    <textarea style id="replycomment" cols="30" rows="4" placeholder="Your Message" class="form-control"></textarea>
                                     <span class="text-danger small" id="msg_error"></span>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
-                                <label for="name" class="small">Name</label>
-                                <input type="text" id="replyname" class="form-control">
+                                <label for="name" class="small">Name <span class="text-danger">*</span></label>
+                                <input type="text" id="replyname" class="form-control" placeholder="Your Name">
                             </div>
 
                             <div class="col-md-6">
-                                <label for="email" class="small">Email</label>
-                                <input type="text" id="replyemail" class="form-control">
+                                <label for="email" class="small">Email <span class="text-danger">*</span></label>
+                                <input type="text" id="replyemail" class="form-control" placeholder="Your Email">
                             </div>
 
                         </div>

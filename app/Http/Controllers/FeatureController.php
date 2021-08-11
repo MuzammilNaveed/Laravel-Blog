@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Role_has_Permission;
 use App\Models\Role;
 use App\Models\Feature;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,6 +21,7 @@ class FeatureController extends Controller
     public function store(Request $request) {
         $fl = new Feature();
         $fl->title = $request->title;
+        $fl->slug = Str::slug($request->title, '-');
         $fl->route = $request->menu_routes;
         $fl->sequence = $request->sequence;
         $fl->parent_id = $request->parent_id;
@@ -62,6 +64,7 @@ class FeatureController extends Controller
     {
         $fl = Feature::find($request->feature_id);
         $fl->title = $request->title;
+        $fl->slug = Str::slug($request->title, '-');
         $fl->route = $request->menu_routes;
         $fl->sequence = $request->sequence;
         $fl->parent_id = $request->parent_id;

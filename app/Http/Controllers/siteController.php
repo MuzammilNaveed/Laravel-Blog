@@ -70,7 +70,7 @@ class siteController extends Controller
 
     public function showCategory($slug) {
 
-        $category = Category::where('is_deleted',0)->inRandomOrder()->where("slug", $slug)->first();
+        $category = Category::where('is_deleted',0)->where("slug", $slug)->first();
         $posts = Post::where('is_active',1)->where('is_deleted',0)->where("cat_id",$category->id)->paginate(4);
         $post_count = sizeof($posts);
 

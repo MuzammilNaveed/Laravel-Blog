@@ -1,5 +1,6 @@
 @extends('admin.layout.master')
 @section('page_title','Dashboard')
+@section('dashboard','active')
 @section('container')
 
 <style>

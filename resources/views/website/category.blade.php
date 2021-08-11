@@ -27,7 +27,7 @@
                     @foreach($posts as $post)
                     <div class="col-md-4 p-1 mt-2">
                         <a href="{{url('post')}}/{{$post->slug}}">
-                            <div class="card">
+                            <div class="card card_shadow border-0">
                                 <div class="project_post">
                                     <div class="project_img">
                                         <img src="{{asset('images')}}/{{$post->image}}" style="width:100%; min-height:150px; height:100px" class="img-fluid" alt="">

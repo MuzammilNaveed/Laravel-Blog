@@ -9,6 +9,7 @@ use App\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use DataTables;
 
 class TagsController extends Controller
 {
@@ -17,17 +18,27 @@ class TagsController extends Controller
         $name = strtolower($role->name);
 
         if( $name == "admin" || $name == "administrator" || $name == "super admin" || $name == "super administrator") {
+
             $tags = Tags::where("is_deleted",0)->get();
             foreach($tags as $tag) {
                 $tag->created_by = User::where('id',$tag->created_by)->first();
             }
-            return $tags;
+            if ($request->ajax()) {
+                return Datatables::of($tags)->addIndexColumn()->make(true);
+            }
+            return view('users-data');
+
         }else{
+
             $tags = Tags::where("is_deleted",0)->where('created_by',Auth::id())->get();
             foreach($tags as $tag) {
                 $tag->created_by = User::where('id',$tag->created_by)->first();
             }
-            return $tags;
+            if ($request->ajax()) {
+                return Datatables::of($tags)->addIndexColumn()->make(true);
+            }
+            return view('users-data');
+            
         }
     }
 

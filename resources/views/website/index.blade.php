@@ -80,10 +80,13 @@
 
     <!-- project section -->
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-3 bg-warning" style="    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;">
             <div class="project_content">
-                <h2>Checkout over Awesome Projects</h2>
-                <a href="#"> view more</a>
+                <h2>Checkout over Awesome Projects</h2> <br>
+                <a href="{{url('category')}}/projects" class="bg-light"> view more</a>
             </div>
         </div>
         <div class="col-md-9">
@@ -93,7 +96,7 @@
                         @foreach($feature_posts as $post)
                         <li class="glide__slide">
                             <a href="{{url('post')}}/{{$post->slug}}">
-                                <div class="card">
+                                <div class="card card_shadow border-0">
                                     <div class="project_post">
                                         <div class="project_img" style="position:relative">
                                             <img src="{{asset('images')}}/{{$post->image}}" style="width:100%; min-height:150px; height:100px" class="img-fluid" alt="">
@@ -137,7 +140,7 @@
                 @foreach($tutorial_posts as $post)
                 <div class="col-md-6">
                     <a href="{{url('post')}}/{{$post->slug}}">
-                        <div class="card mt-2 mb-2">
+                        <div class="card card_shadow border-0 mt-2 mb-2">
                             <div class="project_post">
                                 <div class="project_img" style="position:relative">
                                     <img src="{{asset('images')}}/{{$post->image}}" style="width:100%; min-height:200px; height:100px" class="img-fluid" alt="">

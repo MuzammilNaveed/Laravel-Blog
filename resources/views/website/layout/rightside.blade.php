@@ -1,4 +1,4 @@
-<div class="right-category bg-white shadow-sm p-3">
+<div class="right-category bg-white card_shadow p-3">
     <h5 class="p-0 w-800">Categories</h5>
     <div class="category" id="__categories">
         @foreach($categories as $category)
@@ -8,7 +8,7 @@
 </div>
 
 <!-- popular posts -->
-<div class="recent mt-3 bg-white shadow-sm p-3">
+<div class="recent mt-3 bg-white card_shadow p-3">
     <h5 class="p-0 w-800">Popular Posts</h5>
     <div class="__recent_post mt-3" id="__recent_post">
         @foreach($popular_posts as $post)

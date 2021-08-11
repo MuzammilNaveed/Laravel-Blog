@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use DataTables;
 
 class categoryController extends Controller
 {
@@ -28,7 +29,11 @@ class categoryController extends Controller
                 $category->deleted_by = User::where('id',$category->deleted_by)->first();
             }
 
-            return $categories;
+            if ($request->ajax()) {
+                return Datatables::of($categories)->addIndexColumn()->make(true);
+            }
+            
+            return view('users-data');
 
         }else{
 
@@ -39,14 +44,16 @@ class categoryController extends Controller
                 $category->deleted_by = User::where('id',$category->deleted_by)->first();
             }
 
-            return $categories;
+            if ($request->ajax()) {
+                return Datatables::of($categories)->addIndexColumn()->make(true);
+            }
+            
+            return view('users-data');
         }
 
     }
 
     public function categoryPage() {
-    
-
         $permission = DB::table("permissions")->where("created_by",Auth::id())->where('title','category')->first();
         $categories = Category::where('is_deleted',0)->get();
         return view('admin.category.category', compact('categories','permission'));
@@ -108,6 +115,13 @@ class categoryController extends Controller
 
         $posts = Post::where('cat_id',$request->id)->where('is_deleted',0)->get();
         return $posts;
+
+        // if ($request->ajax()) {
+        //     $data = ProductAttribute::orderBy('id','desc');
+        //     return Datatables::of($data)->addIndexColumn()->make(true);
+        // }
+        
+        // return view('users-data');
 
     }
 

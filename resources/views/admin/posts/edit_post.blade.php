@@ -1,5 +1,7 @@
 @extends('admin.layout.master')
 @section('page_title','Edit Post')
+@section('blog','open active')
+@section('post','active')
 @section('container')
 <style>
     .tag {
@@ -37,7 +39,7 @@
         <div class="row">
             <div class="col-md-9">
                 <h4>1. <span class="text-primary">Post Section</span> </h4>
-                <div class="card card_shadow p-3 border-0 rounded-0">
+                <div class="card card_shadow p-3 border-0 rounded-0 ">
                     <div class="form-group form-group-default">
                         <label>Title</label>
                         <input name="title" id="title" type="text" value="{{$post->title}}" class="form-control input-sm" placeholder="Post Title">
@@ -89,9 +91,9 @@
                         </div>
                     </div>
 
-                    <div class="loader_container" id="card1">
+                    <!-- <div class="loader_container" id="card1">
                         <div class="loader"></div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div class="col-md-3 mt-3 mt-md-0">
@@ -105,9 +107,9 @@
                         <input name="post_img_alt" value="{{$post->post_img_alt}}" type="text" class="form-control input-sm" placeholder="Image ALT Name">
                     </div>
                     <span class="text-muted small ml-1"> <i>For better image SEO</i> </span>
-                    <div class="loader_container" id="card2">
+                    <!-- <div class="loader_container" id="card2">
                         <div class="loader"></div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -115,9 +117,9 @@
 
         <div class="card mt-4 p-3 border-0 card_shadow rounded-0">
             <textarea name="description" class="editor" id="description" class="w-100">{{$post->description}}</textarea>
-            <div class="loader_container" id="card3">
+            <!-- <div class="loader_container" id="card3">
                 <div class="loader"></div>
-            </div>
+            </div> -->
         </div>
 
         <div class="row">
@@ -151,9 +153,9 @@
                     </div>
                 </div>
 
-                <div class="loader_container" id="card4">
+                <!-- <div class="loader_container" id="card4">
                     <div class="loader"></div>
-                </div>
+                </div> -->
 
             </div>
         </div>
@@ -215,10 +217,10 @@
             cache: false,
             processData: false,
             beforeSend:function(data) {
-                $("#card1").show();
-                $("#card2").show();
-                $("#card3").show();
-                $("#card4").show();
+                // $("#card1").show();
+                // $("#card2").show();
+                // $("#card3").show();
+                // $("#card4").show();
             },
             success: function(data) {
                 console.log(data);
@@ -229,16 +231,16 @@
                 }
             },
             complete:function(data) {
-                $("#card1").hide();
-                $("#card2").hide();
-                $("#card3").hide();
-                $("#card4").hide();
+                // $("#card1").hide();
+                // $("#card2").hide();
+                // $("#card3").hide();
+                // $("#card4").hide();
             },
             error: function(e) {
-                $("#card1").hide();
-                $("#card2").hide();
-                $("#card3").hide();
-                $("#card4").hide();
+                // $("#card1").hide();
+                // $("#card2").hide();
+                // $("#card3").hide();
+                // $("#card4").hide();
             }
         });
     });
@@ -255,12 +257,12 @@
     $('.dropify').dropify();
     $("#meta_tags").tagsinput('items')
 
-    setTimeout(() => {
-        $("#card1").fadeOut(500);
-        $("#card2").fadeOut(500);
-        $("#card3").fadeOut(500);
-        $("#card4").fadeOut(500);
-    }, 4000);
+    // setTimeout(() => {
+    //     $("#card1").fadeOut(50);
+    //     $("#card2").fadeOut(50);
+    //     $("#card3").fadeOut(50);
+    //     $("#card4").fadeOut(50);
+    // }, 4000);
 </script>
 
 @show

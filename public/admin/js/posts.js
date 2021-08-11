@@ -5,232 +5,176 @@ $(document).ready(function() {
         }
     });
 
-    let date = new Date();
-    let from = moment(date).startOf('month').format('YYYY-MM-DD');
-    let to = moment(date).endOf('month').format('YYYY-MM-DD');
-    
-    getAllPosts(from,to);
+
+    getAllPosts();
 });
 
-function getAllPosts(from,to) {
-    $("#from_date").text(from);
-    $("#to_date").text(to);
 
-    $.ajax({
-        type: "GET",
-        url: "posts",
-        data: {from:from,to:to},
-        beforeSend: function(data) {
-            $(".loader_container").show();
+function getAllPosts() {
+    $("#post_table").DataTable().destroy();
+    $.fn.dataTable.ext.errMode = "none";
+    var tbl =$("#post_table").DataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+        pageLength: 10,
+        columnDefs: [
+            {
+                orderable: false,
+                targets: 0
+            }
+        ],
+        ajax: {
+            url: posts
         },
-        success: function(data) {
-            console.log(data, "a");
-
-            $("#counts").text(data.length);
-            $("#post_table").DataTable().destroy();
-            $.fn.dataTable.ext.errMode = "none";
-            var tbl = $("#post_table").DataTable({
-                data: data,
-                pageLength: 25,
-                bInfo: true,
-                paging: true,
-                columns: [
-                    {
-                        data: null,
-                        defaultContent: ""
-                    },
-                    {
-                      "render": function(data, type, full, meta) {
-                        let img = `<img src="/images/`+full.image+`" width="80" height="50" class="shadow-sm rounded">`;
-                        return img;
+        columns: [
+            {
+                data: null,
+                defaultContent: ""
+            },
+            {
+                "render": function(data, type, full, meta) {
+                  let img = `<img src="/images/`+full.image+`" width="80" height="50" class="shadow-sm rounded">`;
+                  return img;
+                }
+              },
+              {
+                  "render": function(data, type, full, meta) {
+                      let link = `<div class="mt-2">
+                          <a style="font-size:1rem" data-toggle="tooltip" data-placement="top" title="`+full.title+`" href="edit_post/`+full.id+`">`+full.title.substr(0,30) + '...' +`</a>
+                              <br> date: <span class="small text-muted text-dark">`+moment(full.created_at).format("DD-MM-YYYY h:m:s")+`</span>
+                          </div>`;
+                      return link;
+                  }
+              },
+              {
+                  "className" : "text-center",
+                  "render": function(data, type, full, meta) {
+                      return full.view_count;
+                  }
+              },
+              {
+                  "className" : "small",
+                  "render": function(data, type, full, meta) {
+                      return `<span class="small">`+full.category.name+`</span>`;
+                  }
+              },
+              {
+                  "data": "section",
+                  "render": function(data, type, full, meta) {
+                      if(full.section == 1) {
+                          return `<span class="small">Header</span>`;
+                      }else if(full.section == 2) {
+                          return `<span class="small">Project</span>`;
+                      }else{
+                          return `<span class="small">Tutorials</span>`;
                       }
-                    },
-                    {
-                        "render": function(data, type, full, meta) {
-                            let link = `<div class="mt-2">
-                                <a style="font-size:1rem" data-toggle="tooltip" data-placement="top" title="`+full.title+`" href="edit_post/`+full.id+`">`+full.title.substr(0,30) + '...' +`</a>
-                                    <br> date: <span class="small text-muted text-dark">`+moment(full.created_at).format("DD-MM-YYYY h:m:s")+`</span>
-                                </div>`;
-                            return link;
-                        }
-                    },
-                    {
-                        "className" : "text-center",
-                        "render": function(data, type, full, meta) {
-                            return full.view_count;
-                        }
-                    },
-                    {
-                        "className" : "small",
-                        "render": function(data, type, full, meta) {
-                            return `<span class="small">`+full.category.name+`</span>`;
-                        }
-                    },
-                    {
-                        "data": "section",
-                        "render": function(data, type, full, meta) {
-                            if(full.section == 1) {
-                                return `<span class="small">Header</span>`;
-                            }else if(full.section == 2) {
-                                return `<span class="small">Project</span>`;
-                            }else{
-                                return `<span class="small">Tutorials</span>`;
-                            }
-                        }
-                    },
-                    {
-                        "className" : "small",
-                        "render": function(data, type, full, meta) {
-                            if(full.user != null && full.user != '') {
-                                let created_by = `<a href="javascript:void(0)" onclick="showUserDetails(`+full.user.id+`)">`+full.user.name +`</a>`
-                                return created_by;
-                            }else{
-                                return `-`;
-                            }
-                            
-                        }
-                    },
-                    {
-                        "className" : "small text-center",
-                        "render": function(data, type, full, meta) {
-                            if(full.comments.length > 0) {
+                  }
+              },
+              {
+                  "className" : "small",
+                  "render": function(data, type, full, meta) {
+                      if(full.user != null && full.user != '') {
+                          let created_by = `<a href="javascript:void(0)" onclick="showUserDetails(`+full.user.id+`)">`+full.user.name +`</a>`
+                          return created_by;
+                      }else{
+                          return `-`;
+                      }
+                      
+                  }
+              },
+              {
+                  "className" : "small text-center",
+                  "render": function(data, type, full, meta) {
+                      if(full.comments.length > 0) {
 
-                                for(var c = 0; c < full.comments.length; c++) {
-                                    return `<a onclick="showComments(`+full.comments[c].id+`,'`+full.title+`')" href="javascript:void(0)">`+full.comments.length+`</a>`;
-                                }
-                            }else{
-                                return full.comments.length;
-                            }
-                            
-                        }
-                    },
-                    
-                    {
-                        "render": function(data, type, full, meta) {
-                          var tag_arr = [];
-                          for(var i=0; i < full.tags.length;i++) {
-                            var tag = `<span class="badge badge-pill mt-1 mr-1 bg-primary text-white">`+full.tags[i].name+`</span>`;
-                            tag_arr.push(tag);
+                          for(var c = 0; c < full.comments.length; c++) {
+                              return `<a onclick="showComments(`+full.comments[c].id+`,'`+full.title+`')" href="javascript:void(0)">`+full.comments.length+`</a>`;
                           }
-                          return tag_arr.join(' ');
+                      }else{
+                          return full.comments.length;
                       }
-                    },
-                    {
-                        "className" : "text-left",
-                        "render": function(data, type, full, meta) {
-                            let check = `<i class="fas fa-check text-success"></i>`;
-                            let cancel = `<i class="fas fa-times text-danger"></i>`;
-                          return `
-                            <ul class="small seo pl-0" style="list-style:none">
-                                <li >`+(full.meta_title !=null ? check + ' Meta Title' : cancel+ ' Meta Title')+`</li>
-                                <li >`+(full.meta_author !=null ? check + ' Meta Author Name ': cancel+ ' Meta Author Name ')+`</li>
-                                <li >`+(full.meta_description !=null ? check + ' Meta Description': cancel+ ' Meta Description')+` </li>
-                                <li >`+(full.meta_tags !=null ? check + ' Meta Tags': cancel + ' Meta Tags')+` </li>
-                            </ul>
-                          `;
-                      }
-                    },
-                    {
-                        "render": function(data, type, full, meta) {
-                          return `
-                          <div class="custom-control custom-switch">
-                            <input onchange="changeStatus(`+full.id+`)" type="checkbox" class="custom-control-input" id="active_post_`+full.id+`"  `+(full.is_active == 1 ? 'checked' : '-')+` >
-                            <label class="custom-control-label" for="active_post_`+full.id+`"></label>
-                          </div>
-                          `;
-                      }
-
-                    },
-                    {
-                        "render": function(data, type, full, meta) {
-                            let view_btn = `<a data-toggle="tooltip" data-placement="top" title="view post" href="`+view_post+`/`+full.id+`"class="btn btn-info text-white btn_cirlce ml-2">
-                            <i class="far fa-eye"></i></a>`;
-                            let update_btn = ` <a href="edit_post/`+full.id+`" type="button" class="btn btn-primary text-white btn_cirlce ml-2" data-toggle="tooltip" data-placement="top" title="edit post"><i class="fas fa-pen"></i></a>`;
-                            let del_btn = `<button data-toggle="tooltip" data-placement="top" title="delete post" onclick="deleteRecord(`+ full.id + `)" type="button" class="btn btn-danger text-white ml-2 text-white btn_cirlce">
-                            <i class="fas fa-trash"></i></button>`;
-                            
-                            var update = $("#update").text();
-                            var del = $("#delete").text();
-                            
-                            if(update != "" && del != "") {
-                                if(update == 1 && del == 1) {
-                                    return view_btn + update_btn + del_btn
-                                } else if(update == 1 && del == 0) {
-                                    return view_btn + update_btn;
-                                }else if(update == 0 && del == 1) {
-                                    return view_btn + del_btn;
-                                }else{
-                                    return view_btn;
-                                }
-                            }
-                        
-                        }
+                      
+                  }
+              },
+              
+              {
+                  "render": function(data, type, full, meta) {
+                    var tag_arr = [];
+                    for(var i=0; i < full.tags.length;i++) {
+                      var tag = `<span class="badge badge-pill mt-1 mr-1 bg-primary text-white">`+full.tags[i].name+`</span>`;
+                      tag_arr.push(tag);
                     }
-                ]
-            });
+                    return tag_arr.join(' ');
+                }
+              },
+              {
+                  "className" : "text-left",
+                  "render": function(data, type, full, meta) {
+                      let check = `<i class="fas fa-check text-success"></i>`;
+                      let cancel = `<i class="fas fa-times text-danger"></i>`;
+                    return `
+                      <ul class="small seo pl-0" style="list-style:none">
+                          <li >`+(full.meta_title !=null ? check + ' Meta Title' : cancel+ ' Meta Title')+`</li>
+                          <li >`+(full.meta_author !=null ? check + ' Meta Author Name ': cancel+ ' Meta Author Name ')+`</li>
+                          <li >`+(full.meta_description !=null ? check + ' Meta Description': cancel+ ' Meta Description')+` </li>
+                          <li >`+(full.meta_tags !=null ? check + ' Meta Tags': cancel + ' Meta Tags')+` </li>
+                      </ul>
+                    `;
+                }
+              },
+              {
+                  "render": function(data, type, full, meta) {
+                    return `
+                    <div class="custom-control custom-switch">
+                      <input onchange="changeStatus(`+full.id+`)" type="checkbox" class="custom-control-input" id="active_post_`+full.id+`"  `+(full.is_active == 1 ? 'checked' : '-')+` >
+                      <label class="custom-control-label" for="active_post_`+full.id+`"></label>
+                    </div>
+                    `;
+                }
 
-            tbl.on("order.dt search.dt", function() {
-                tbl.column(0, {
-                    search: "applied",
-                    order: "applied"
-                })
-                    .nodes()
-                    .each(function(cell, i) {
-                        cell.innerHTML = i + 1;
-                    });
-            }).draw();
-
-
-            $("#sections").on('change', function () {
-                tbl.column(5).search($(this).val()).draw();
-            });
-
-            $("#category_id").on('change', function () {
-                tbl.column(4).search($(this).val()).draw();
-            });
-        },
-        complete: function(data) {
-            $(".loader_container").hide();
-            $('[data-toggle="tooltip"]').tooltip();
-        },
-        error: function(e) {
-            console.log(e);
-        }
+              },
+              {
+                  "render": function(data, type, full, meta) {
+                      let view_btn = `<a data-toggle="tooltip" data-placement="top" title="view post" href="`+view_post+`/`+full.id+`"class="btn btn-info text-white btn_cirlce ml-2">
+                      <i class="far fa-eye"></i></a>`;
+                      let update_btn = ` <a href="edit_post/`+full.id+`" type="button" class="btn btn-primary text-white btn_cirlce ml-2" data-toggle="tooltip" data-placement="top" title="edit post"><i class="fas fa-pen"></i></a>`;
+                      let del_btn = `<button data-toggle="tooltip" data-placement="top" title="delete post" onclick="deleteRecord(`+ full.id + `)" type="button" class="btn btn-danger text-white ml-2 text-white btn_cirlce">
+                      <i class="fas fa-trash"></i></button>`;
+                      
+                      var update = $("#update").text();
+                      var del = $("#delete").text();
+                      
+                      if(update != "" && del != "") {
+                          if(update == 1 && del == 1) {
+                              return view_btn + update_btn + del_btn
+                          } else if(update == 1 && del == 0) {
+                              return view_btn + update_btn;
+                          }else if(update == 0 && del == 1) {
+                              return view_btn + del_btn;
+                          }else{
+                              return view_btn;
+                          }
+                      }
+                  
+                  }
+              },
+        ]
     });
+    tbl.on("order.dt search.dt", function() {
+        tbl.column(0, {
+            search: "applied",
+            order: "applied"
+        })
+            .nodes()
+            .each(function(cell, i) {
+                cell.innerHTML = i + 1;
+            });
+    }).draw();
 }
 
-function filterData(value) {
-    var today = new Date();
-    switch (value) {
-        case "current_month":
-            var from_date1 =  moment(today).startOf('month').format('YYYY-MM-DD');
-            var too_date1 =  moment(today).endOf('month').format('YYYY-MM-DD');
-            getAllPosts(from_date1,too_date1)
-            $("#date_range_filter").attr("style", "display:none !important");
-            break;
-        case "previous_month":
-            var from_date =  moment(today).subtract(1,'months').startOf('month').format('YYYY-MM-DD');
-            var too_date =  moment(today).subtract(1,'months').endOf('month').format('YYYY-MM-DD');
-            getAllPosts(from_date,too_date)
-            $("#date_range_filter").attr("style", "display:none !important");
-            break;
-        case "all_time":
-            let to_date = moment(today).format("YYYY-MM-DD");
-            getAllPosts('2000-01-01',to_date);
-            $("#date_range_filter").attr("style", "display:none !important");
-            break;
-        case "date_range":
-            $("#date_range_filter").css("display", "block");
-            break;
-    }
-}
 
-function dateWiseData() {
-    var from = $("#start").val();
-    var to = $("#end").val();
 
-    getAllPosts(from,to)
-}
 
 function changeStatus(id) {
     if( $("#active_post_"+id).is(":checked") ) {
@@ -267,8 +211,6 @@ function changeStatus(id) {
         });
     }
 }
-
-
 
 function showUserDetails(id) {
 

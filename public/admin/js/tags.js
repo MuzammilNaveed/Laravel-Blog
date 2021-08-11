@@ -94,93 +94,6 @@ $(document).ready(function() {
 });
 
 
-function getAllTags() {    
-    $.ajax({
-        type: "GET",
-        url: "tags",
-        dataType:'json',
-        beforeSend:function(data) {
-            $(".loader_container").show();
-        },
-        success: function(data) {
-
-            $("#counts").text(data.length);
-            $('#tag_table').DataTable().destroy();
-            $.fn.dataTable.ext.errMode = 'none';
-            var tbl = $('#tag_table').DataTable({
-                data: data,
-                "pageLength":25,
-                "bInfo": true,
-                "paging": true,
-                columns: [{
-                    "data": null,
-                    "defaultContent": ""
-                },
-                {
-                    "render": function (data, type, full, meta) {
-                        return moment(full.created_at).format('DD-MM-YYYY h:m:s');
-                    }
-                },
-                {
-                    "render": function (data, type, full, meta) {
-                        return full.name != null ? full.name : '--';
-                    }
-                },
-                {
-                    "render": function (data, type, full, meta) {
-                        return full.slug != null ? full.slug : '--';
-                    }
-                },
-                {
-                    "render": function (data, type, full, meta) {
-                        let update_btn = `
-                            <button onclick="viewRecord(`+ full.id +`, '`+full.name+`')" type="button" 
-                                class="btn btn-primary text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Edit" >
-                                <i class="fas fa-pencil-alt"></i> 
-                            </button>`;
-                        
-                        let del_btn = `<button onclick="deleteRecord(`+full.id+`)" type="button" 
-                                class="btn btn-danger text-white ml-2 text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </button>`;
-
-                        var update = $("#update").text();
-                        var del = $("#delete").text();
-                        if(update != "" && del != "") {
-                            if(update == 1 && del == 1) {
-                                return update_btn + del_btn
-                            } else if(update == 1 && del == 0) {
-                                return update_btn;
-                            }else if(update == 0 && del == 1) {
-                                return del_btn;
-                            }
-                        }
-                    }
-                },
-                ],
-            });
-
-            tbl.on('order.dt search.dt', function () {
-                tbl.column(0, {
-                    search: 'applied',
-                    order: 'applied'
-                }).nodes().each(function (cell, i) {
-                    cell.innerHTML = i + 1;
-                });
-            }).draw();
-
-        },
-        complete:function(data) {
-            $(".loader_container").hide();
-            $('[data-toggle="tooltip"]').tooltip();
-        },
-        error: function(e) {
-            console.log(e);
-        }
-    });
-}
-
-
 function viewRecord(id,name) {
     $("#updateModal").modal('show');
     $("#id").val(id);
@@ -228,4 +141,81 @@ function deleteRecord(id) {
         });
         }
       })
+}
+
+
+function getAllTags() {
+    $("#tag_table").DataTable().destroy();
+    $.fn.dataTable.ext.errMode = "none";
+    var tbl =$("#tag_table").DataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+        pageLength: 10,
+        columnDefs: [
+            {
+                orderable: false,
+                targets: 0
+            }
+        ],
+        ajax: { url: tags },
+        columns: [
+            {
+                data: null,
+                defaultContent: ""
+            },
+            {
+                render: function(data, type, full, meta) {
+                    return moment(full.created_at).format("DD-MM-YYYY");
+                }
+            },
+            {
+                render: function(data, type, full, meta) {
+                    return full.name != null ? full.name : "-";
+                }
+            },
+            {
+                className: "small text-center",
+                render: function(data, type, full, meta) {
+                    return full.slug != null ? full.slug : '--';
+                }
+            },
+            {
+                render: function(data, type, full, meta) {
+                    let update_btn = `
+                    <button onclick="viewRecord(`+ full.id +`, '`+full.name+`')" type="button" 
+                        class="btn btn-primary text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Edit" >
+                        <i class="fas fa-pencil-alt"></i> 
+                    </button>`;
+                
+                    let del_btn = `<button onclick="deleteRecord(`+full.id+`)" type="button" 
+                            class="btn btn-danger text-white ml-2 text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>`;
+
+                    var update = $("#update").text();
+                    var del = $("#delete").text();
+                    if(update != "" && del != "") {
+                        if(update == 1 && del == 1) {
+                            return update_btn + del_btn
+                        } else if(update == 1 && del == 0) {
+                            return update_btn;
+                        }else if(update == 0 && del == 1) {
+                            return del_btn;
+                        }
+                    }
+                }
+            },
+        ]
+    });
+    tbl.on("order.dt search.dt", function() {
+        tbl.column(0, {
+            search: "applied",
+            order: "applied"
+        })
+            .nodes()
+            .each(function(cell, i) {
+                cell.innerHTML = i + 1;
+            });
+    }).draw();
 }

@@ -9,7 +9,7 @@ class Feature extends Model
 {
 
     protected $table = 'feature';
-    protected $fillable = ['title','route','sequence','parent_id',
+    protected $fillable = ['title','slug','route','sequence','parent_id',
     'is_active','role_id','feature_type','menu_icon'];
     use HasFactory;
 

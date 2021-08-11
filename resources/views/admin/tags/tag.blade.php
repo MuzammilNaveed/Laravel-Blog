@@ -1,5 +1,7 @@
 @extends('admin.layout.master')
 @section('page_title','Manage Tags')
+@section('blog','active')
+@section('tag','active')
 @section('container')
 
 <style>
@@ -80,9 +82,6 @@
             <button aria-label="" type="button" class="btn btn-cons" data-dismiss="modal"> Cancel</button>
           </div>
         </form>
-        <div class="loader_container" id="add_loader" style="display:none">
-          <div class="loader"></div>
-        </div>
       </div>
     </div>
   </div>
@@ -115,9 +114,6 @@
             <button aria-label="" type="button" class="btn btn-cons" data-dismiss="modal"> Cancel</button>
           </div>
         </form>
-        <div class="loader_container" id="edit_loader" style="display:none">
-          <div class="loader"></div>
-        </div>
       </div>
     </div>
   </div>
@@ -127,5 +123,8 @@
 
 @endsection
 @section('scripts')
+<script>
+  var tags = "{{url('tags')}}";
+</script>
 <script src="{{asset('admin/js/tags.js')}}"></script>
 @show

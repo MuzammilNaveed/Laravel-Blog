@@ -16,6 +16,7 @@ class CreateFeaturesTable extends Migration
         Schema::create('features', function (Blueprint $table) {
             $table->id();
             $table->string('title')->nullable();
+            $table->string('slug')->nullable();
             $table->string('route')->nullable();
             $table->integer('sequence')->nullable();
             $table->integer('parent_id')->nullable();

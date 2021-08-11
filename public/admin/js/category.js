@@ -28,8 +28,12 @@ $(document).ready(function() {
                         $("#addRecord")[0].reset();
                         $("#addRecordModal").modal("hide");
                         let date = new Date();
-                        let from = moment(date).startOf("month").format("YYYY-MM-DD");
-                        let to = moment(date).endOf("month").format("YYYY-MM-DD");
+                        let from = moment(date)
+                            .startOf("month")
+                            .format("YYYY-MM-DD");
+                        let to = moment(date)
+                            .endOf("month")
+                            .format("YYYY-MM-DD");
 
                         getAllCategories(from, to);
                         notyf.success(data.message);
@@ -37,7 +41,7 @@ $(document).ready(function() {
                         notyf.error(data.message);
                     }
                 },
-                complete:function(data) {
+                complete: function(data) {
                     $("#add_loader").hide();
                 },
                 error: function(e) {
@@ -84,7 +88,7 @@ $(document).ready(function() {
                         notyf.erro(data.message);
                     }
                 },
-                complete:function(data) {
+                complete: function(data) {
                     $("#edit_loader").hide();
                 },
                 error: function(e) {
@@ -95,114 +99,18 @@ $(document).ready(function() {
         }
     });
 
-
     getAllCategories();
 });
 
-function getAllCategories() {
-    $.ajax({
-        type: "GET",
-        url: categories,
-        beforeSend: function(data) {
-            $(".loader_container").show();
-        },
-        success: function(data) {
-            $("#counts").text(data.length);
 
-            $("#showRecord").DataTable().destroy();
-            $.fn.dataTable.ext.errMode = "none";
-            var tbl = $("#showRecord").DataTable({
-                data: data,
-                pageLength: 25,
-                bInfo: true,
-                paging: true,
-                columns: [
-                    {
-                        data: null,
-                        defaultContent: ""
-                    },
-                    {
-                        "render": function(data, type, full, meta) {
-                            return moment(full.created_at).format("DD-MM-YYYY");
-                        }
-                    },
-                    {
-                        "render": function(data, type, full, meta) {
-                            return full.name != null ? full.name : '-';
-                        }
-                    },
-                    {
-                        "className" : "small text-center",
-                        "render": function(data, type, full, meta) {
-                            let post_count =  full.post_count != null ? full.post_count : '-';
-                            let cat_name = full.name != null ? full.name : '-';
-                            return `<a href="#" onclick="showPosts(`+full.id+`,'`+cat_name+`')">`+post_count+`</a>`;
-                        }
-                    },
-                    {
-                        "render": function(data, type, full, meta) {
-                            return full.description != null ? full.description.substring(0,30) + "...." : '-';
-                        }
-                    },
-                    {
-                        "render": function(data, type, full, meta) {
-                            let update_btn = `
-                                <button onclick="viewRecord(`+full.id + `, '` + full.name + `','` + full.description +`',`+full.parent_id+`)" 
-                                    type="button" class="btn btn-primary text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Edit">
-                                    <i class="fas fa-pencil-alt"></i>
-                                </button>`;
-                            let del_btn = `
-                                <button  onclick="deleteRecord(`+ full.id + `)" type="button" 
-                                    class="btn btn-danger ml-2 text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Delete">
-                                    <i class="fas fa-trash"></i>
-                                </button>`;
-
-                            var update = $("#update").text();
-                            var del = $("#delete").text();
-
-                            if(update != "" && del != "") {
-                                if(update == 1 && del == 1) {
-                                    return update_btn + del_btn
-                                } else if(update == 1 && del == 0) {
-                                    return update_btn;
-                                }else{
-                                    return del_btn;
-                                }
-                            }
-
-                           
-                        }
-                    }
-                ]
-            });
-
-            tbl.on("order.dt search.dt", function() {
-                tbl.column(0, {
-                    search: "applied",
-                    order: "applied"
-                })
-                    .nodes()
-                    .each(function(cell, i) {
-                        cell.innerHTML = i + 1;
-                    });
-            }).draw();
-        },
-        complete: function(data) {
-            $(".loader_container").hide();
-            $('[data-toggle="tooltip"]').tooltip();
-        },
-        error: function(e) {
-            console.log(e);
-        }
-    });
-}
-
-function viewRecord(id, name, description,parent_id) {
+function viewRecord(id, name, description, parent_id) {
     $("#updateModal").modal("show");
     $("#id").val(id);
     $("#name").val(name);
     $("#description").val(description);
-    $("#parent_id").val(parent_id).trigger('change');
+    $("#parent_id")
+        .val(parent_id)
+        .trigger("change");
 
     $("#catname").text(name);
 }
@@ -237,17 +145,15 @@ function deleteRecord(id) {
     });
 }
 
-
-function showPosts(id,name) {
-
+function showPosts(id, name) {
     $("#categoryname").text(name);
-    $("#postViewModal").modal('show');
+    $("#postViewModal").modal("show");
 
     $.ajax({
         type: "POST",
         url: category_posts,
-        data: {id:id},
-        dataType:'json',
+        data: { id: id },
+        dataType: "json",
         beforeSend: function(data) {
             $("#cat_post_loader").show();
         },
@@ -256,10 +162,18 @@ function showPosts(id,name) {
 
             let html = ``;
             let index = 1;
-            for(var i = 0; i < data.length; i ++) {
-
-                html +=`
-                    <li style="list-style:none"><strong>`+index+`. </strong> <a href="`+view_post+`/`+data[i].id+`">`+data[i].title+`</a></li>
+            for (var i = 0; i < data.length; i++) {
+                html +=
+                    `
+                    <li style="list-style:none"><strong>` +
+                    index +
+                    `. </strong> <a href="` +
+                    view_post +
+                    `/` +
+                    data[i].id +
+                    `">` +
+                    data[i].title +
+                    `</a></li>
                 `;
                 index++;
             }
@@ -273,5 +187,95 @@ function showPosts(id,name) {
             console.log(e);
         }
     });
+}
 
+function getAllCategories() {
+    $("#showRecord").DataTable().destroy();
+    $.fn.dataTable.ext.errMode = "none";
+    var tbl =$("#showRecord").DataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+        pageLength: 10,
+        columnDefs: [
+            {
+                orderable: false,
+                targets: 0
+            }
+        ],
+        ajax: {
+            url: categories
+        },
+        columns: [
+            {
+                data: null,
+                defaultContent: ""
+            },
+            {
+                render: function(data, type, full, meta) {
+                    return moment(full.created_at).format("DD-MM-YYYY");
+                }
+            },
+            {
+                render: function(data, type, full, meta) {
+                    return full.name != null ? full.name : "-";
+                }
+            },
+            {
+                className: "small text-center",
+                render: function(data, type, full, meta) {
+                    let post_count = full.post_count != null ? full.post_count : "-";
+                    let cat_name = full.name != null ? full.name : "-";
+                    return (
+                        `<a href="#" onclick="showPosts(` + full.id +`,'` + cat_name + `')">` + post_count + `</a>`
+                    );
+                }
+            },
+            {
+                render: function(data, type, full, meta) {
+                    return full.description != null
+                        ? full.description.substring(0, 30) + "...."
+                        : "-";
+                }
+            },
+            {
+                render: function(data, type, full, meta) {
+                    let update_btn =
+                    `
+                    <button onclick="viewRecord(` + full.id + `, '` + full.name + `','` + full.description + `',` + full.parent_id +`)" 
+                        type="button" class="btn btn-primary text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Edit">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>`;
+
+                    let del_btn =` <button  onclick="deleteRecord(` + full.id + `)" type="button" 
+                            class="btn btn-danger ml-2 text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>`;
+
+                    var update = $("#update").text();
+                    var del = $("#delete").text();
+
+                    if (update != "" && del != "") {
+                        if (update == 1 && del == 1) {
+                            return update_btn + del_btn;
+                        } else if (update == 1 && del == 0) {
+                            return update_btn;
+                        } else {
+                            return del_btn;
+                        }
+                    }
+                }
+            },
+        ]
+    });
+    tbl.on("order.dt search.dt", function() {
+        tbl.column(0, {
+            search: "applied",
+            order: "applied"
+        })
+            .nodes()
+            .each(function(cell, i) {
+                cell.innerHTML = i + 1;
+            });
+    }).draw();
 }

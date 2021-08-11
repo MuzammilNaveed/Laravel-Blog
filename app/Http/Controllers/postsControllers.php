@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use function GuzzleHttp\json_encode;
 use Illuminate\Support\Facades\Auth;
+use DataTables;
 
 class postsControllers extends Controller
 {
@@ -24,7 +25,7 @@ class postsControllers extends Controller
         $name = strtolower($role->name);
 
         if( $name == "admin" || $name == "administrator" || $name == "super admin" || $name == "super administrator") {
-            $posts =  Post::whereBetween('created_at', [$request->from, $request->to])->orderBy('id','desc')->get();
+            $posts =  Post::orderBy('id','desc')->get();
 
             foreach($posts as $post) {
                 $post->category = Category::where("id",$post->cat_id)->select("name")->first();         
@@ -36,9 +37,14 @@ class postsControllers extends Controller
                 $post->user = User::where('id',$post->meta_author_id)->first();
                 $post->comments = Comments::where('post_id',$post->id)->get();
             }
-            return $posts;
+
+            if ($request->ajax()) {
+                return Datatables::of($posts)->addIndexColumn()->make(true);
+            }
+            return view('users-data');
+
         }else{
-            $posts =  Post::whereBetween('created_at', [$request->from, $request->to])->where('created_by',Auth::id())->orderBy('id','desc')->get();
+            $posts =  Post::where('created_by',Auth::id())->orderBy('id','desc')->get();
 
             foreach($posts as $post) {
                 $post->category = Category::where("id",$post->cat_id)->select("name")->first();         
@@ -50,7 +56,10 @@ class postsControllers extends Controller
                 $post->user = User::where('id',$post->meta_author_id)->first();
                 $post->comments = Comments::where('post_id',$post->id)->get();
             }
-            return $posts;
+            if ($request->ajax()) {
+                return Datatables::of($posts)->addIndexColumn()->make(true);
+            }
+            return view('users-data');
         }
 
     }

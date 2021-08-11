@@ -1,5 +1,7 @@
 @extends('admin.layout.master')
 @section('page_title','View Post')
+@section('blog','open active')
+@section('post','active')
 @section('container')
 
 <?php
