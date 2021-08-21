@@ -1,6 +1,6 @@
 @extends('admin.layout.master')
 @section('page_title','Manage Categories')
-@section('blog','active')
+@section('blog','open active')
 @section('category','active')
 @section('container')
 

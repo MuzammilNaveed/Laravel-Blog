@@ -109,7 +109,22 @@
     ::-webkit-scrollbar-thumb:hover {
       background: #555;
     }
-
+    .page-sidebar .sidebar-menu .menu-items > li > a > .title {
+      width: 80% !important;
+    }
+    .page-sidebar .sidebar-menu .menu-items > li > a > .arrow {
+      float: right;
+      padding-right: 0px !important;
+    }
+    .fr-toolbar , .second-toolbar{
+        border-radius: 2px !important;
+    }
+    #logo {
+        display: none;
+    }
+    .fr-toolbar {
+      background-color: #f8f9fa !important;
+    }
   </style>
 </head>
 <body class="fixed-header windows desktop js-focus-visible pace-done menu-pin">
@@ -187,6 +202,7 @@
 
   </div>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.0-alpha.1/jquery-ui.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="{{asset('admin/assets/plugins/pace/pace.min.js')}}" type="text/javascript"></script>
   <script src="{{asset('admin/assets/plugins/liga.js')}}" type="text/javascript"></script>

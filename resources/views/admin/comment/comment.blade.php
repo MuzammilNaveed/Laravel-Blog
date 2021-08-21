@@ -32,9 +32,7 @@
                                 <th>Sr#</th>
                                 <th>Date</th>
                                 <th>Name</th>
-                                <th>Email</th>
                                 <th>Comment</th>
-                                <th>Post Title</th>
                                 <th>Replies</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -62,6 +60,7 @@
     let view_post = "{{url('view_post')}}";
     let approve_comment = "{{url('approve_comment')}}";
     let approve_comment_reply = "{{url('approve_comment_reply')}}";
+    let comment = "{{url('comment')}}";
 </script>
 <script src="{{asset('admin/js/comment.js')}}"></script>
 

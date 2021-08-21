@@ -1,5 +1,7 @@
 @extends('admin.layout.master')
 @section('page_title','Manage Users')
+@section('administration','open active')
+@section('users','active')
 @section('container')
 
 <style>

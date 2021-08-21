@@ -164,7 +164,7 @@
                 <section class="bg-white p-3 card_shadow" id="__post_content">
 
                     <div class="__post_head_with_img __overlay" style="position:relative; z-index:1">
-                        <img src="{{asset('images')}}/{{$post->image}}" style="width:100%" class="img-fluid" alt="">
+                        <img src="{{asset('images')}}/{{$post->image}}" style="width:100%;height:350px" class="img-fluid" alt="">
                         <div class="header_content">
                             <span class="badge bg-dark text-white pt-1 pr-3 pl-3 pb-1">{{$post_category->name}}</span>
                             <h1 class="bg-dark text-white p-2 mt-2">{{$post->title}}</h1>
@@ -198,13 +198,11 @@
 
                 <!-- sharing icons -->
                 <h3 class="lead mt-5">Sharing is Caring <i class="fas fa-heart text-danger small"></i></h3>
-                <button type="button" class="btn btn-dark" style="border-radius:50px; padding:8px 12px"><i class="fas fa-print text-white"></i></button>
+                <button style="background:#3b5998;" class="btn btn-border text-white btn-sm"><i class="fab fa-facebook-f text-white"></i> facebook</button>
 
-                <button style="background:#3b5998;border-radius:50px; padding:8px 14px" class="btn btn-border"><i class="fab fa-facebook-f text-white"></i></button>
+                <button style="background:#0077b5;" class="btn btn-light text-white btn-sm"><i class="fab fa-linkedin-in text-white"></i> linkedin</button>
 
-                <button style="background:#0077b5;border-radius:50px; padding:8px 12px" class="btn btn-light"><i class="fab fa-linkedin-in text-white"></i></button>
-
-                <button style="background:#1da1f2;border-radius:50px; padding:8px 12px" class="btn btn-light"><i class="fab fa-twitter text-white"></i></button>
+                <button style="background:#1da1f2;" class="btn btn-light text-white btn-sm"><i class="fab fa-twitter text-white"></i> twitter</button>
 
 
                 <!-- about author -->

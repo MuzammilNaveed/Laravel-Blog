@@ -10,6 +10,10 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\adminController;
 use App\Http\Controllers\siteController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\MenuController;
 
 
 
@@ -96,6 +100,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/approve_comment_reply', [postsControllers::class, 'approveCommentReply']);
 
     Route::post('/comment_details', [postsControllers::class, 'commentDetails']);
+    Route::get('/comment/{id}/{type}', [postsControllers::class, 'viewComment']);
 
 
 
@@ -118,5 +123,37 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/visitors', [adminController::class, 'index'])->name('visitor.index');
     Route::get('/get_usrr_info', [adminController::class, 'getUserInfo']);
 
+
+    // pages
+    Route::get('/manage_pages', [PageController::class, 'managePages'])->name('pages.index');
+    Route::get('/add_page', [PageController::class, 'addPages']);
+    Route::post('/insert_page_data', [PageController::class, 'insertPageData']);
+    Route::get('/edit_page/{slug}', [PageController::class, 'editPage']);
+    Route::post('/save_edit_page', [PageController::class, 'saveEditPage']);
+
+
+    // contact
+    Route::get('/manage_contact', [ContactController::class, 'index'])->name('contact.index');
+    Route::post('/save_contact', [PageController::class, 'saveContact']);
+    Route::get('/edit_contact/{id}', [PageController::class, 'editContact']);
+
+    // newsletter
+    Route::get('/newsletter', [NewsletterController::class, 'index'])->name('newsletter.index');
+
+
+    // menu
+    Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
+    Route::get('/add-menu/{id?}', [MenuController::class, 'addMenu']);
+    Route::get('/edit-menu/{id}', [MenuController::class, 'editMenu']);
+    Route::post('/insert-menu', [MenuController::class, 'insertMenu']);
+
+    Route::get('/menu-item/{id}', [MenuController::class, 'menuItemPage']);
+    Route::post('/insert-menu-items', [MenuController::class, 'insertMenuItems']);
+    Route::get('/edit-menu-item/{id}', [MenuController::class, 'editMenuItemPage']);
+
+    ROute::post('/update-menu-item-position',[MenuController::class, 'updateMenuItemPostion']);
+
+
+    
 });
 

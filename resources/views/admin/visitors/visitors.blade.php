@@ -1,5 +1,7 @@
 @extends('admin.layout.master')
 @section('page_title','Site Visitor Detail')
+@section('administration','open active')
+@section('visitors','active')
 @section('container')
 
 <style>

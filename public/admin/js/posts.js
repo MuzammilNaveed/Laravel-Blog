@@ -42,7 +42,7 @@ function getAllPosts() {
                   "render": function(data, type, full, meta) {
                       let link = `<div class="mt-2">
                           <a style="font-size:1rem" data-toggle="tooltip" data-placement="top" title="`+full.title+`" href="edit_post/`+full.id+`">`+full.title.substr(0,30) + '...' +`</a>
-                              <br> date: <span class="small text-muted text-dark">`+moment(full.created_at).format("DD-MM-YYYY h:m:s")+`</span>
+                              <br> created at: <span class="small text-muted">`+moment(full.created_at).format("DD-MM-YYYY h:m:s")+`</span>
                           </div>`;
                       return link;
                   }

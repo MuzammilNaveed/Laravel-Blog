@@ -16,13 +16,20 @@ $(document).ready(function() {
 
 
     $("#menu").click(function() {
-        $("#toggle_title_field").css("display", "none");
         $("#route-title").css("display", "block");
     });
 
     $("#toggle_menu").click(function() {
-        $("#toggle_title_field").css("display", "block");
         $("#route-title").css("display", "none");
+    });
+
+// edit 
+    $("#flexRadioDefault4").click(function() {
+        $("#ed-menu-title").css("display", "block");
+    });
+
+    $("#flexRadioDefault5").click(function() {
+        $("#ed-menu-title").css("display", "none");
     });
 
     // for add record 

@@ -1,5 +1,7 @@
 @extends('admin.layout.master')
 @section('page_title','Manage Roles')
+@section('administration','open active')
+@section('role','active')
 @section('container')
 
 @if($permission != null && $permission != "")

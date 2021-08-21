@@ -341,4 +341,18 @@ class postsControllers extends Controller
         return Comments::where('id',$request->id)->get();
     }
 
+    public function viewComment($id,$type) {
+
+        if($type == "comment") {
+            $comment = Comments::where('id',$id)->first();
+            $post = Post::where('id',$comment->post_id)->first();
+        }else if($type == "reply") {
+            $comment = CommentReplies::where('id',$id)->first();
+            $post = Post::where('id',$comment->post_id)->first();
+        }
+
+        return view('admin.comment.view_comment',compact('comment','post'));
+
+    }
+
 }

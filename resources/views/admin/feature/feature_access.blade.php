@@ -1,5 +1,7 @@
 @extends('admin.layout.master')
 @section('page_title','Manage Feature List')
+@section('administration','open active')
+@section('feature-access','active')
 @section('container')
 <style>
 
@@ -169,7 +171,7 @@
                 </div>
               </div>
 
-              <div class="form-group form-group-default" id="menu-title">
+              <div class="form-group form-group-default" id="ed-menu-title">
                   <label>Title</label>
                   <input type="text" name="title" id="edit_title" class="form-control input-sm" placeholder="Menu Title">
               </div>

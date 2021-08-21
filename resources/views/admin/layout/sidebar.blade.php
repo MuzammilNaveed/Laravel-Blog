@@ -17,7 +17,7 @@
     <li class="@yield($menu->slug)">
       @if($menu->is_active == 1)
       <a href="javascript:;"><span class="title"> {{$menu->title}} </span>
-        <span class=" arrow @yield($menu->slug)" "></span></a>
+        <span class=" arrow @yield($menu->slug)"></span></a>
       <span class="icon-thumbnail"> <?php echo $menu->menu_icon; ?> </span>
 
       @php $sub_menus = $menu->sub_menu; @endphp

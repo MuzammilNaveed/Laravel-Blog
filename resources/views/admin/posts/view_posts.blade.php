@@ -23,7 +23,7 @@
 
                 <div class="d-flex justify-content-between">
                     <span class="small text-muted"></span>
-                    <button aria-label="" class="btn {{ $post->is_active == 1 ? 'bg-success text-white' : 'bg-danger text-white' }} btn-lg btn-rounded">{{ $post->is_active == 1 ? 'Published' : 'Not-published' }}</button>
+                    <button aria-label="" class="btn {{ $post->is_active == 1 ? 'bg-success text-white' : 'bg-danger text-white' }}">{{ $post->is_active == 1 ? 'Published' : 'Not-published' }}</button>
                 </div>
                 <span class="small text-muted">Title</span>
                 <h5>{{$post->title}}</h5>
@@ -41,7 +41,7 @@
                         <span class="small text-muted">Tags</span> <br>
                         <div class="row ml-2">
                             @foreach($post_tags as $tag) 
-                                <button aria-label="" class="btn btn-default btn-lg btn-rounded m-r-10 m-b-10">{{$tag->tags['name']}}</button>
+                                <button class="badge bg-light border-0 badge-pill ml-2 mr-2 p-2">{{$tag->tags['name']}}</span>
                             @endforeach
                         </div>
                     </div>

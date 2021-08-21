@@ -48,17 +48,13 @@ function getAllComments() {
                     }
                 },
                 {
-                    "data" : "name",
-                },
-                {
-                    "data" : "email",
-                },
-                {
-                    "data" : "comment",
+                    "render": function (data, type, full, meta) {
+                        return full.name != null ? full.name : '-';
+                    }
                 },
                 {
                     "render": function (data, type, full, meta) {
-                        return `<a href="`+view_post+`/`+full.post.id+`">`+full.post.title+`</a>`;
+                        return full.comment != null ? full.comment : '-';
                     }
                 },
                 {
@@ -83,8 +79,9 @@ function getAllComments() {
                 {
                     "render": function (data, type, full, meta) {
                         return `<div class="d-flex justify-content-center">
+                            <a href="`+comment+`/`+full.id+`/comment" data-toggle="tooltip" data-placement="top" title="View Comment" type="button" class="btn btn-default text-dark btn_cirlce mr-1"><i class="fas fa-eye"></i> </a>
                             <button data-toggle="tooltip" data-placement="top" title="Approve Comment" onclick="commentStatus(`+ full.id +`,'approve')" type="button" class="btn btn-success text-white btn_cirlce"><i class="fas fa-check"></i></button>
-                            <button data-toggle="tooltip" data-placement="top" title="Dis-approve Comment" onclick="commentStatus(`+full.id+`,'reject')" type="button" class="btn btn-danger text-white ml-2 btn_cirlce">
+                            <button data-toggle="tooltip" data-placement="top" title="Dis-approve Comment" onclick="commentStatus(`+full.id+`,'reject')" type="button" class="btn btn-danger text-white ml-1 btn_cirlce">
                             <i class="fas fa-ban"></i>
                         </div>`
                     }
@@ -174,6 +171,7 @@ function format ( data ) {
                 <td>`+ cmt_rp_status +`</td>
                 <td>
                     <div class="d-flex justify-content-center">
+                        <a href="`+comment+`/`+data[i].id+`/reply" data-toggle="tooltip" data-placement="top" title="View Comment" type="button" class="btn btn-default text-dark btn_cirlce mr-1"><i class="fas fa-eye"></i> </a>
                         <button data-toggle="tooltip" data-placement="top" title="Approve Reply" onclick="commentReplyStatus(`+ data[i].id +`,'approve')" type="button" class="btn btn-success text-white btn_cirlce" title="Edit"><i class="fas fa-check"></i></button>
                         <button data-toggle="tooltip" data-placement="top" title="Disapprove Reply" onclick="commentReplyStatus(`+data[i].id+`,'reject')" type="button" class="btn btn-danger ml-2 text-white btn_cirlce" title="Delete">
                             <i class="fas fa-ban"></i>

@@ -115,11 +115,11 @@ class siteController extends Controller
         $setting = Settings::first();
 
         $total_comments = 0;
-        $comments =  Comments::where("post_id","=",$post->id)->get();
+        $comments =  Comments::where("post_id",$post->id)->where('status',1)->get();
         $total_comments = sizeof($comments);
         
         foreach($comments as $comment) {
-            $replies = CommentReplies::where('comment_id',$comment->id)->get();
+            $replies = CommentReplies::where('comment_id',$comment->id)->where('status',1)->get();
             $comment->comment_replies = $replies;
             $total_comments += sizeof($replies);  
         }        

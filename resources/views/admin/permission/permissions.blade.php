@@ -1,5 +1,7 @@
 @extends('admin.layout.master')
 @section('page_title','Manage Permissions')
+@section('administration','open active')
+@section('permissions','active')
 @section('container')
 
 <div class="row mt-2 add_margin">

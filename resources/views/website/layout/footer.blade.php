@@ -1,6 +1,6 @@
-<footer class="bg-dark mt-5">
+<footer class="mt-5 shadow-sm" style="background-color: #eeeeee;">
     <div class="container">
-        <div class="row p-3 text-white footer_row">
+        <div class="row p-3 text-dark footer_row">
             <div class="col-md-4">
                 <h2 class="w-800">{{$setting->site_name}}</h2>
                 <small>© Copyright 2020 LaravelProject.</small>

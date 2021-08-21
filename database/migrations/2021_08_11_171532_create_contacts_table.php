@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRoleHasPermissionsTable extends Migration
+class CreateContactsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,13 @@ class CreateRoleHasPermissionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('role_has_permissions', function (Blueprint $table) {
+        Schema::create('contacts', function (Blueprint $table) {
             $table->id();
-            $table->integer('feature_id');
-            $table->integer('role_id');
+            $table->string('name')->nullable();
+            $table->string('email')->nullable();
+            $table->string('subject')->nullable();
+            $table->longText('message')->nullable();
+            $table->integer('status')->default('0');
             $table->timestamps();
         });
     }
@@ -28,6 +31,6 @@ class CreateRoleHasPermissionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('role_has__permissions');
+        Schema::dropIfExists('contacts');
     }
 }

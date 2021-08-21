@@ -21,6 +21,7 @@
     #videoUpload-1 {
         display:none !important;
     }
+    
 </style>
 <link href="https://cdn.jsdelivr.net/npm/froala-editor@3.1.0/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
 
@@ -91,11 +92,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="loader_container" id="card1">
-                        <div class="loader"></div>
-                    </div>
-
                 </div>
             </div>
             <div class="col-md-3 mt-3 mt-md-0">
@@ -110,11 +106,7 @@
                         <input name="post_img_alt" type="text" class="form-control input-sm" placeholder="Image ALT Name">
                     </div>
                     <span class="text-muted small ml-1"> <i>For better image SEO</i> </span>
-                    
-                    <div class="loader_container" id="card2">
-                        <div class="loader"></div>
-                    </div>
-
+              
                 </div>
             </div>
         </div>
@@ -122,9 +114,6 @@
 
         <div class="card mt-4 p-3 border-0 card_shadow rounded-0">
             <textarea name="description" class="editor" id="description" class="w-100"></textarea>
-            <div class="loader_container" id="card3">
-                <div class="loader"></div>
-            </div>
         </div>
 
         <div class="row">
@@ -160,14 +149,10 @@
                     </div>
                 </div>
 
-                <div class="loader_container" id="card4">
-                    <div class="loader"></div>
-                </div>
-
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary p-2 mb-5 w-100"><i class="fas fa-check-circle mr-1"></i> Save</button>
+        <button type="submit" class="btn btn-primary p-2 mb-5 btn-lg"><i class="fas fa-check-circle mr-1"></i> Save</button>
 
     </form>
 </div>
@@ -268,34 +253,19 @@
             cache: false,
             processData: false,
             beforeSend:function(data) {
-                $("#card1").show();
-                $("#card2").show();
-                $("#card3").show();
-                $("#card4").show();
             },
             success: function(data) {
                 console.log(data);
                 if ((data.status == 200) & (data.success == true)) {
                     notyf.success(data.message);
-
-
-
                 } else {
                     notyf.error(data.message);
                 }
             },
             complete:function(data) {
-                $("#card1").hide();
-                $("#card2").hide();
-                $("#card3").hide();
-                $("#card4").hide();
             },
             error: function(e) {
-                console.log(e)
-                $("#card1").hide();
-                $("#card2").hide();
-                $("#card3").hide();
-                $("#card4").hide();
+                console.log(e);
             }
 
         });
