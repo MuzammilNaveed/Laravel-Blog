@@ -14,6 +14,7 @@
   <link rel="apple-touch-icon" sizes="152x152" href="pages/ico/152.png">
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
   <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"/>
   <link href="{{asset('admin/assets/plugins/pace/pace-theme-flash.css')}}" rel="stylesheet" type="text/css" />
   <link href="{{asset('admin/assets/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
   <script src="https://kit.fontawesome.com/5fcfcbf541.js" crossorigin="anonymous"></script>
@@ -260,5 +261,4 @@
   @section('scripts')
   @show
 </body>
-
 </html>

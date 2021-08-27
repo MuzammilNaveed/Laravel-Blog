@@ -25,64 +25,38 @@ class MenuController extends Controller
     
     public function editMenu($id) {
         $menu = Menu::find($id);
-        $menuItems = MenuItems::where('menu_id',$id)->get();
 
-        // $items = implode(' ',$this->getTreeArray($id ,0 , []));
+        $menuItems = MenuItems::where('menu_id',$id)->where('parent_id',0)->orderBy('position','asc')->get();
 
-        // print_r($items);
-
-        // $data = MenuItems::where('menu_id',$id)->where('parent_id',0)->get();
-        return false;
-
-        return view('admin.menu.edit_menu',compact('id','menuItems','menu','items'));
+        return view('admin.menu.edit_menu',compact('id','menuItems','menu'));
     }
 
+    public function getTreeArray($menuId, $parentId, $treeArray = '') {
 
-    public function fetchAllMenus($menu_id , $parent_id) {
+        $data = MenuItems::where('menu_id',$menuId)->where('parent_id',$parentId)->get()->toArray();
 
-        $data = MenuItems::where('menu_id',$menu_id)->where('parent_id',$parent_id)->get();
+        if(!is_array($treeArray)){ $treeArray  = [];}
 
-        foreach($data as $item) {
+        foreach($data as $key => $item) {
+            
+            if($item['parent_id'] == 0) {
+                $treeArray[] = '<li class="dd-item" data-id="' . $item['id'] . '"><div class="dd-handle">' . $item['name'] . '</div></li>';
+            }
 
-            $item->sub = MenuItems::where('parent_id',$item->id)->get()->toArray();
+            if($item['parent_id'] != 0){
+                $treeArray[] = '<li class="dd-item" data-id="'.$item['id'].'"><div class="dd-handle">'.$item['name'].'</div>
+                <ol class="dd-list">';
+            }
 
-            // $this->fetchAllMenus($menu_id, $item['parent_id']);
-
+            $treeArray = $this->getTreeArray($menuId, $item['id'], $treeArray);
+            
+            if(array_key_last($data) == $key){
+                $treeArray[] = '</ol></li>';
+            }
         }
 
-        return $data;
-
-
+        return $treeArray;
     }
-
-
-
-    // public function getTreeArray($menuId, $parentId, $treeArray = '') {
-
-    //     $data = MenuItems::where('menu_id',$menuId)->where('parent_id',$parentId)->get()->toArray();
-
-    //     if(!is_array($treeArray)){ $treeArray  = [];}
-
-    //     foreach($data as $key => $item) {
-            
-    //         if($item['parent_id'] == 0) {
-    //             $treeArray[] = '<li class="dd-item" data-id="' . $item['id'] . '"><div class="dd-handle">' . $item['name'] . '</div></li>';
-    //         }
-
-    //         if($item['parent_id'] != 0){
-    //             $treeArray[] = '<li class="dd-item" data-id="'.$item['id'].'"><div class="dd-handle">'.$item['name'].'</div>
-    //             <ol class="dd-list">';
-    //         }
-
-    //         $treeArray = $this->getTreeArray($menuId, $item['id'], $treeArray);
-            
-    //         if(array_key_last($data) == $key){
-    //             $treeArray[] = '</ol></li>';
-    //         }
-    //     }
-
-    //     return $treeArray;
-    // }
 
 
     public function updateMenuItemPostion(Request $request) {
@@ -97,11 +71,13 @@ class MenuController extends Controller
 
     public function fetchTreeArray($data, $menuId, $parentId = 0) {
 
-        foreach($data as $item) {
+        foreach($data as $key => $item) {
 
+            $position = $key + 1;
             $id = $item['id'];
 
-            MenuItems::where('id',$id)->update([ "parent_id" => $parentId]);
+            // echo 'id:'. $id . '- parentid:' . $parentId . '-position:' . $position . '<br>';
+            MenuItems::where('id',$id)->update([ "parent_id" => $parentId, 'position' => $position]);
             
             $isChildren = (isset($item['children'])) ? $item['children'] : false;
 
@@ -119,10 +95,24 @@ class MenuController extends Controller
             "name" => strip_tags($request->name),
             "status" => ($request->enabled_menu == "on" ? 1 : 0),
         );
+
         Menu::create($data);
 
         $menu = Menu::orderBy('id','desc')->first();
         return redirect("add-menu/$menu->id")->with("success" , "Menu Saved Successfully");
+    }
+
+    public function updateMenu(Request $request) {
+
+        $data = array(
+            "name" => strip_tags($request->name),
+            "status" => ($request->enabled_menu == "on" ? 1 : 0),
+        );
+
+        Menu::where('id',$request->menu_id)->update($data);
+
+        return redirect()->back()->with("success" , "Menu Updated Successfully");
+
     }
 
     public function menuItemPage($id) {
@@ -133,15 +123,44 @@ class MenuController extends Controller
         return view('admin.menu.menu_item',compact('id','categories','pages','menuItems'));
     }
 
-    public function editMenuItemPage ($id) {
+    public function editMenuItemPage ($item_id,$menu_id) {
 
         $categories = Category::where('is_deleted',0)->get();
         $pages = Page::where('published',1)->get();
 
-        $menuItems = MenuItems::where('menu_id',$id)->get();
+        $menuItems = MenuItems::where('menu_id',$menu_id)->get();
 
-        $item = MenuItems::find($id);
-        return view('admin.menu.edit_menu_item',compact('id','categories','pages','menuItems','item'));
+        $menuitem = MenuItems::find($item_id);
+        return view('admin.menu.edit_menu_item',compact('menu_id','categories','pages','menuItems','menuitem'));
+
+    }
+
+    public function updateMenuItem(Request $request) {
+
+        $data = array(
+            "name" => $request->name,
+            "slug" => Str::slug($request->name, '-'),
+            "type" => $request->type,
+            "icon" => $request->icon,
+            "target" => $request->target,
+            "parent_id" => $request->parent_menu_id,
+            "status" => ($request->enabled_menu == "on" ? 1 : 0),
+        );
+
+        if($request->category_id != null) {
+            $data['category_id'] = $request->category_id;
+        }
+
+        if($request->page_id != null) {
+            $data['page_id'] = $request->page_id;
+        }
+
+        if($request->url != null) {
+            $data['url'] = $request->url;
+        }
+
+        MenuItems::where('id',$request->item_id)->update($data);
+        return redirect()->back()->with("success" , "Menu Item Updated Successfully");
 
     }
 
@@ -172,6 +191,11 @@ class MenuController extends Controller
 
         MenuItems::create($data);
         return redirect()->back()->with("success" , "Menu Item Saved Successfully");
+    }
+
+    public function deleteMenuItem ($id) {
+        MenuItems::find($id)->delete();
+        return redirect()->back()->with("success" , "Menu Item Deleted Successfully");
     }
 
 }

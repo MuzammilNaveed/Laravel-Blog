@@ -14,6 +14,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\WidgetsController;
 
 
 
@@ -141,19 +142,27 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/newsletter', [NewsletterController::class, 'index'])->name('newsletter.index');
 
 
-    // menu
+    // menu & menu items
     Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
     Route::get('/add-menu/{id?}', [MenuController::class, 'addMenu']);
-    Route::get('/edit-menu/{id}', [MenuController::class, 'editMenu']);
+    Route::post('/update-menu', [MenuController::class, 'updateMenu']);
     Route::post('/insert-menu', [MenuController::class, 'insertMenu']);
 
+    Route::get('/edit-menu/{id}', [MenuController::class, 'editMenu']);
     Route::get('/menu-item/{id}', [MenuController::class, 'menuItemPage']);
     Route::post('/insert-menu-items', [MenuController::class, 'insertMenuItems']);
-    Route::get('/edit-menu-item/{id}', [MenuController::class, 'editMenuItemPage']);
+    Route::get('/edit-menu-item/{item_id}/{menu_id}', [MenuController::class, 'editMenuItemPage']);
+    Route::post('/update-menu-item', [MenuController::class, 'updateMenuItem']);
 
-    ROute::post('/update-menu-item-position',[MenuController::class, 'updateMenuItemPostion']);
+    Route::get('/delete-menu-item/{id}', [MenuController::class, 'deleteMenuItem']);
+
+    Route::post('/update-menu-item-position',[MenuController::class, 'updateMenuItemPostion']);
 
 
+    
+    // widgets
+    Route::get('/manage_widgets', [WidgetsController::class, 'index'])->name('widgets.index');
+    Route::post('/save-widget', [WidgetsController::class, 'saveWidget']);
     
 });
 

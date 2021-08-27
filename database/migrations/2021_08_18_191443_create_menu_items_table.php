@@ -24,6 +24,7 @@ class CreateMenuItemsTable extends Migration
             $table->string('icon')->nullable();
             $table->string('target')->nullable();
             $table->integer('parent_id')->nullable();
+            $table->integer('position')->default('0')->nullable();
             $table->integer('status')->nullable();
             $table->integer('menu_id')->nullable();            
             $table->timestamps();
