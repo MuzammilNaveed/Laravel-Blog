@@ -163,6 +163,8 @@ Route::group(['middleware' => ['auth']], function() {
     // widgets
     Route::get('/manage_widgets', [WidgetsController::class, 'index'])->name('widgets.index');
     Route::post('/save-widget', [WidgetsController::class, 'saveWidget']);
+    Route::get('/get-widget', [WidgetsController::class, 'showAllWidget']);
+    Route::post('/delete-widget', [WidgetsController::class, 'deleteWidget']);
     
 });
 
