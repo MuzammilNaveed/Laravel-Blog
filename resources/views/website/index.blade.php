@@ -127,7 +127,6 @@
         </div>
     </div>
 
-
     <div class="d-flex justify-content-between mt-5">
         <h2 style="font-size:1.6rem; font-weight:800">All Tutorials</h2>
     </div>
@@ -181,6 +180,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script type="text/javascript" src="{{asset('website/js/menu.js')}}"></script>
+<script type="text/javascript" src="{{asset('website/js/newsletter.js')}}"></script>
 <script type="text/javascript" src="{{asset('website/js/glide.min.js')}}"></script>
 <script>
     new Glide('.glide_1', {
@@ -199,6 +199,7 @@
             }
         }
     }).mount();
+
 </script>
 
 </body>

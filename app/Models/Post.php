@@ -31,4 +31,16 @@ class Post extends Model
         'view_count',
     ];
 
+
+    public function category() {
+        return $this->hasOne(Category::class, 'id' , 'cat_id');
+    }
+
+    public function user() {
+        return $this->hasOne(User::class, 'id' , 'meta_author_id');
+    }
+
+    public function comments() {
+        return $this->hasMany(Comments::class, 'post_id' , 'id');
+    }
 }

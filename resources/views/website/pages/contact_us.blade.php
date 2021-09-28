@@ -7,10 +7,18 @@
                 <h1 class="w-800 mb-3">Contact Us</h1>
                 <p class="small">Feel free to contact us if you have any queries. We will get back to you promptly.  </p>
 
-                <!-- Email: <a href="mailto:muzamilnaveed10@gmail.com">muzamilnaveed10@gmail.com</a> -->
+                @if (Session::has('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        {{ Session::get('success') }}
+                    </div>
+                @endif
 
                 <div class="card rounded-0 p-3 card_shadow">
-                    <form action="">
+                    <form action="{{url('save-contacts')}}" method="POST">
+                        @csrf
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">

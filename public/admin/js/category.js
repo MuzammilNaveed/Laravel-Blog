@@ -226,9 +226,8 @@ function getAllCategories() {
                 render: function(data, type, full, meta) {
                     let post_count = full.post_count != null ? full.post_count : "-";
                     let cat_name = full.name != null ? full.name : "-";
-                    return (
-                        `<a href="#" onclick="showPosts(` + full.id +`,'` + cat_name + `')">` + post_count + `</a>`
-                    );
+                    let link = `<a href="#" onclick="showPosts(` + full.id +`,'` + cat_name + `')">` + post_count + `</a>`;
+                    return post_count != 0 ? link : post_count;
                 }
             },
             {

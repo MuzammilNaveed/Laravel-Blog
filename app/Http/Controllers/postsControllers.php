@@ -7,6 +7,7 @@ use App\Models\Post;
 use App\Models\Tags;
 use App\Models\Category;
 use App\Models\Comments;
+use App\Models\Section;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\CommentReplies;
@@ -25,42 +26,33 @@ class postsControllers extends Controller
         $name = strtolower($role->name);
 
         if( $name == "admin" || $name == "administrator" || $name == "super admin" || $name == "super administrator") {
-            $posts =  Post::orderBy('id','desc')->get();
+            $posts =  Post::with(['category','user','comments'])->orderBy('id','desc')->get();
 
-            foreach($posts as $post) {
-                $post->category = Category::where("id",$post->cat_id)->select("name")->first();         
+            foreach($posts as $post) {       
                 $post->tags = DB::table("post_tags")->where("post_id","=",$post->id)
                 ->join('tags','post_tags.tag_id','tags.id')
                 ->select('name')
                 ->get();
-
-                $post->user = User::where('id',$post->meta_author_id)->first();
-                $post->comments = Comments::where('post_id',$post->id)->get();
             }
-
-            if ($request->ajax()) {
-                return Datatables::of($posts)->addIndexColumn()->make(true);
-            }
-            return view('users-data');
 
         }else{
-            $posts =  Post::where('created_by',Auth::id())->orderBy('id','desc')->get();
+            $posts =  Post::with(['category','user','comments'])
+                        ->where('created_by',Auth::id())
+                        ->orderBy('id','desc')
+                        ->get();
 
-            foreach($posts as $post) {
-                $post->category = Category::where("id",$post->cat_id)->select("name")->first();         
+            foreach($posts as $post) {      
                 $post->tags = DB::table("post_tags")->where("post_id","=",$post->id)
                 ->join('tags','post_tags.tag_id','tags.id')
                 ->select('name')
                 ->get();
-
-                $post->user = User::where('id',$post->meta_author_id)->first();
-                $post->comments = Comments::where('post_id',$post->id)->get();
             }
-            if ($request->ajax()) {
-                return Datatables::of($posts)->addIndexColumn()->make(true);
-            }
-            return view('users-data');
         }
+
+        if ($request->ajax()) {
+            return Datatables::of($posts)->addIndexColumn()->make(true);
+        }
+        return view('users-data');
 
     }
 
@@ -75,7 +67,8 @@ class postsControllers extends Controller
         $tags = Tags::where('is_deleted',0)->get();
         $categories = Category::where('is_deleted',0)->get();
         $users = User::where('is_deleted',0)->where('is_author',1)->get();
-        return view('admin.posts.add_post',compact('categories','tags','users')); 
+        $sections = Section::where('status',1)->get();
+        return view('admin.posts.add_post',compact('categories','tags','users','sections')); 
     }
 
     public function store(Request $request) {
@@ -245,25 +238,21 @@ class postsControllers extends Controller
         $name = strtolower($role->name);
 
         if( $name == "admin" || $name == "administrator" || $name == "super admin" || $name == "super administrator") {
-            $comments =  Comments::all();
+            $comments =  Comments::with('post')->get();
 
             foreach($comments as $comment) {
-                $comment->post = Post::where("id",'=',$comment->post_id)->first();
                 $comment->replies = CommentReplies::where("comment_id",'=',$comment->id)->get()->count();
             }
-
-            return $comments;
         }else{
-            $comments =  Comments::all();
+            $comments =  Comments::with('post')->get();
 
             foreach($comments as $comment) {
-                $comment->post = Post::where("id",'=',$comment->post_id)->where('created_by',Auth::id())->first();
                 $comment->replies = CommentReplies::where("comment_id",'=',$comment->id)->get()->count();
             }
-
-            return $comments;
         }
+        return $comments;
     }
+    
 
     public function getCommentReplieByID($id) {
         return DB::table("comment_replies")->where("comment_id",'=',$id)->get();

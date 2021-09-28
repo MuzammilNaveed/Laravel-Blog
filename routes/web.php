@@ -18,7 +18,7 @@ use App\Http\Controllers\WidgetsController;
 
 
 
-    Route::get('/', [HomeController::class,'userHomePage']);
+    Route::get('/', [siteController::class,'userHomePage']);
 
     Route::get('category/{slug}',[siteController::class,'showCategory']);
     Route::get('post/{slug}',[siteController::class,'showSinglePost']);
@@ -43,6 +43,9 @@ use App\Http\Controllers\WidgetsController;
     Route::post('/search_post', [siteController::class, 'searchPosts']);
     Route::get('/tag/{slug}', [siteController::class, 'showTagPage']);
 
+    Route::post('/newsletter-subscription', [siteController::class, 'saveNewsletter']);
+    Route::post('/save-contacts', [siteController::class, 'saveContacts']);
+
 Route::group(['middleware' => ['auth']], function() {
 
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard.index');
@@ -57,6 +60,11 @@ Route::group(['middleware' => ['auth']], function() {
     // tags crud
     Route::resource('tags', TagsController::class);
     Route::get('/manage_tags', [TagsController::class, 'tagPage'])->name('tag.index');
+
+    Route::get('/manage_section', [TagsController::class, 'section'])->name('section.index');
+    Route::get('/get_section', [TagsController::class, 'all_sections']);
+    Route::post('/save_section', [TagsController::class, 'save_section']);
+    Route::post('/delete_section', [TagsController::class, 'delete_section']);
 
 
     // posts crud
@@ -111,6 +119,9 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/save_setting', [SettingController::class, 'saveSetting']);
     Route::post('/update_profile', [SettingController::class, 'updateProfile']);
 
+    // contacts
+    Route::get('/get_contacts', [SettingController::class, 'getAllContacts']);
+    Route::get('/view_contacts/{id}', [SettingController::class, 'viewContact']);
 
     // feature
     Route::get('/feature', [FeatureController::class, 'index'])->name('feature.index');

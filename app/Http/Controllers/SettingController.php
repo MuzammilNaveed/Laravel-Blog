@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Settings;
 use App\Models\User;
+use App\Models\Contact;
 use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Crypt;
+use DataTables;
 
 class SettingController extends Controller
 {
@@ -239,4 +240,19 @@ class SettingController extends Controller
         }
     }
 
+
+
+    public function getAllContacts(Request $request) {
+        $contacts = Contact::all();
+        if ($request->ajax()) {
+            return Datatables::of($contacts)->addIndexColumn()->make(true);
+        }
+        
+        return view('users-data');
+    }
+
+    public function viewContact($id) {
+        $contact = Contact::where('id',$id)->first();
+        return view('admin.contact.view_contact', compact('contact'));
+    }
 }

@@ -85,9 +85,9 @@
                                 <label class="">Section</label>
                                 <select class="full-width select2-hidden-accessible" name="section" data-placeholder="Select Section" data-init-plugin="select2" tabindex="-1" aria-hidden="true">
                                     <option value="">Select</option>
-                                    <option value="1">Header</option>
-                                    <option value="2">Project</option>
-                                    <option value="3">Tutorials</option>
+                                    @foreach($sections as $section)
+                                        <option value="{{$section->id}}">{{$section->title}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>

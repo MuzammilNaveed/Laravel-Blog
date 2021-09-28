@@ -227,10 +227,4 @@
     var view_post = "{{url('view_post')}}";
     var get_all_users = "{{url('get_all_users')}}";
 </script>
-
-<!-- @if( $name == "admin" || $name == "administrator" || $name == "super admin" || $name == "super administrator")  -->
-    <!-- <script src="{{asset('admin/js/dashboard.js')}}"></script> -->
-<!-- @endif -->
-
-
 @show

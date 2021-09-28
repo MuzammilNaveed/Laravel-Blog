@@ -35,7 +35,7 @@
 </head>
 
 <style>
-     .dropdown:hover>.dropdown-menu {
+    .dropdown:hover>.dropdown-menu {
         display: block;
     }
 
@@ -76,26 +76,21 @@
             @if($setting != null && $setting != "" && $setting->site_logo != null && $setting->site_logo != "")
                 <img src="{{asset('settings')}}/{{$setting->site_logo}}" style="width:45px" class="img-fluid"/> 
             @else
-                <h5>My Blog</h5>     
+                <h5>My Blog</h5>
             @endif   
         </a>
         <ul class="navbar-nav mr-auto" id="navbar_links">
-            @foreach($menus as $menu)
-                <li class="nav-item dropdown">
-                    @if($menu->sub_menu != [] && $menu->sub_menu != null)
-                        <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{$menu->name}} <i class="fas fa-chevron-down"></i>
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        @foreach($menu->sub_menu as $submenu)
-                            <a class="dropdown-item" href="{{url('category')}}/{{$submenu['slug']}}">{{$submenu['name']}}</a>
-                        @endforeach
-                    </div>
-                    @else
-                        <a class="nav-link" href="{{url('category')}}/{{$menu->slug}}">{{$menu->name}}</a>
+            @foreach($menuItems as $item)
+                <li class="nav-item {{count($item->childs) > 0 ? 'dropdown' : ''}}">
+                    <a class="nav-link" href="#">{{$item->name}} <?= count($item->childs) > 0 ? '<i class="fas fa-chevron-down"></i>' : '' ?>  </a>
+                    @if(count($item->childs) > 0)
+                        @include('website.layout.child',['childs' => $item->childs])
                     @endif
                 </li>
             @endforeach
+            <li class="nav-item">
+                <a class="nav-link" href="{{url('contact_us')}}"> Contact us </a>
+            </li>
         </ul>
 
 
@@ -108,6 +103,7 @@
                 <i class="fas fa-search  ml-3 search_icon" style="cursor:pointer"></i>
             </div>
         </div> 
+
 </nav>
 
 <div class="search_div w-100 bg-light" style="height:50%; display:none; box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);position:absolute;z-index:10">
@@ -140,24 +136,16 @@
         @endif   
         <span style="margin:11px;cursor:pointer" onclick="closeSidebar()"><i class="fas fa-times"></i></span>
     </div>
+    
     <ul class="menu-primary">
-        @foreach($menus as $menu)
-            <li class="">
-                @if($menu->sub_menu != [] && $menu->sub_menu != null)
-                    <a href="#" id="navbarDropdown">
-                        {{$menu->name}}  <i class="fas fa-angle-down drpdown" style="float:right"></i>
-                    </a>
-                <ul class="dropdown_menu">
-                    @foreach($menu->sub_menu as $submenu)
-                        <li>
-                            <a class="dropdown-item small" href="{{url('category')}}/{{$menu->slug}}">{{$submenu['name']}}</a>
-                        </li>
-                    @endforeach
-                </ul>
-                @else
-                    <a class="nav-link" href="{{url('category')}}/{{$menu->slug}}">{{$menu->name}}</a>
+        @foreach($menuItems as $item)
+            <li class="nav-item {{count($item->childs) > 0 ? 'dropdown' : ''}}">
+                <a class="nav-link" href="#">{{$item->name}} <?= count($item->childs) > 0 ? '<i class="fas fa-chevron-down"></i>' : '' ?>  </a>
+                @if(count($item->childs) > 0)
+                    @include('website.layout.child',['childs' => $item->childs])
                 @endif
             </li>
-        @endforeach
+        @endforeach           
     </ul>
+    
 </div>

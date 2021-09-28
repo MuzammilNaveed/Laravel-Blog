@@ -5,10 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Contact extends Model
+class Section extends Model
 {
-
-    protected $table = 'contacts';
-    protected $fillable = ['name','email','subject','status','message'];
+    protected $table = 'sections';
+    protected $fillable = ['title','status'];
     use HasFactory;
 }

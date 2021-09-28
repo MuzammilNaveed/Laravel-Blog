@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Tags;
+use App\Models\Section;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\Post;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -23,10 +25,6 @@ class TagsController extends Controller
             foreach($tags as $tag) {
                 $tag->created_by = User::where('id',$tag->created_by)->first();
             }
-            if ($request->ajax()) {
-                return Datatables::of($tags)->addIndexColumn()->make(true);
-            }
-            return view('users-data');
 
         }else{
 
@@ -34,12 +32,12 @@ class TagsController extends Controller
             foreach($tags as $tag) {
                 $tag->created_by = User::where('id',$tag->created_by)->first();
             }
-            if ($request->ajax()) {
-                return Datatables::of($tags)->addIndexColumn()->make(true);
-            }
-            return view('users-data');
-            
         }
+
+        if ($request->ajax()) {
+            return Datatables::of($tags)->addIndexColumn()->make(true);
+        }
+        return view('users-data');
     }
 
     public function tagPage() {
@@ -94,6 +92,64 @@ class TagsController extends Controller
                 'success' => true
             ]);
         }        
+    }
+
+    public function section() {
+        return view('admin.section.index');
+    }
+
+    public function all_sections(Request $request) {
+        
+        $sections = Section::all();
+
+        if ($request->ajax()) {
+            return Datatables::of($sections)->addIndexColumn()->make(true);
+        }
+        return view('users-data');
+    }
+
+    public function save_section(Request $request) {
+        
+        $data = array(
+            "title" => $request->title,
+            "status" => $request->status == "on" ? 1 : 0,
+        );
+        if($request->id == null && $request->id == "") {
+            Section::create($data);
+            $message = 'Section Saved Successfully';
+        }else{
+            Section::where('id',$request->id)->update($data);
+            $message = 'Section Updated Successfully';
+        }
+
+        return response()->json([
+            'message' => $message,
+            'status' => 200,
+            'success' => true
+        ]);
+
+    }
+
+
+    public function delete_section(Request $request) {
+
+        $post = Post::where("section",$request->id)->count();
+
+        if($post > 0) {
+            return response()->json([
+                'message' => 'Depended Section Cannot be Deleted',
+                'status' => 500,
+                'success' => false
+            ]);
+        }else{
+            Section::where('id',$request->id)->delete();
+            return response()->json([
+                'message' => 'Section Deleted Successfully.',
+                'status' => 200,
+                'success' => true
+            ]);
+        }
+
     }
 
 }

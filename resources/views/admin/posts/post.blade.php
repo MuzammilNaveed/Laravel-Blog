@@ -109,6 +109,7 @@
 
     <div class="loader_container" id="cmt_loader">
       <div class="loader"></div>
+      page_title adsfadsf
     </div>
 
   </div>
