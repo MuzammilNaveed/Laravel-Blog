@@ -240,6 +240,7 @@
   <script src="{{asset('admin/assets/plugins/handlebars/handlebars-v4.0.5.js')}}"></script>
   <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
   <script>
+    var base_url = window.location.origin;
     var notyf = new Notyf({
       duration: 2000,
       position: {

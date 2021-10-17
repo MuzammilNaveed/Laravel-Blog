@@ -13,4 +13,9 @@ class Feature extends Model
     'is_active','role_id','feature_type','menu_icon'];
     use HasFactory;
 
+
+    public function sub_menu() {
+        return $this->hasMany(Feature::class,'parent_id','id');
+    }
+
 }

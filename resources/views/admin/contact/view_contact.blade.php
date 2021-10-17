@@ -20,7 +20,7 @@
                 </div>
             </div>
 
-            <div class="d-flex justify-content-between mt-4">
+            <div class="d-flex justify-content-between mt-2">
                 <div>
                     <span class="text-muted small mt-5"> Subject </span>
                     <h4 class="m-0">{{$contact->subject}}</h4>
@@ -31,13 +31,13 @@
                 </div>
             </div>
 
-            <hr>
+            <hr class="m-1">
             <span class="text-muted small m-0">Message</span>
-            <p>{!! $contact->message !!}</p>
+            <p>{{$contact->message}}</p>
         </div>
         
     </div>
-    <button class="btn btn-primary ">Reply</button>
+    <button class="btn btn-primary btn-lg">Reply</button>
 
 
 

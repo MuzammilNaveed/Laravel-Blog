@@ -46,6 +46,8 @@ use App\Http\Controllers\WidgetsController;
     Route::post('/newsletter-subscription', [siteController::class, 'saveNewsletter']);
     Route::post('/save-contacts', [siteController::class, 'saveContacts']);
 
+    Route::post('/save-newsletters', [siteController::class, 'saveNewsletters']);
+
 Route::group(['middleware' => ['auth']], function() {
 
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard.index');
@@ -86,8 +88,11 @@ Route::group(['middleware' => ['auth']], function() {
     // roles crud
     Route::resource('roles', RoleController::class);
     Route::get('/manage_roles', [RoleController::class, 'manageRoles'])->name('role.index');
+    Route::get('/permissions/{id}', [RoleController::class, 'permissions']);
+
     Route::get('/manage_permissions', [RoleController::class, 'managePermission'])->name('permission.index');
     Route::post('/save_permissions', [RoleController::class, 'savePermission']);
+    
     Route::post('/show_role_permissions', [RoleController::class, 'showRolePermission']);
 
     
@@ -151,6 +156,7 @@ Route::group(['middleware' => ['auth']], function() {
 
     // newsletter
     Route::get('/newsletter', [NewsletterController::class, 'index'])->name('newsletter.index');
+    Route::get('/get_all_newsletter', [NewsletterController::class, 'get_all_newletters']);
 
 
     // menu & menu items

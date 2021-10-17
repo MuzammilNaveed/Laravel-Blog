@@ -1,86 +1,66 @@
 @extends('admin.layout.master')
 @section('page_title','Manage Permissions')
 @section('administration','open active')
-@section('permissions','active')
+@section('role','active')
 @section('container')
 
 <div class="row mt-2 add_margin">
   <div class="container-fluid p-0">
-      <div class="card card_shadow">
-        
-        <div class="card-header d-flex justify-content-between">
-          <div class="card-title font-weight-bolder">All Permissions <span class="badge bg-primary text-white" id="counts"></span></div>
-        </div>
-
-        <div class="card-body">
-
-          <hr class="m-0">
-
-          <div class="row mt-3">
-
-            <div class="col-md-4">
-              <div class="form-group form-group-default form-group-default-select2">
-                  <label class="">Page</label>
-                  <select onchange="Permissionpages()" class="full-width select2-hidden-accessible" id="page" data-placeholder="Select Page" data-init-plugin="select2" tabindex="-1" aria-hidden="true">
-                      <option value="">Select</option>
-                      <option value="category">Category</option>
-                      <option value="tags">Tags</option>
-                      <option value="post">Post</option>
-                      <option value="role">Role</option>
-                      <option value="user">User</option>
-                      <option value="feature_access">Feature Access</option>
-                      <option value="permission">Permission</option>
-                  </select>
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="form-group form-group-default form-group-default-select2">
-                  <label class="">Role</label>
-                  <select onchange="showRolePermissions(this.value)" id="role" class="full-width select2-hidden-accessible"  data-placeholder="Select Category" data-init-plugin="select2" tabindex="-1" aria-hidden="true">
-                      <option value="">Select</option>
-                      @foreach($roles as $role)
-                      <option value="{{$role->id}}">{{$role->name}}</option>
-                      @endforeach
-                  </select>
-              </div>
-            </div>
-
-            <div class="col-md-4" id="action_block" style="display:none">
-              <div class="form-group form-group-default form-group-default-select2" >
-                  <label class="">Permission</label>
-                  <select id="permissions" class="full-width select2-hidden-accessible" multiple="multiple" data-placeholder="Select Permission" data-init-plugin="select2" tabindex="-1" aria-hidden="true">
-                      <option value="">Select</option>
-                      <option value="create">Create</option>
-                      <option value="update">Update</option>
-                      <option value="delete">Delete</option>
-                  </select>
-              </div>
-            </div>
-          </div>
-
-          @if($permission != null && $permission != "")
-            @if( str_contains($permission->action,'create') )
-              <button onclick="savePermissions()" class="btn btn-success btn-lg rounded text-white"> <i class="fas fa-check-circle"></i> &nbsp; Save</button>
-            @endif
-          @endif
-
-          <div class="loader_container" id="loader" style="display:none">
-              <div class="loader"></div>
-          </div>
-
+    <div class="card card_shadow">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover w-100 text-center" id="newslettters_table">
+            <thead>
+              <tr>
+                <th>Sr#</th>
+                <th>Page Name</th>
+                <th> View </th>
+                <th> Create </th>
+                <th> Edit </th>
+                <th> Delete </th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach($features as $feature)
+              <tr>
+                <td>{{$loop->iteration}}</td>
+                <td>{{$feature->title}}</td>
+                <td>
+                  <div class="custom-control custom-checkbox mr-sm-2">
+                    <input type="checkbox" class="custom-control-input" id="view_{{$feature->id}}">
+                    <label class="custom-control-label" for="view_{{$feature->id}}"></label>
+                  </div>
+                </td>
+                <td>
+                  <div class="custom-control custom-checkbox mr-sm-2">
+                    <input type="checkbox" class="custom-control-input" id="create_{{$feature->id}}">
+                    <label class="custom-control-label" for="create_{{$feature->id}}"></label>
+                  </div>
+                </td>
+                <td>
+                  <div class="custom-control custom-checkbox mr-sm-2">
+                    <input type="checkbox" class="custom-control-input" id="edit_{{$feature->id}}">
+                    <label class="custom-control-label" for="edit_{{$feature->id}}"></label>
+                  </div>
+                </td>
+                <td>
+                  <div class="custom-control custom-checkbox mr-sm-2">
+                    <input type="checkbox" class="custom-control-input" id="delete_{{$feature->id}}">
+                    <label class="custom-control-label" for="delete_{{$feature->id}}"></label>
+                  </div>
+                </td>
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
         </div>
       </div>
+    </div>
+    <form method="POST" action="{{url('save_permissions')}}">
+      @csrf
+    </form>
   </div>
 </div>
 
 
 @endsection
-@section('scripts')
-<script>
-  var save_permissions= "{{url('save_permissions')}}";
-  var show_role_permissions = "{{url('show_role_permissions')}}";
-
-</script>
-<script src="{{asset('admin/js/permission.js')}}"></script>
-@show

@@ -117,7 +117,8 @@ function getAllRoles() {
                 },
                 {
                     "render": function (data, type, full, meta) {
-                        return full.name != null ? full.name : '-';
+                        let role_name = `<a href="/permissions/`+full.id+`">`+full.name+`</a>`;
+                        return role_name;
                     }
                 },
                 {

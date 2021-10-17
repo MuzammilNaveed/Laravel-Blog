@@ -169,7 +169,6 @@
         <div class="col-md-4">
             <!-- right sidebar -->
             @include('website/layout/rightside')
-
         </div>
     </div>
 

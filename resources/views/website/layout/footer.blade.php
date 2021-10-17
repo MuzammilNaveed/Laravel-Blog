@@ -62,9 +62,12 @@
                             <h5 class="font-weight-bold"> {{$widget->name}} </h5>
                             <hr>
                             <p class="small">Subscribe to our newsletter and get our newest updates right on your inbox.</p>
-                            <input type="email" class="form-control" id="newsletter_email" placeholder="Your Email Address">
-                            <span id="show-message"></span>
-                            <button class="btn btn-primary mt-2 btn-block newletter-btn" type="button" role="button">Subscribe</button>
+                            <form class="new_letter_form" action="{{url('save-newsletters')}}" method="POST" data-wid="{{$widget->id}}">
+                                <input type="email" class="form-control" id="newsletter_email_{{$widget->id}}" placeholder="Your Email Address">
+                                <div class="text-danger small" id="show_message_{{$widget->id}}"></div>
+                                <button id="save_btn_{{$widget->id}}" class="btn btn-primary mt-2 btn-block newletter-btn" type="submit" >Subscribe</button>
+                                <button id="loader_{{$widget->id}}" class="btn btn-primary mt-2 btn-block newletter-btn" type="button" role="button" style="display:none" disabled > <i class="fas fa-circle-notch fa-spin"></i> </button>
+                            </form>
                         @endif
 
                     </div>

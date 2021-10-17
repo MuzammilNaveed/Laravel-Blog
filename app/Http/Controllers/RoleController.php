@@ -17,7 +17,8 @@ class RoleController extends Controller
 {
     public function manageRoles() {
         $permission = DB::table("permissions")->where("created_by",Auth::id())->where('title','role')->first();
-        return view("admin.roles.roles",compact('permission'));
+        $features = Feature::where('parent_id',0)->get();
+        return view("admin.roles.roles",compact('permission','features'));
     }
 
     public function index(Request $request) {
@@ -109,6 +110,12 @@ class RoleController extends Controller
         }
     }
 
+    public function permissions($id) {
+        // $features = Feature::where("parent_id",0)->with('sub_menu')->get();
+        $features = Feature::all();
+        return view("admin.permission.permissions" ,compact('id','features'));
+    }
+
 
     public function managePermission() {
         $roles = Role::all();
@@ -118,31 +125,33 @@ class RoleController extends Controller
     }
 
     public function savePermission(Request $request) {
-        $data = array(
-            "title" => $request->page,
-            "role_id" => $request->role,
-            "action" =>  $request->permissions,
-            "created_by" =>  Auth::id(),
-        );
 
-        $permissions = permissions::where('title',$request->page)
-        ->where('role_id',$request->role)->where('created_by',Auth::id())->first();
+        return dd($request->all());
+        // $data = array(
+        //     "title" => $request->page,
+        //     "role_id" => $request->role,
+        //     "action" =>  $request->permissions,
+        //     "created_by" =>  Auth::id(),
+        // );
 
-        if($permissions){
+        // $permissions = permissions::where('title',$request->page)
+        // ->where('role_id',$request->role)->where('created_by',Auth::id())->first();
 
-            permissions::where('title',$request->page)
-            ->where('role_id',$request->role)
-            ->where('created_by',Auth::id())->update($data);
+        // if($permissions){
 
-        }else{
-            permissions::insert($data);
-        }  
+        //     permissions::where('title',$request->page)
+        //     ->where('role_id',$request->role)
+        //     ->where('created_by',Auth::id())->update($data);
 
-        return response()->json([
-            'message' => 'Permissions Saved Successfully.',
-            'status' => 200,
-            'success' => true
-        ]);
+        // }else{
+        //     permissions::insert($data);
+        // }  
+
+        // return response()->json([
+        //     'message' => 'Permissions Saved Successfully.',
+        //     'status' => 200,
+        //     'success' => true
+        // ]);
     }
 
     public function showRolePermission(Request $request) {
