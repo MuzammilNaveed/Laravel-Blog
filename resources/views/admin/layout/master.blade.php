@@ -1,265 +1,269 @@
 <!DOCTYPE html>
-<html lang="en">
-<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<html class="loading" lang="en" data-textdirection="ltr">
+<!-- BEGIN: Head-->
 
 <head>
-  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-  <meta charset="utf-8" />
-  <title>@yield('page_title')</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no" />
-  <link rel="apple-touch-icon" href="pages/ico/60.png">
-  <meta name="csrf-token" content="{{ csrf_token() }}" />
-  <link rel="apple-touch-icon" sizes="76x76" href="pages/ico/76.png">
-  <link rel="apple-touch-icon" sizes="120x120" href="pages/ico/120.png">
-  <link rel="apple-touch-icon" sizes="152x152" href="pages/ico/152.png">
-  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-  <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"/>
-  <link href="{{asset('admin/assets/plugins/pace/pace-theme-flash.css')}}" rel="stylesheet" type="text/css" />
-  <link href="{{asset('admin/assets/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
-  <script src="https://kit.fontawesome.com/5fcfcbf541.js" crossorigin="anonymous"></script>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="{{asset('admin/assets/plugins/jquery-scrollbar/jquery.scrollbar.css')}}" rel="stylesheet" type="text/css" media="screen" />
-  <link href="{{asset('admin/assets/plugins/select2/css/select2.min.css')}}" rel="stylesheet" type="text/css" media="screen" />
-  <link class="main-stylesheet" href="{{asset('admin/pages/css/themes/corporate.css')}}" rel="stylesheet" type="text/css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
-  <link href="{{asset('admin/assets/plugins/bootstrap-tag/bootstrap-tagsinput.css')}}" rel="stylesheet" type="text/css" />
-  <link href="{{asset('admin/assets/plugins/dropzone/css/dropzone.css')}}" rel="stylesheet" type="text/css" />
-  <link href="{{asset('admin/assets/plugins/bootstrap-datepicker/css/datepicker3.css')}}" rel="stylesheet" type="text/css" media="screen">
-  <link href="{{asset('admin/assets/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css')}}" rel="stylesheet" type="text/css" media="screen">
-  <link href="{{asset('admin/assets/plugins/bootstrap-timepicker/bootstrap-timepicker.min.css')}}" rel="stylesheet" type="text/css" media="screen">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimal-ui">
+    <meta name="description" content="Vuexy admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
+    <meta name="keywords" content="admin template, Vuexy admin template, dashboard template, flat admin template, responsive admin template, web app">
+    <meta name="author" content="PIXINVENT">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
 
-  <link class="main-stylesheet" href="{{asset('admin/assets/css/style.css')}}" rel="stylesheet" type="text/css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css" integrity="sha512-EZSUkJWTjzDlspOoPSpUFR0o0Xy7jdzW//6qhUkoZ9c4StFkVsp9fbbd0O06p9ELS3H486m4wmrCELjza4JEog==" crossorigin="anonymous" />
-  <style>
-    .loader_container {
-      width: 100%;
-      height: 100%;
-      background-color: #fff;
-      opacity: 0.9;
-      position: absolute;
-      top: 0px;
-      right: 0px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1;
-    }
+    <title> @yield('page_title')</title>
+    <link rel="apple-touch-icon" href="{{asset('app-assets/images/ico/apple-icon-120.png')}}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{asset('app-assets/images/ico/favicon.ico')}}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600" rel="stylesheet">
 
-    .loader {
-      width: 30px;
-      height: 30px;
-      border: 2px solid;
-      color: #111;
-      border-radius: 50%;
-      border-top-color: transparent;
-      animation: loader 0.8s linear infinite;
-    }
+    <!-- BEGIN: Vendor CSS-->
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/vendors/css/vendors.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/vendors/css/extensions/toastr.min.css')}}">
+    <!-- END: Vendor CSS-->
 
-    @keyframes loader {
-      25% {
-        color: #37b0e9;
-      }
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/vendors/css/forms/select/select2.min.css')}}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
 
-      50% {
-        color: #6d5eac;
-      }
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/vendors/css/tables/datatable/dataTables.bootstrap5.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/vendors/css/tables/datatable/responsive.bootstrap4.min.css')}}">
 
-      75% {
-        color: #37b0e9;
-      }
+    <!-- BEGIN: Theme CSS-->
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/bootstrap.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/bootstrap-extended.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/colors.css')}}">
 
-      100% {
-        color: #6d5eac;
-      }
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/components.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/themes/dark-layout.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/themes/bordered-layout.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/themes/semi-dark-layout.css')}}">
 
-      to {
-        transform: rotate(360deg);
-      }
-    }
-    table th, table td{
-        white-space: nowrap !important;
-    }
-    table tbody tr td{
-        vertical-align: middle !important;
-    }
-    .btn_cirlce {
-      border-radius: 100px;
-      padding: 8px 9px;
-    }
-    .table tbody tr td {
-        padding:8px;
-    }
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/plugins/extensions/ext-component-toastr.css')}}">
 
-    /* width */
-    ::-webkit-scrollbar {
-      width: 10px;
-    }
+    <!-- BEGIN: Page CSS-->
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/core/menu/menu-types/vertical-menu.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/core/menu/menu-types/horizontal-menu.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/plugins/extensions/ext-component-toastr.css')}}">
+    <!-- END: Page CSS-->
 
-    /* Track */
-    ::-webkit-scrollbar-track {
-      background: #f1f1f1;
-    }
-
-    /* Handle */
-    ::-webkit-scrollbar-thumb {
-      background: #b5b5b5;
-    }
-
-    /* Handle on hover */
-    ::-webkit-scrollbar-thumb:hover {
-      background: #555;
-    }
-    .page-sidebar .sidebar-menu .menu-items > li > a > .title {
-      width: 80% !important;
-    }
-    .page-sidebar .sidebar-menu .menu-items > li > a > .arrow {
-      float: right;
-      padding-right: 0px !important;
-    }
-    .fr-toolbar , .second-toolbar{
-        border-radius: 2px !important;
-    }
-    #logo {
-        display: none;
-    }
-    .fr-toolbar {
-      background-color: #f8f9fa !important;
-    }
-  </style>
+    <!-- BEGIN: Custom CSS-->
+    <!-- <link rel="stylesheet" type="text/css" href="{{asset('assets/css/style.css')}}"> -->
+    <!-- END: Custom CSS-->
+    <style>
+        .loading__ {
+            background: white !important;
+            width: 100%;
+            height: 100%;
+            top: 0px;
+            right: 0px;
+            position: absolute;
+            z-index: 9;
+            border-radius: 3px;
+            opacity: 0.8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .img_circle {
+            width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+        }
+    </style>
+    @yield('css')
 </head>
-<body class="fixed-header windows desktop js-focus-visible pace-done menu-pin">
+<!-- END: Head-->
 
-  <nav class="page-sidebar" data-pages="sidebar">
-    <div class="sidebar-header">
-      @if( Session('dashboard_logo') != null && Session('dashboard_logo') != '' )
-        <img src="{{asset('settings')}}/{{Session('dashboard_logo')}}" alt="logo" class="brand" data-src="{{asset('settings')}}/{{Session('dashboard_logo')}}" data-src-retina="{{asset('settings')}}/{{Session('dashboard_logo')}}" width="78" height="22">
-      @else
-        <p>Dashboard</p>
-      @endif
-      <div class="sidebar-header-controls" style="margin-left:58px">
-        <button aria-label="Pin Menu" type="button" class="btn btn-icon-link invert d-lg-inline-block d-xlg-inline-block d-md-inline-block d-sm-none d-none" data-toggle-pin="sidebar">
-          <i class="pg-icon"></i>
-        </button>
-      </div>
-    </div>
-    
-    @include('admin.layout.sidebar')
+<!-- BEGIN: Body-->
 
-  </nav>
+<body class="vertical-layout vertical-menu-modern  navbar-floating footer-static  " data-open="click" data-menu="vertical-menu-modern" data-col="">
 
-  <div class="page-container ">
-    <div class="header ">
-      <a href="#" class="btn-link toggle-sidebar d-lg-none pg-icon btn-icon-link" data-toggle="sidebar">
-        menu</a>
-      <div class="">
-        <div class="brand inline  m-l-10 ">
-        @if( Session('dashboard_logo') != null && Session('dashboard_logo') != '' )
-          <img src="{{asset('settings')}}/{{Session('dashboard_logo')}}" alt="logo" class="brand" data-src="{{asset('settings')}}/{{Session('dashboard_logo')}}" data-src-retina="{{asset('settings')}}/{{Session('dashboard_logo')}}" style="width:50px">
-        @else
-          <strong>Dashboard</strong>
-        @endif
-          <!-- <img src="{{asset('admin/assets/img/logo.png')}}" alt="logo"  width="78" height="22"> -->
+    <!-- BEGIN: Header-->
+    <nav class="header-navbar navbar navbar-expand-lg align-items-center floating-nav navbar-light navbar-shadow container-xxl">
+        <div class="navbar-container d-flex content">
+            <div class="bookmark-wrapper d-flex align-items-center">
+
+            </div>
+            <ul class="nav navbar-nav align-items-center ms-auto">
+
+                <li class="nav-item d-none d-lg-block"><a class="nav-link nav-link-style"><i class="ficon" data-feather="moon"></i></a></li>
+                <li class="nav-item nav-search"><a class="nav-link nav-link-search"><i class="ficon" data-feather="search"></i></a>
+                    <div class="search-input">
+                        <div class="search-input-icon"><i data-feather="search"></i></div>
+                        <input class="form-control input" type="text" placeholder="Explore Vuexy..." tabindex="-1" data-search="search">
+                        <div class="search-input-close"><i data-feather="x"></i></div>
+                        <ul class="search-list search-list-main"></ul>
+                    </div>
+                </li>
+
+                <li class="nav-item dropdown dropdown-notification me-25"><a class="nav-link" href="#" data-bs-toggle="dropdown"><i class="ficon" data-feather="bell"></i><span class="badge rounded-pill bg-danger badge-up">5</span></a>
+                    <ul class="dropdown-menu dropdown-menu-media dropdown-menu-end">
+                        <li class="dropdown-menu-header">
+                            <div class="dropdown-header d-flex">
+                                <h4 class="notification-title mb-0 me-auto">Notifications</h4>
+                                <div class="badge rounded-pill badge-light-primary">6 New</div>
+                            </div>
+                        </li>
+                        <li class="scrollable-container media-list"><a class="d-flex" href="#">
+                                <div class="list-item d-flex align-items-start">
+                                    <div class="me-1">
+                                        <div class="avatar"><img src="../../../app-assets/images/portrait/small/avatar-s-15.jpg" alt="avatar" width="32" height="32"></div>
+                                    </div>
+                                    <div class="list-item-body flex-grow-1">
+                                        <p class="media-heading"><span class="fw-bolder">Congratulation Sam 🎉</span>winner!</p><small class="notification-text"> Won the monthly best seller badge.</small>
+                                    </div>
+                                </div>
+                            </a><a class="d-flex" href="#">
+                                <div class="list-item d-flex align-items-start">
+                                    <div class="me-1">
+                                        <div class="avatar"><img src="../../../app-assets/images/portrait/small/avatar-s-3.jpg" alt="avatar" width="32" height="32"></div>
+                                    </div>
+                                    <div class="list-item-body flex-grow-1">
+                                        <p class="media-heading"><span class="fw-bolder">New message</span>&nbsp;received</p><small class="notification-text"> You have 10 unread messages</small>
+                                    </div>
+                                </div>
+                            </a><a class="d-flex" href="#">
+                                <div class="list-item d-flex align-items-start">
+                                    <div class="me-1">
+                                        <div class="avatar bg-light-danger">
+                                            <div class="avatar-content">MD</div>
+                                        </div>
+                                    </div>
+                                    <div class="list-item-body flex-grow-1">
+                                        <p class="media-heading"><span class="fw-bolder">Revised Order 👋</span>&nbsp;checkout</p><small class="notification-text"> MD Inc. order updated</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="list-item d-flex align-items-center">
+                                <h6 class="fw-bolder me-auto mb-0">System Notifications</h6>
+                                <div class="form-check form-check-primary form-switch">
+                                    <input class="form-check-input" id="systemNotification" type="checkbox" checked="">
+                                    <label class="form-check-label" for="systemNotification"></label>
+                                </div>
+                            </div><a class="d-flex" href="#">
+                                <div class="list-item d-flex align-items-start">
+                                    <div class="me-1">
+                                        <div class="avatar bg-light-danger">
+                                            <div class="avatar-content"><i class="avatar-icon" data-feather="x"></i></div>
+                                        </div>
+                                    </div>
+                                    <div class="list-item-body flex-grow-1">
+                                        <p class="media-heading"><span class="fw-bolder">Server down</span>&nbsp;registered</p><small class="notification-text"> USA Server is down due to high CPU usage</small>
+                                    </div>
+                                </div>
+                            </a><a class="d-flex" href="#">
+                                <div class="list-item d-flex align-items-start">
+                                    <div class="me-1">
+                                        <div class="avatar bg-light-success">
+                                            <div class="avatar-content"><i class="avatar-icon" data-feather="check"></i></div>
+                                        </div>
+                                    </div>
+                                    <div class="list-item-body flex-grow-1">
+                                        <p class="media-heading"><span class="fw-bolder">Sales report</span>&nbsp;generated</p><small class="notification-text"> Last month sales report generated</small>
+                                    </div>
+                                </div>
+                            </a><a class="d-flex" href="#">
+                                <div class="list-item d-flex align-items-start">
+                                    <div class="me-1">
+                                        <div class="avatar bg-light-warning">
+                                            <div class="avatar-content"><i class="avatar-icon" data-feather="alert-triangle"></i></div>
+                                        </div>
+                                    </div>
+                                    <div class="list-item-body flex-grow-1">
+                                        <p class="media-heading"><span class="fw-bolder">High memory</span>&nbsp;usage</p><small class="notification-text"> BLR Server using high memory</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="dropdown-menu-footer"><a class="btn btn-primary w-100" href="#">Read all notifications</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown dropdown-user">
+                    <a class="nav-link dropdown-toggle dropdown-user-link" id="dropdown-user" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="user-nav d-sm-flex d-none">
+                            <span class="user-name fw-bolder"> {{auth()->user()->name}} </span>
+                            <span class="user-status">Admin</span>
+                        </div>
+                        <span class="avatar bg-primary img_circle border">
+                            {{ strtoupper( substr( auth()->user()->name , 0, 1) ) }} 
+                        </span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-user">
+                        <a class="dropdown-item" href="page-profile.html"> <i class="me-50" data-feather="user"></i> Profile</a>
+                        <a class="dropdown-item" href="#"><i class="me-50" data-feather="settings"></i> Settings</a>
+                        <a class="dropdown-item" href="#"><i class="me-50" data-feather="power"></i> Logout</a>
+                    </div>
+                </li>
+            </ul>
         </div>
-        <span class="ml-3 font-weight-bold" id="showDateTime"></span>        
-        
-      </div>
-      <div class="d-flex align-items-center">
-        <div class="dropdown pull-right d-lg-block d-none">
-          <button class="profile-dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="profile dropdown">
-            <span class="thumbnail-wrapper d32 circular inline">
-              <img src="{{asset('users')}}/{{Auth::user()->profile_pic}}" width="32" height="32">
-            </span>
-          </button>
-          <div class="dropdown-menu dropdown-menu-right profile-dropdown" role="menu">
-            <a href="#" class="dropdown-item">
-              <span>Signed in as <br /> <b>{{Auth::user()->name}}</b> </span>
-            </a>
-            <div class="dropdown-divider"></div>
-              @if( strtolower(Session('role_name')) == "admin" || strtolower(Session('role_name')) == "administrator" || 
-                  strtolower(Session('role_name')) == "super admin" || strtolower(Session('role_name')) == "super administrator") 
-                <a href="{{route('setting.index')}}" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
-              @endif
+    </nav>
 
-            <a href="{{route('logout.user')}}" class="dropdown-item text-danger"><i class="fas fa-power-off"></i> Logout</a>
-            
-          </div>
-        </div>
-      </div>
+    <!-- END: Header-->
+
+    <!-- sidebar -->
+    @include('admin.layout.sidebar');
+
+
+    <!-- BEGIN: Content-->
+    <div class="app-content content ">
+        @yield('content')
     </div>
+    <!-- END: Content-->
+
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
+
+    <!-- BEGIN: Footer-->
+    <footer class="footer footer-static footer-light">
+        <p class="clearfix mb-0"><span class="float-md-start d-block d-md-inline-block mt-25">COPYRIGHT &copy; 2021<a class="ms-25" href="https://1.envato.market/pixinvent_portfolio" target="_blank">Pixinvent</a><span class="d-none d-sm-inline-block">, All rights Reserved</span></span><span class="float-md-end d-none d-md-block">Hand-crafted & Made with<i data-feather="heart"></i></span></p>
+    </footer>
+    <button class="btn btn-primary btn-icon scroll-top" type="button"><i data-feather="arrow-up"></i></button>
+    <!-- END: Footer-->
 
 
-    <!-- main content -->
-    <div class="page-content-wrapper ">
-      <div class="content">
-        <div class=" container-fluid ">
-          @section('container')
+    <!-- BEGIN: Vendor JS-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="{{asset('app-assets/vendors/js/vendors.min.js')}}"></script>
+    <!-- BEGIN Vendor JS-->
 
-          @show
-        </div>
-      </div>
+    <script src="{{asset('app-assets/vendors/js/extensions/toastr.min.js')}}"></script>
 
-    </div>
+    <script src="{{asset('app-assets/vendors/js/tables/datatable/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('app-assets/vendors/js/tables/datatable/dataTables.bootstrap5.min.js')}}"></script>
+    <script src="{{asset('app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js')}}"></script>
+    <script src="{{asset('app-assets/vendors/js/tables/datatable/responsive.bootstrap4.js')}}"></script>
 
-  </div>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://code.jquery.com/ui/1.13.0-alpha.1/jquery-ui.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="{{asset('admin/assets/plugins/pace/pace.min.js')}}" type="text/javascript"></script>
-  <script src="{{asset('admin/assets/plugins/liga.js')}}" type="text/javascript"></script>
-  <script src="{{asset('admin/assets/plugins/modernizr.custom.js')}}" type="text/javascript"></script>
-  <script src="{{asset('admin/assets/plugins/jquery-ui/jquery-ui.min.js')}}" type="text/javascript"></script>
-  <script src="{{asset('admin/assets/plugins/popper/umd/popper.min.js')}}" type="text/javascript"></script>
-  <script src="{{asset('admin/assets/plugins/bootstrap/js/bootstrap.min.js')}}" type="text/javascript"></script>
-  <script src="{{asset('admin/assets/plugins/jquery/jquery-easy.js')}}" type="text/javascript"></script>
-  <script src="{{asset('admin/assets/plugins/jquery-unveil/jquery.unveil.min.js')}}" type="text/javascript"></script>
-  <script src="{{asset('admin/assets/plugins/jquery-ios-list/jquery.ioslist.min.js')}}" type="text/javascript"></script>
-  <script src="{{asset('admin/assets/plugins/jquery-actual/jquery.actual.min.js')}}"></script>
-  <script src="{{asset('admin/assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js')}}"></script>
-  <script type="text/javascript" src="{{asset('admin/assets/plugins/select2/js/select2.full.min.js')}}"></script>
-  <script type="text/javascript" src="{{asset('admin/assets/plugins/classie/classie.js')}}"></script>
-  <script src="{{asset('admin/pages/js/pages.js')}}"></script>
-  <script src="{{asset('admin/assets/js/scripts.js')}}" type="text/javascript"></script>
-  <script src="{{asset('admin/assets/js/scripts.js')}}" type="text/javascript"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js" integrity="sha512-8QFTrG0oeOiyWo/VM9Y8kgxdlCryqhIxVeRpWSezdRRAvarxVtwLnGroJgnVW9/XBRduxO/z1GblzPrMQoeuew==" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+    <script src="{{asset('app-assets/vendors/js/forms/select/select2.full.min.js')}}"></script>
+    <script src="{{asset('app-assets/js/scripts/forms/form-select2.js')}}"></script>
+    <script src="{{asset('app-assets/js/scripts/extensions/ext-component-toastr.js')}}"></script>
 
-  <script type="text/javascript" src="{{asset('admin/assets/plugins/jquery-autonumeric/autoNumeric.js')}}"></script>
-  <script type="text/javascript" src="{{asset('admin/assets/plugins/dropzone/dropzone.min.js')}}"></script>
-  <script type="text/javascript" src="{{asset('admin/assets/plugins/bootstrap-tag/bootstrap-tagsinput.min.js')}}"></script>
-  <script type="text/javascript" src="{{asset('admin/assets/plugins/jquery-inputmask/jquery.inputmask.min.js')}}"></script>
-  <script src="{{asset('admin/assets/plugins/bootstrap-form-wizard/js/jquery.bootstrap.wizard.min.js')}}" type="text/javascript"></script>
-  <script src="{{asset('admin/assets/plugins/jquery-validation/js/jquery.validate.min.js')}}" type="text/javascript"></script>
-  <script src="{{asset('admin/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')}}" type="text/javascript"></script>
-  <script src="{{asset('admin/assets/plugins/quill/quill.min.js')}}" type="text/javascript"></script>
-  <script src="{{asset('admin/assets/plugins/moment/moment.min.js')}}"></script>
-  <script src="{{asset('admin/assets/plugins/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
-  <script src="{{asset('admin/assets/plugins/bootstrap-timepicker/bootstrap-timepicker.min.js')}}"></script>
-  <script src="{{asset('admin/assets/plugins/bootstrap-typehead/typeahead.bundle.min.js')}}"></script>
-  <script src="{{asset('admin/assets/plugins/bootstrap-typehead/typeahead.jquery.min.js')}}"></script>
-  <script src="{{asset('admin/assets/plugins/handlebars/handlebars-v4.0.5.js')}}"></script>
-  <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-  <script>
-    var base_url = window.location.origin;
-    var notyf = new Notyf({
-      duration: 2000,
-      position: {
-        x: 'right',
-        y: 'top',
-      },
-    });
-   
-    function showDateTime() {
-      $("#showDateTime").html(moment().format('MMMM Do YYYY - h:mm:ss a - dddd'));
-    }
+    <!-- BEGIN: Theme JS-->
+    <script src="{{asset('app-assets/js/core/app-menu.js')}}"></script>
+    <script src="{{asset('app-assets/js/core/app.js')}}"></script>
+    <!-- END: Theme JS-->
+    <script src="{{asset('app-assets/js/scripts/components/components-tooltips.min.js')}}"></script>
 
-    setInterval(() => {
-      showDateTime();
-    }, 1000);
-    
-  </script>
+    <script>
+        const base_url = "{{request()->root()}}";
+        $(document).ready(function() {
+            if (feather) {
+                feather.replace({
+                    width: 14,
+                    height: 14
+                });
+            }
+            $('.datatable').DataTable();
+        });
+        const notification = ( type , message , title) => {
+            toastr[type](message, title, {
+                showMethod: 'slideDown',
+                hideMethod: 'slideUp',
+                timeOut: 5000,
+                // rtl: 'isRtl',
+            });
+        }
+    </script>
 
-  @section('scripts')
-  @show
+    @yield('js')
 </body>
+<!-- END: Body-->
+
 </html>

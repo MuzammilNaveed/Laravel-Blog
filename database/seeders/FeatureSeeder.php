@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;          
 
 class FeatureSeeder extends Seeder
 {
@@ -11,8 +12,11 @@ class FeatureSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
-    {
-        //
+    public function run() {
+        
+        $features = array(
+            array("id" => 1 , "title" => 'Dashboard',"slug" => 'dashboard', "sequence" => 1,"role_id" => 1, "is_active" => 1 , "parent_id" => 0, "route" => "dashboard.index"),
+        );
+
     }
 }

@@ -1,8 +1,8 @@
 @extends('admin.layout.master')
 @section('page_title','Manage widgets')
 @section('appearance','active')
-@section('widgets','active')
-@section('container')
+@section('widget','active')
+@section('content')
 
 <style>
     .draggable {

@@ -15,57 +15,32 @@ use DataTables;
 
 class TagsController extends Controller
 {
-    public function index(Request $request) {
-        $role = Role::where('id',Auth::user()->role_id)->first();
-        $name = strtolower($role->name);
 
-        if( $name == "admin" || $name == "administrator" || $name == "super admin" || $name == "super administrator") {
-
-            $tags = Tags::where("is_deleted",0)->get();
-            foreach($tags as $tag) {
-                $tag->created_by = User::where('id',$tag->created_by)->first();
-            }
-
-        }else{
-
-            $tags = Tags::where("is_deleted",0)->where('created_by',Auth::id())->get();
-            foreach($tags as $tag) {
-                $tag->created_by = User::where('id',$tag->created_by)->first();
-            }
-        }
-
-        if ($request->ajax()) {
-            return Datatables::of($tags)->addIndexColumn()->make(true);
-        }
-        return view('users-data');
+    public function index() {
+        return view('admin.tags.tag');
     }
 
-    public function tagPage() {
-        $permission = DB::table("permissions")->where("created_by",Auth::id())->where('title','tags')->first();
-        return view('admin.tags.tag',compact('permission'));
+    public function getTags() {
+        
+        return response()->json([
+            "tags" => Tags::orderByDesc('id')->get() , 
+            "success" => true , 
+            "status_code" => 200,
+        ]);
+
     }
 
     public function store(Request $request) {
-        $tag = new Tags();
-        $tag->name = $request->name;
-        $tag->slug = Str::slug($request->name, '-');
-        $tag->save();
+        $data = array(
+            "name" => strip_tags( $request->name ),
+            "slug" =>  Str::slug( strip_tags( $request->name ) , '-'),
+            "status" => request()->status ?? 0,
+        );
+
+        Tags::updateOrCreate( ['id' => request()->id] , $data);
 
         return response()->json([
-            'message' => 'Tag Added Successfully.',
-            'status' => 200,
-            'success' => true
-        ]);
-    }
-
-    public function update($id, Request $request) {
-        $tag = Tags::find($id);
-        $tag->name = $request->name;
-        $tag->slug = Str::slug($request->name, '-');
-        $tag->save();
-
-        return response()->json([
-            'message' => 'Tag Updated Successfully.',
+            'message' => 'Tag '. ($request->id == null ? 'Saved' : 'Updated') .' Successfully.',
             'status' => 200,
             'success' => true
         ]);
@@ -73,39 +48,37 @@ class TagsController extends Controller
 
     public function destroy($id) {
 
-        $post_tags = DB::table("post_tags")->where("tag_id",$id)->count();
-
-        if($post_tags > 0) {
-            return response()->json([
-                'message' => 'Tag Used in Post Cannot be Deleted',
-                'status' => 500,
-                'success' => false
-            ]);
-        }else{
-            $tag = Tags::find($id);
-            $tag->is_deleted = 1;
-            $tag->deleted_by = Auth::user()->id;
-            $tag->save();
+        $tag = Tags::find($id);
+        if($tag) {
+            $tag->delete();
             return response()->json([
                 'message' => 'Tag Deleted Successfully.',
                 'status' => 200,
                 'success' => true
             ]);
-        }        
+        }else{
+            return response()->json([
+                'message' => 'Something went wrong',
+                'status' => 500,
+                'success' => false
+            ]);
+        }   
     }
+
+
+    // section
 
     public function section() {
         return view('admin.section.index');
     }
 
-    public function all_sections(Request $request) {
+    public function get_sections(Request $request) {
         
-        $sections = Section::all();
+        $sections = Section::orderBy('id','desc')->withCount('posts')->get();
 
         if ($request->ajax()) {
             return Datatables::of($sections)->addIndexColumn()->make(true);
         }
-        return view('users-data');
     }
 
     public function save_section(Request $request) {

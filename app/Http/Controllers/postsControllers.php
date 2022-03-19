@@ -20,93 +20,79 @@ use DataTables;
 
 class postsControllers extends Controller
 {
-    //
-    public function index(Request $request) {
-        $role = Role::where('id',Auth::user()->role_id)->first();
-        $name = strtolower($role->name);
-
-        if( $name == "admin" || $name == "administrator" || $name == "super admin" || $name == "super administrator") {
-            $posts =  Post::with(['category','user','comments'])->orderBy('id','desc')->get();
-
-            foreach($posts as $post) {       
-                $post->tags = DB::table("post_tags")->where("post_id","=",$post->id)
-                ->join('tags','post_tags.tag_id','tags.id')
-                ->select('name')
-                ->get();
-            }
-
-        }else{
-            $posts =  Post::with(['category','user','comments'])
-                        ->where('created_by',Auth::id())
-                        ->orderBy('id','desc')
-                        ->get();
-
-            foreach($posts as $post) {      
-                $post->tags = DB::table("post_tags")->where("post_id","=",$post->id)
-                ->join('tags','post_tags.tag_id','tags.id')
-                ->select('name')
-                ->get();
-            }
-        }
-
-        if ($request->ajax()) {
-            return Datatables::of($posts)->addIndexColumn()->make(true);
-        }
-        return view('users-data');
-
+ 
+    public function index() {
+        return view('admin.posts.index');
     }
 
-    public function manage_post() {
-        $categories = Category::where('is_deleted' ,0)->get();
-        $authors = User::where('is_deleted' ,0)->where('is_author',1)->get();
-        $permission = DB::table("permissions")->where("created_by",Auth::id())->where('title','post')->first();
-        return view('admin.posts.post', compact('categories','authors','permission'));
-    }
-
-    public function addPostPage() {
-        $tags = Tags::where('is_deleted',0)->get();
-        $categories = Category::where('is_deleted',0)->get();
+    public function create() {
+        $tags = Tags::all();
+        $categories = Category::all();
         $users = User::where('is_deleted',0)->where('is_author',1)->get();
-        $sections = Section::where('status',1)->get();
-        return view('admin.posts.add_post',compact('categories','tags','users','sections')); 
+        return view('admin.posts.create', get_defined_vars()); 
     }
 
-    public function store(Request $request) {
+    public function store() {
 
-        $image = $request->file('image');
-        $imageName = rand(). '.' . $image->extension();
-        $image->move(public_path('images'), $imageName);
+        $data = array(
+            "title" => request()->title,
+            "slug" => Str::slug(request()->title, '-'),
+            "cat_id" => request()->category , 
+            "tags_id" =>  request()->tags != null ? implode(',', request()->tags) : NULL,
+            "author" => request()->author , 
+            "status" => request()->status , 
+            "description" => request()->description,
+            "meta_title" => request()->title,
+            "meta_tags" => request()->meta_tags,
+            "meta_description" => request()->meta_description,
+            "created_by" => auth()->id(),
+        );
 
-        $post = new Post();
-        $post->title = $request->title;
-        $post->slug = Str::slug($request->title, '-');
-        $post->cat_id = $request->category;
-        $post->section = $request->section;
-        $post->image = $imageName;
-        $post->description = $request->description;
-        $post->created_by = Auth::user()->id;
+        
+        if(request()->hasFile('image') ) {
 
-        $post->meta_author_id = $request->author_id;
-        $post->post_img_alt = $request->post_img_alt;
-        $post->meta_tags = $request->meta_tags;
-        $post->meta_description = $request->meta_description;
-        $post->meta_author = $request->meta_author;
-        $post->meta_title = $request->meta_title;
-        $post->save();
+            $image = request()->file('image');
+            $filename = strtolower($image->getClientOriginalName());
+            $image->storeAs('posts/',  $filename ,'public');
+            
+            $data['image']  = 'storage/posts/' . $filename; 
+        }
 
-        for($i =0; $i < sizeof($request->tags); $i++ ) {
-            DB::table("post_tags")->insert([
-                'post_id' => $post->id,
-                "tag_id" => $request->tags[$i],
-            ]);
-        }       
+        Post::updateOrCreate( ['id' => request()->id] , $data);
 
         return response()->json([
-            'message' => 'Post Created Successfully.',
+            'message' => 'Post ' . (request()->id == null ? 'Created' : 'Updated') .' Successfully.',
             'status' => 200,
             'success' => true
         ]);
     }
+
+
+    public function getPosts() {
+
+        return response()->json([
+            "posts" => Post::withCategory()->get() , 
+            "success" => true , 
+            "status_code" => 200,
+        ]);
+    }
+
+    public function show($id) {
+        $data = Post::where('id' , $id)->withCategory()->first();
+        return view('admin.posts.view' , get_defined_vars() );
+    }
+
+    public function edit($id) {
+        $data = Post::where('id' , $id)->withCategory()->first();
+        $tags = Tags::all();
+        $categories = Category::all();
+        $users = User::where('is_deleted',0)->where('is_author',1)->get();
+
+        // dd($data->toArray());
+        return view('admin.posts.edit' , get_defined_vars() );
+    }
+
+
 
     public function updatePost(Request $request) {
 

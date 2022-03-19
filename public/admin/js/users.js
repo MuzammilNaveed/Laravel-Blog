@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    let users_arr = [];
     $.ajaxSetup({
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
@@ -9,294 +10,214 @@ $(document).ready(function() {
     $("#addRecord").submit(function(e) {
         e.preventDefault();
 
-        let form_data = new FormData(this);
-        let status = 0;
-        let is_author = 0;
+        users.saveUser( $(this).attr('action') , $(this).attr('method')  ,new FormData(this) );
 
-        $("#status").is(":checked") ? (status = 1) : (status = 0);
-        $("#author").is(":checked") ? (is_author = 1) : (is_author = 0);
-        form_data.append("status", status);
-        form_data.append("author", is_author);
-
-        $.ajax({
-            headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
-            },
-            type: "POST",
-            url: create_users,
-            data: form_data,
-            dataType: "JSON",
-            contentType: false,
-            cache: false,
-            processData: false,
-            beforeSend: function(data) {
-                $("#add_loader").show();
-            },
-            success: function(data) {
-                console.log(data, "a");
-
-                if ((data.status == 200) & (data.success == true)) {
-                    $("#addRecord")[0].reset();
-                    $("#addRecordModal").modal("hide");
-                    getAllUsers();
-                } else {
-                    notyf.error(data.message);
-                }
-            },
-            complete: function(data) {
-                $("#add_loader").hide();
-            },
-            error: function(e) {
-                console.log(e);
-                $("#add_loader").hide();
-            }
-        });
     });
 
-    //for updateing user record
-    $("#editRecord").submit(function(e) {
-        e.preventDefault();
-
-        let form_data = new FormData(this);
-        let status = 0;
-
-        $("#editstatus").is(":checked") ? (status = 1) : (status = 0);
-        form_data.append("status", status);
-
-        $.ajax({
-            headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
-            },
-            type: "POST",
-            url: update_user,
-            data: form_data,
-            dataType: "JSON",
-            contentType: false,
-            cache: false,
-            processData: false,
-            beforeSend: function(data) {
-                $("#edit_loader").show();
-            },
-            success: function(data) {
-                if ((data.status == 200) & (data.success == true)) {
-                    $("#editRecord")[0].reset();
-                    $("#updateModal").modal("hide");
-                    getAllUsers();
-                    notyf.success(data.message);
-                } else {
-                    notyf.error(data.message);
-                }
-            },
-            complete: function(data) {
-                $("#edit_loader").hide();
-            },
-            error: function(e) {
-                console.log(e);
-                $("#edit_loader").hide();
-            }
-        });
+     // delete category
+     $("#deleteRecord").click(function() {
+        var id = $("#did").val();
+        users.deleteRecord(id);
     });
 
-    getAllUsers();
+    users.fetch();
+    
 });
 
-function getAllUsers() {
-    $.ajax({
-        type: "GET",
-        url: get_all_users,
-        dataType: "json",
-        beforeSend: function(data) {
-            $(".loader_container").show();
-        },
-        success: function(data) {
-            console.log(data, "users");
-            $("#counts").text(data.length);
+const users = {
 
-            $("#user_table").DataTable().destroy();
-            $.fn.dataTable.ext.errMode = "none";
-            var tbl = $("#user_table").DataTable({
-                data: data,
-                pageLength: 25,
-                bInfo: true,
-                paging: true,
-                columns: [
-                    {
-                        data: null,
-                        defaultContent: ""
-                    },
-                    {
-                        "render": function(data, type, full, meta) {
-                            let img = `<img src="/users/` + full.profile_pic + `" width="80" height="50" class="shadow-sm rounded">`;
-                            return full.profile_pic != null ? img : `<p class="text-danger text-center">Missing</p>`;
-                        }
-                    },
-                    {
-                        "render": function(data, type, full, meta) {
-                            return `
-                                <div>
-                                    <p> <strong class="text-primary">`+(full.name != null ? full.name : "-")+`</strong> <br> <span class="text-muted small"> Created at: `+moment(full.created_at).format("DD-MM-YYYY")+`</span> </p>
-                                </div>`;
-                        }
-                    },
-                    {
-                        "render": function(data, type, full, meta) {
-                            return full.email != null ? full.email : "-";
-                        }
-                    },
-                    {
-                        "render": function(data, type, full, meta) {
-                            if(full.role != null && full.role != "") {
-                                return full.role.name != null && full.role.name != "" ? full.role.name : "-";
-                            }                            
-                        }
-                    },
-                    {
-                        "render": function(data, type, full, meta) {
-                            let active = `<span class="badge text-white bg-success">Active</span>`;
-                            let deactive = `<span class="badge text-white bg-danger">De-Active</span>`;
-                            return full.status == 1 ? active : deactive;
-                        }
-                    },
-                    {
-                        "render": function(data, type, full, meta) {
-                            let yes = `<span class="badge text-white bg-success">Yes</span>`;
-                            let no = `<span class="badge text-white bg-danger">No</span>`;
-                            return full.is_author == 1 ? yes : no;
-                        }
-                    },
-                    {
-                        "render": function(data, type, full, meta) {
-                            let update_btn = `<button onclick="viewRecord(` + full.id + `,'` + full.role_id + `','` + full.name + `','` + full.email + `','` + full.status + `','` + full.phone + `', '` + full.address + `','` +full.facebook +`','` + full.twitter + `','` +full.instagram +`','` + full.linkedin + `','` +full.profile_pic +`')" 
-                                type="button" class="btn btn-primary btn_cirlce text-white" data-toggle="tooltip" data-placement="top" title="Edit">
-                                <i class="fas fa-pencil-alt"></i></button>`;
+    openModal : () => {
+        $("#addRecordModal").modal('show');
+        $("#modal_title").text("Add User");
+        $("#addRecord").trigger('reset');
+        $("#id").val("");
+    },
 
-                            let del_btn = `<button  onclick="deleteRecord(`+ full.id +`)" type="button" 
-                                class="btn btn-danger ml-2 text-white btn_cirlce text-white" data-toggle="tooltip" data-placement="top" title="Delete">
-                                <i class="fas fa-trash"></i></button>`;
-                            
-                            var update = $("#update").text();
-                            var del = $("#delete").text();
+    saveUser : (url , method , data) => {
 
-                            if(update != "" && del != "") {
-                                if(update == 1 && del == 1) {
-                                    return update_btn + del_btn
-                                } else if(update == 1 && del == 0) {
-                                    return update_btn;
-                                }else{
-                                    return del_btn;
-                                }
-                            }
-
-                        }
-                    }
-                ]
-            });
-
-            tbl.on("order.dt search.dt", function() {
-                tbl.column(0, {
-                    search: "applied",
-                    order: "applied"
-                })
-                    .nodes()
-                    .each(function(cell, i) {
-                        cell.innerHTML = i + 1;
-                    });
-            }).draw();
-
-
-            $("#role_select").on('change', function () {
-                tbl.column(4).search($(this).val()).draw();
-            });
-
-        },
-        complete: function(data) {
-            $(".loader_container").hide();
-            $('[data-toggle="tooltip"]').tooltip();
-        },
-        error: function(e) {
-            console.log(e);
-        }
-    });
-}
-
-function viewRecord( id, role_id, name, email, status, phone, address, facebook, twitter, instagram, linkedin, profile) {
-    $("#edit_modal_loader").show();
-    $("#updateModal").modal("show");
-
-    $("#id").val(id);
-    $("#username").text(name);
-    $("#name").val(name);
-    $("#email").val(email);
-    $("#phone").val(phone);
-    $("#address").val(address);
-
-    $("#facebook").val(facebook);
-    $("#instagram").val(twitter);
-    $("#twitter").val(instagram);
-    $("#linkedin").val(linkedin);
-    $("#role_id")
-        .val(role_id)
-        .trigger("change");
-
-    status == 1
-        ? $("input[name='editstatus']").prop("checked", true)
-        : $("input[name='editstatus']").prop("checked", false);
-
-    $("#profile_pic").html(
-        `<div class="form-group">
-        <input type="file" class="form-control dropify" data-default-file="` +
-            image_path +
-            "/" +
-            profile +
-            `" name="edit_profile_pic" data-allowed-file-extensions="png jpg jpeg">
-    </div>`
-    );
-    $(".dropify").dropify();
-    setTimeout(() => {
-        $("#edit_modal_loader").hide();
-    }, 1000);
-}
-
-function deleteRecord(id) {
-    Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-    }).then(result => {
-        if (result.isConfirmed) {
-            $.ajax({
-                type: "POST",
-                url: delete_users,
-                data: {id:id},
-                beforeSend: function(data) {
-                    $(".loader_container").show();
-                },
-                success: function(data) {
-                    console.log(data, "a");
-    
-                    if ((data.status == 200) & (data.success == true)) {
-    
-                        getAllUsers();
-                        Swal.fire("Deleted!", data.message, "success");
-    
-                    }else{
-                        Swal.fire("Cancelled!", data.message, "error");
-                    }
-                    
-                },
-                complete: function(data) {
-                    $(".loader_container").hide();
-                },
-                error: function(e) {
-                    console.log(e);
-                    $(".loader_container").hide();
+        $.ajax({
+            type: method,
+            url: url,
+            data: data,
+            dataType: "JSON",
+            contentType: false,
+            cache: false,
+            processData: false,
+            beforeSend: function(data) {
+                $('.loadingBtn').show();
+                $('.saveBtn').hide();
+            },
+            success: function(data) {
+                if ((data.status_code == 200) & (data.success == true)) {
+                    $("#addRecordModal").modal("hide");   
+                    notification('success' , data.message , 'Success');
+                } else {
+                    notification('error' , data.message , 'Failed');
                 }
-            });
-            
+            },
+            complete: function(data) {
+                $('.loadingBtn').hide();
+                $('.saveBtn').show();
+            },
+            error: function(e) {
+                console.log(e);
+                $('.loadingBtn').hide();
+                $('.saveBtn').show();
+            }
+        });
+    },
+
+    fetch : () => {
+
+        fetch(get_users)
+        .then( (response) => response.json() )
+        .then((data) => {
+            $('.loading__').attr('style', 'display: block !important');
+            if(data.status_code == 200) {
+
+                users_arr = data.users;
+                $("#sectionCount").text(data.users.length);
+                $('#showRecord').DataTable().destroy();
+                $.fn.dataTable.ext.errMode = 'none';
+                var tbl = $('#showRecord').DataTable({
+                    data: data.users,
+                    "pageLength": 10,
+                    "bInfo": false,
+                    "paging": true,
+                    "fnCreatedRow": function( nRow, aData, iDataIndex ) {
+                        $(nRow).attr('id', 'row__'+aData.id);
+                    },
+                    columns: [
+                        {
+                            data: null,
+                            defaultContent: ""
+                        },
+                        {
+                            render: function(data, type, full, meta) {
+                                return full.name != null ? `<a href="${base_url}/profile/${full.id}" class="fw-bolder">${full.name}</a>` : "-";
+                            }
+                        },
+                        {
+                            render: function(data, type, full, meta) {
+                                return full.email != null ? `<a href="mailto:${full.email}">${full.email}</a>` : "-";
+                            }
+                        },
+                        {
+                            render: function(data, type, full, meta) {
+                                return full.role_id != null ? full.role_id : '-';
+                            }
+                        },
+                        {
+                            render: function(data, type, full, meta) {
+                                return `<span class="badge bg-light-${full.status == 1 ? "success" : "danger"}"> ${full.status == 1 ? "Active" : "Inactive"}</span>`;
+                            }
+                        },
+                        {
+                            render: function(data, type, full, meta) {
+                                return full.created_at != null ? full.created_at : '-';
+                            }
+                        },
+                        {
+                            render: function(data, type, full, meta) {
+                                return `
+                                <div class="d-flex justify-content-start">
+                                    <button onclick="users.viewRecord(${full.id})" 
+                                        type="button" class="btn btn-icon rounded-circle btn-outline-primary waves-effect" data-toggle="tooltip" data-placement="top" title="Edit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2 font-medium-3"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                                    </button>
+
+                                    <button onclick="users.deleteModal(${full.id})" 
+                                        type="button" class="btn btn-icon rounded-circle btn-outline-danger mx-1 waves-effect" data-toggle="tooltip" data-placement="top" title="Delete">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash font-medium-3"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                    </button>
+
+                                </div>`;
+                            }
+                        },
+                    ],
+                });
+                tbl.on("order.dt search.dt", function() {
+                    tbl.column(0, {
+                        search: "applied",
+                        order: "applied"
+                    })
+                        .nodes()
+                        .each(function(cell, i) {
+                            cell.innerHTML = i + 1;
+                        });
+                }).draw();
+            }else{
+                notification('error' , 'Something went wrong' , 'Failed');
+            }
+        })
+        .then( () => {
+            $('.loading__').attr('style', 'display: none !important');
+        })
+        .catch( (error) => {
+            notification('error' , 'Something went wrong' , 'Failed');
+        });
+
+    },
+
+    viewRecord : (id) => {
+
+        let item = users_arr.find(item => item.id === id);
+
+        if(item != null) {
+            $("#id").val(id);
+            $("#name").val(item.name);
+            $("#email").val(item.email);
+            $("#role").val(item.role_id);
+
+            $("#password").attr('readonly' , true);
+
+            item.status == 1 ? $("#status").prop("checked", true) : $("#status").prop("checked", false);
+
+            $("#addRecordModal").modal('show');
+            $("#modal_title").text("Edit User");
         }
-    });
+
+    },
+
+    deleteModal : (id) => {
+        $("#deleteModal").modal('show');
+        $("#did").val(id);
+    },
+
+    deleteRecord :(id) => {
+        $('.delLoader').attr('style' , 'display: block !important');
+        $('.delBtn').attr('style' , 'display: none !important');
+
+        fetch( deluser +`/${id}` , {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json; charset=UTF-8",
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+            },
+        })
+        .then((response) => response.json())
+        .then((data) =>  {
+            console.log(data);
+            if ( data.status == 200 && data.success == true) {
+                $("#deleteModal").modal('hide');
+                $("#row__"+id).remove();
+
+                let sectionCount = $("#sectionCount").text();
+                sectionCount != 0 ? $("#sectionCount").text( ($("#sectionCount").text() - 1) ) : $("#sectionCount").text(0);
+                
+                notification('success' , data.message , 'Success');
+
+            } else {
+                notification('error' , data.message , 'Failed');
+            }
+        }).then( () => {
+            $('.delLoader').attr('style' , 'display: none !important');
+            $('.delBtn').attr('style' , 'display: block !important');
+        })
+        .catch( (error) => {
+            notification('error' , 'Something went wrong' , 'Failed');
+            $('.delLoader').attr('style' , 'display: none !important');
+            $('.delBtn').attr('style' , 'display: block !important');
+        });
+    }
 }

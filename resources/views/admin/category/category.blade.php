@@ -2,206 +2,153 @@
 @section('page_title','Manage Categories')
 @section('blog','open active')
 @section('category','active')
-@section('container')
+@section('content')
 
-<style>
-  .select2-selection {
-    width: 200px !important;
-  }
-</style>
+<div class="">
+	<div class="content-overlay"></div>
+	<div class="header-navbar-shadow"></div>
+	<div class="content-wrapper p-0">
+		<div class="content-header row">
+			
+			<div class="content-header-left">
+				<div class="row breadcrumbs-top">
+					<div class="d-flex justify-content-between">
+						<div>
+							<div class="breadcrumb-wrapper">
+							<h3 class="content-header-title fw-bolder float-start mb-0">Categories (<span id="catCount">0</span>) </h3>
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="{{route('home')}}">Home</a>
+									</li>
+									<li class="breadcrumb-item"> Category </li>
+								</ol>
+							</div>
+						</div>
+						<button class="btn btn-primary" onclick="categories.openModal()"> <i data-feather='plus'></i> Add Category</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+
+	<div class="card mt-2">
+		<div class="card-body">
+
+			<div class="table-responsive">
+				<table class="table table-hover" id="showRecord">
+					<thead>
+						<tr role="row">
+							<th>Sr #</th>
+							<th>Category Name</th>
+							<th>Description</th>
+							<th>Status</th>
+							<th>Created At</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="loading__">
+				<div class="spinner-border text-primary" role="status">
+					<span class="visually-hidden">Loading...</span>
+				</div>
+			</div>
 
 
-<div class="row mt-2 add_margin">
-  <div class="container-fluid p-0">
+		</div>
 
-    @if($permission != null && $permission != "")
-      <p id="update" class="d-none"> {{str_contains($permission->action,'update') ? 1 : 0}} </p>
-      <p id="delete" class="d-none"> {{str_contains($permission->action,'delete') ? 1 : 0}} </p>
-    @endif
+	</div>
 
-        <div class="card card_shadow">
-      <div class="card-header d-flex justify-content-between">
-        <div class="card-title font-weight-bolder">All Categories 
-            <span class="badge bg-primary text-white" id="counts"></span> 
-        </div> 
 
-        @if($permission != null && $permission != "")
-          @if( str_contains($permission->action,'create') )
-          <button data-toggle="modal" data-target="#addRecordModal" class="btn btn-primary">
-            <i class="material-icons">add</i> Add Category</button>
-          @endif
-        @endif
-        
-      </div>
-
-      <div class="card-body">
-        <div class="table-responsive sm-m-b-15">
-          <table class="table table-hover no-footer w-100" id="showRecord">
-            <thead>
-              <tr role="row">
-                <th>Sr #</th>
-                <th>Created At</th>
-                <th>Category Name</th>
-                <th>Total Posts</th>
-                <th>Category Description</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="loader_container" style="display:none">
-        <div class="loader"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade stick-up" id="addRecordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"> <span class="text-muted small">Add</span> <span class="text-primary">Category</span> </h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-
-        <form role="form" id="addRecord" class="mt-3">
-          <div class="row">
-            <div class="col-sm-12">
-              <div class="form-group form-group-default">
-                <label>Category Name</label>
-                <input id="appName" name="name" type="text" class="form-control" placeholder="Name of Category">
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-12">
-              <div class="form-group form-group-default">
-                <label>Description</label>
-                <textarea cols="30" rows="10" name="description" type="text" class="form-control" style="resize:none;height:80px" placeholder="Tell us more about it"></textarea>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-                <div class="form-group form-group-default form-group-default-select2">
-                    <label class="">Category</label>
-                    <select class="full-width select2-hidden-accessible" name="parent_id" data-placeholder="Select Parent Category" data-init-plugin="select2" tabindex="-1" aria-hidden="true">
-                        <option value="0">Root</option>
-                        @foreach($categories as $cat)
-                        <option value="{{$cat->id}}">{{$cat->name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-          </div>
-          <div class="modal-footer pr-0">
-            <button id="add-app" type="submit" class="btn btn-primary  btn-cons"> Save</button>
-            <button aria-label="" type="button" class="btn btn-cons" data-dismiss="modal"> Cancel</button>
-          </div>
-        </form>
-
-        <!-- <div class="loader_container" id="add_loader">
-            <div class="loader"></div>
-        </div> -->
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade stick-up" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"> <span class="text-muted small">Update</span> <span class="text-primary" id="catname"></span> </h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form role="form" id="updateRecord" class="mt-3">
-          <input type="hidden" id="id">
-          <div class="row">
-            <div class="col-sm-12">
-              <div class="form-group form-group-default">
-                <label>Category Name</label>
-                <input id="name" name="name" type="text" class="form-control" placeholder="Name of Category">
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-12">
-              <div class="form-group form-group-default">
-                <label>Description</label>
-                <textarea cols="30" rows="10" id="description" name="description" type="text" class="form-control" style="resize:none;height:80px" placeholder="Tell us more about it"></textarea>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="form-group form-group-default form-group-default-select2">
-                <label class="">Category</label>
-                <select class="full-width select2-hidden-accessible" id='parent_id' name="parent_id" data-placeholder="Select Category" data-init-plugin="select2" tabindex="-1" aria-hidden="true">
-                    <option value="0">Root</option>
-                    @foreach($categories as $category) 
-                      <option value="{{$category->id}}"> {{$category->name}} </option>
-                    @endforeach
-                </select>
-            </div>
-          </div>
-          <div class="modal-footer pr-0">
-            <button id="add-app" type="submit" class="btn btn-primary  btn-cons"> Save</button>
-            <button aria-label="" type="button" class="btn btn-cons" data-dismiss="modal"> Cancel</button>
-          </div>
-        </form>
-
-        <!-- <div class="loader_container" id="edit_loader">
-            <div class="loader"></div>
-        </div> -->
-      </div>
-    </div>
-  </div>
 </div>
 
 
-<!-- post view modal -->
-<div class="modal fade stick-up" id="postViewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"> <span class="text-primary" id="categoryname"></span> has following posts</h5>
 
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mt-2" id="category_post">
+<!-- add update  category modal  -->
+<div class="modal fade text-start" id="showModal" tabindex="-1" aria-labelledby="myModalLabel1" style="display: none;" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="modal_title"> </h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="saveCategory" method="POST" enctype="multipart/form-data" action="{{route('category.store')}}">
+					<input type="hidden" name="id" id="id">
 
+					<div class="col-sm-12">
+						<div class="form-group form-group-default">
+							<label>Category Name <span class="text-danger">*</span> </label>
+							<input name="name" id="name" type="text" required="required" class="form-control" placeholder="Name of Category">
+						</div>
+					</div>
 
+					<div class="col-sm-12 mt-1">
+						<div class="form-group form-group-default">
+							<label>Description</label>
+							<textarea cols="30" rows="5" name="description" id="description" type="text" class="form-control" placeholder="Tell us more about it"></textarea>
+						</div>
+					</div>
 
-      </div>
-    </div>
+					<div class="col-md-12 mt-1">
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" id="status" value="1" name="status">
+							<label class="form-check-label" for="status">Active</label>
+						</div>
+					</div>
 
-    <div class="loader_container" id="cat_post_loader">
-      <div class="loader"></div>
-    </div>
-
-  </div>
+					<div class="modal-footer mt-2">
+						<button aria-label="" type="button" class="btn btn-danger" data-bs-dismiss="modal"> Cancel</button>
+						<button class="btn btn-primary waves-effect loadingBtn" style="display:none" type="button" disabled="">
+							<span class="spinner-border spinner-border-sm " role="status" aria-hidden="true"></span>
+							<span class="ms-25 align-middle">Saving...</span>
+						</button>
+						<button id="save_btn" type="submit" class="btn btn-primary saveBtn"> Save</button>
+						<button id="loader" type="button" style="display:none" role="button" class="btn btn-primary  btn-cons" disabled> <i class="fas fa-circle-notch fa-spin"></i> </button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </div>
+
+<!-- delete category Modal -->
+<div class="modal fade text-start" id="deleteModal" tabindex="-1" aria-labelledby="myModalLabel1" style="display: none;" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="modal_title"> Confirmation </h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="cid">
+				<p>Are you sure you want to delete?</p>
+			</div>
+			<div class="modal-footer bg-light">
+				<button data-bs-dismiss="modal" type="button" class="btn btn-secondary btn-cons btn-animated from-top"> Cancel </button>
+
+				<button type="button" id="deleteCategory" class="btn btn-danger waves-effect delBtn">  Delete </button>
+
+				<button class="btn btn-danger waves-effect delLoader" style="display:none" type="button" disabled="">
+					<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+					<span class="ms-25 align-middle">Processing...</span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
 
 
 @endsection
-@section('scripts')
-<script src="{{asset('admin/js/category.js')}}"></script>
-
+@section('js')
 <script>
-  var categories = "{{url('categories')}}";
-  var category_posts = "{{url('category_posts')}}";
-  var view_post = "{{url('view_post')}}";
+	let delCategory = "{{url('category')}}";
+	let getCategory = "{{route('adminCategory.get')}}";
 </script>
-@show
+<script src="{{asset('admin/js/category.js')}}"></script>
+@endsection

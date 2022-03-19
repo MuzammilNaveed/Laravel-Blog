@@ -26,7 +26,7 @@ class CreateSettingsTable extends Migration
             $table->string('linkedin')->nullable();
             $table->string('instagram')->nullable();
             $table->string('twitter')->nullable();
-            $table->integer('twitter')->nullable();
+            $table->integer('created_by')->nullable();
             $table->timestamps();
         });
     }

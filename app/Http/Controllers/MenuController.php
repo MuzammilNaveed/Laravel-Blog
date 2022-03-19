@@ -15,9 +15,62 @@ class MenuController extends Controller
 {
    
     public function index() {
-        $menus = Menu::all();
-        return view('admin.menu.menu', compact('menus'));
+        return view('admin.menu.index');
     }
+
+    public function getMenus() {
+        
+        return response()->json([
+            "menus" => Menu::orderByDesc('id')->get() , 
+            "success" => true , 
+            "status_code" => 200,
+        ]);
+
+    }
+
+    public function store() {
+        $data = array(
+            "name" => strip_tags( request()->name ),
+            "slug" =>  Str::slug( strip_tags( request()->name ) , '-'),
+            "status" => request()->status ?? 0,
+        );
+
+        Menu::updateOrCreate( ['id' => request()->id] , $data);
+
+        return response()->json([
+            'message' => 'Menu '. (request()->id == null ? 'Saved' : 'Updated') .' Successfully.',
+            'status' => 200,
+            'success' => true
+        ]);
+    }
+
+    
+    public function destroy($id) {
+
+        $tag = Menu::findOrFail($id);
+        if($tag) {
+            $tag->delete();
+            return response()->json([
+                'message' => 'Menu Deleted Successfully.',
+                'status' => 200,
+                'success' => true
+            ]);
+        }else{
+            return response()->json([
+                'message' => 'Something went wrong',
+                'status' => 500,
+                'success' => false
+            ]);
+        }   
+    }
+
+    public function show($id) {
+        $menu = Menu::find($id);
+        $menuItems = MenuItems::where('menu_id',$id)->where('parent_id',0)->orderBy('position','asc')->get();
+
+        return view('admin.menu.edit', get_defined_vars());
+    }
+
 
     public function addMenu($id='') {
         return view('admin.menu.add_menu',compact('id'));
@@ -116,7 +169,7 @@ class MenuController extends Controller
     }
 
     public function menuItemPage($id) {
-        $categories = Category::where('is_deleted',0)->get();
+        $categories = Category::all();
         $pages = Page::where('published',1)->get();
 
         $menuItems = MenuItems::where('menu_id',$id)->get();
@@ -125,7 +178,7 @@ class MenuController extends Controller
 
     public function editMenuItemPage ($item_id,$menu_id) {
 
-        $categories = Category::where('is_deleted',0)->get();
+        $categories = Category::all();
         $pages = Page::where('published',1)->get();
 
         $menuItems = MenuItems::where('menu_id',$menu_id)->get();

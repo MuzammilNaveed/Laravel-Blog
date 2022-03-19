@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\categoryController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TagsController;
 use App\Http\Controllers\postsControllers;
 use App\Http\Controllers\RoleController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\WidgetsController;
+use App\Http\Controllers\SectionController;
 
 
 
@@ -50,62 +52,55 @@ use App\Http\Controllers\WidgetsController;
 
 Route::group(['middleware' => ['auth']], function() {
 
-    Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard.index');
+    Route::get('/home', [HomeController::class, 'dashboard'])->name('home');
 
-    // category crud
-    Route::resource('categories', categoryController::class);
-    Route::get('/manage_categories', [categoryController::class, 'categoryPage'])->name('category.index');
-    Route::post('/category_posts', [categoryController::class, 'viewCategoryPosts']);
+    // category
+    Route::get('/get_categories', [CategoryController::class, 'getCategories'])->name('adminCategory.get');
+    
+    // tags
+    Route::get('/get_tags', [TagsController::class, 'getTags'])->name("getTags");
 
-
-
-    // tags crud
-    Route::resource('tags', TagsController::class);
-    Route::get('/manage_tags', [TagsController::class, 'tagPage'])->name('tag.index');
-
-    Route::get('/manage_section', [TagsController::class, 'section'])->name('section.index');
-    Route::get('/get_section', [TagsController::class, 'all_sections']);
-    Route::post('/save_section', [TagsController::class, 'save_section']);
-    Route::post('/delete_section', [TagsController::class, 'delete_section']);
-
+    // section
+    Route::get('/get_sections', [SectionController::class, 'getSections'])->name("getSections");
 
     // posts crud
-    Route::resource('posts', postsControllers::class);
-
-    Route::get('/manage_post', [postsControllers::class, 'manage_post'])->name('post.index');
-
-    Route::get('/add_post', [postsControllers::class, 'addPostPage'])->name('add_post.index');
-    Route::get('/edit_post/{id}', [postsControllers::class, 'editPostPage']);
-    Route::get('/active_post/{id}', [postsControllers::class, 'activePost']);
-    Route::get('/view_post/{id}', [postsControllers::class, 'viewPost']);
-    Route::post('/update_post', [postsControllers::class, 'updatePost']);
-
+    Route::get('/get_posts', [postsControllers::class, 'getPosts'])->name("posts.get");
     Route::post('/upload_post_imgs', [postsControllers::class, 'uploadPostImages']);
     Route::post('/delete_post_imgs', [postsControllers::class, 'deletePostImages']);
+
+    // users
+    Route::get('/get_users',[UserController::class, 'getUsers'])->name('getUsers');
+    Route::get('/profile/{id}',[UserController::class, 'profile'])->name('user.profile');
+
+    // users
+    Route::get('/get_menus',[MenuController::class, 'getMenus'])->name('getMenus');
+
+    Route::resources([
+        'category' => CategoryController::class,
+        'tag' => TagsController::class,
+        'section' => SectionController::class,
+        'posts' => postsControllers::class,
+        'user' => UserController::class,
+        'menu' => MenuController::class,
+    ]);
+
+    // menu & menu items
+    // Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
+    // Route::get('/add-menu/{id?}', [MenuController::class, 'addMenu']);
+    // Route::post('/update-menu', [MenuController::class, 'updateMenu']);
+    // Route::post('/insert-menu', [MenuController::class, 'insertMenu']);
+
+    Route::get('/edit-menu/{id}', [MenuController::class, 'editMenu']);
+    Route::get('/menu-item/{id}', [MenuController::class, 'menuItemPage']);
+    Route::post('/insert-menu-items', [MenuController::class, 'insertMenuItems']);
+    Route::get('/edit-menu-item/{item_id}/{menu_id}', [MenuController::class, 'editMenuItemPage']);
+    Route::post('/update-menu-item', [MenuController::class, 'updateMenuItem']);
+
+    Route::get('/delete-menu-item/{id}', [MenuController::class, 'deleteMenuItem']);
+
+    Route::post('/update-menu-item-position',[MenuController::class, 'updateMenuItemPostion']);
     
-
-
-    // roles crud
-    Route::resource('roles', RoleController::class);
-    Route::get('/manage_roles', [RoleController::class, 'manageRoles'])->name('role.index');
-    Route::get('/permissions/{id}', [RoleController::class, 'permissions']);
-
-    Route::get('/manage_permissions', [RoleController::class, 'managePermission'])->name('permission.index');
-    Route::post('/save_permissions', [RoleController::class, 'savePermission']);
     
-    Route::post('/show_role_permissions', [RoleController::class, 'showRolePermission']);
-
-    
-    // users crud
-    Route::get('/manage_users',[HomeController::class, 'manageUserPage'])->name("user.index");
-    Route::post('/create_users',[HomeController::class, 'createUser']);
-    Route::get('/get_all_users',[HomeController::class, 'getAllUsers']);
-    Route::post('/update_users',[HomeController::class, 'updateUser']);
-    Route::post('/delete_users',[HomeController::class, 'deleteUser']);
-
-    Route::post('/user_detail',[HomeController::class, 'userDetail']);
-
-
     // comments
     Route::get('/comments', [postsControllers::class, 'comments'])->name('comments.index');
     Route::get('/getComments', [postsControllers::class, 'getComments']);
@@ -157,24 +152,6 @@ Route::group(['middleware' => ['auth']], function() {
     // newsletter
     Route::get('/newsletter', [NewsletterController::class, 'index'])->name('newsletter.index');
     Route::get('/get_all_newsletter', [NewsletterController::class, 'get_all_newletters']);
-
-
-    // menu & menu items
-    Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
-    Route::get('/add-menu/{id?}', [MenuController::class, 'addMenu']);
-    Route::post('/update-menu', [MenuController::class, 'updateMenu']);
-    Route::post('/insert-menu', [MenuController::class, 'insertMenu']);
-
-    Route::get('/edit-menu/{id}', [MenuController::class, 'editMenu']);
-    Route::get('/menu-item/{id}', [MenuController::class, 'menuItemPage']);
-    Route::post('/insert-menu-items', [MenuController::class, 'insertMenuItems']);
-    Route::get('/edit-menu-item/{item_id}/{menu_id}', [MenuController::class, 'editMenuItemPage']);
-    Route::post('/update-menu-item', [MenuController::class, 'updateMenuItem']);
-
-    Route::get('/delete-menu-item/{id}', [MenuController::class, 'deleteMenuItem']);
-
-    Route::post('/update-menu-item-position',[MenuController::class, 'updateMenuItemPostion']);
-
 
     
     // widgets

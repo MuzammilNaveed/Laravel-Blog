@@ -4,6 +4,26 @@ $(document).ready(function() {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
         }
     });
+    
+    function loadFile(event) {
+        var output = document.getElementById('hung22');
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function() {
+            console.log(URL.revokeObjectURL(output.src));
+            let showProfileimage = `<img src="${URL.revokeObjectURL(output.src)}"/>`;
+            $("#showProfileimage").html(showProfileimage);
+        }
+    }
+
+    function loadFil12e(event) {
+        $('.modalImg').hide();
+        $("#hung22").show()
+        var output = document.getElementById('hung22');
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function() {
+        URL.revokeObjectURL(output.src) // free memory
+        }
+    };
 
     // save profile info
     $("#saveProfile").submit(function(event) {

@@ -78,12 +78,15 @@ function getAllComments() {
                 },
                 {
                     "render": function (data, type, full, meta) {
-                        return `<div class="d-flex justify-content-center">
-                            <a href="`+comment+`/`+full.id+`/comment" data-toggle="tooltip" data-placement="top" title="View Comment" type="button" class="btn btn-default text-dark btn_cirlce mr-1"><i class="fas fa-eye"></i> </a>
-                            <button data-toggle="tooltip" data-placement="top" title="Approve Comment" onclick="commentStatus(`+ full.id +`,'approve')" type="button" class="btn btn-success text-white btn_cirlce"><i class="fas fa-check"></i></button>
-                            <button data-toggle="tooltip" data-placement="top" title="Dis-approve Comment" onclick="commentStatus(`+full.id+`,'reject')" type="button" class="btn btn-danger text-white ml-1 btn_cirlce">
-                            <i class="fas fa-ban"></i>
-                        </div>`
+                        let view = `<a href="`+comment+`/`+full.id+`/comment" data-toggle="tooltip" data-placement="top" title="View Comment" type="button" class="btn btn-default text-dark btn_cirlce mr-1"><i class="fas fa-eye"></i> </a>`;
+                        let approve = `<button data-toggle="tooltip" data-placement="top" 
+                            title="Approve Comment" onclick="commentStatus(`+ full.id +`,'approve')" type="button" 
+                            class="btn btn-success text-white btn_cirlce"><i class="fas fa-check"></i></button>`;
+                        let cancel = `
+                            <button data-toggle="tooltip" data-placement="top" title="Dis-approve Comment" 
+                                onclick="commentStatus(`+full.id+`,'reject')" type="button" class="btn btn-danger text-white ml-1 btn_cirlce">
+                                <i class="fas fa-ban"></i> </button>`;
+                        return `<div class="d-flex justify-content-center"> `+ view + approve + cancel +`</div>`
                     }
                 },
             ],

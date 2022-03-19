@@ -16,6 +16,7 @@ class CreateSections extends Migration
         Schema::create('sections', function (Blueprint $table) {
             $table->id();
             $table->string('title')->nullable();
+            $table->string('post_id')->nullable();
             $table->integer('status')->default('0')->nullable();
             $table->timestamps();
         });

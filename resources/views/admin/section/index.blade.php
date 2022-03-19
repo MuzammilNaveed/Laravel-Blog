@@ -1,89 +1,155 @@
 @extends('admin.layout.master')
 @section('page_title','Manage Section')
-@section('blog','active')
+@section('blog','open active')
 @section('section','active')
-@section('container')
+@section('content')
 
-<div class="row mt-2 add_margin">
+<div class="">
+	<div class="content-overlay"></div>
+	<div class="header-navbar-shadow"></div>
+	<div class="content-wrapper p-0">
+		<div class="content-header row">
+			
+			<div class="content-header-left">
+				<div class="row breadcrumbs-top">
+					<div class="d-flex justify-content-between">
+						<div>
+							<div class="breadcrumb-wrapper">
+							<h3 class="content-header-title fw-bolder float-start mb-0"> Section (<span id="sectionCount">0</span>) </h3>
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="{{route('home')}}">Home</a>
+									</li>
+									<li class="breadcrumb-item"> Section </li>
+								</ol>
+							</div>
+						</div>
+						<button class="btn btn-primary" onclick="section.openModal()"> <i data-feather='plus'></i> Add Section </button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
 
-  <div class="container-fluid p-1">
-      <div class="card card_shadow">
-        <div class="card-header d-flex justify-content-between">
-          <div class="card-title font-weight-bolder"> Sections <span id="counts" class="badge bg-primary text-white"></span> </div>
-          <div class="export-options-container">
-            <div class="exportOptions">
-              <div class="DTTT btn-group">
-                  <button id="add_section" class="btn btn-primary">
-                    <i class="material-icons">add</i> Add Section</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="table-responsive sm-m-b-15">
-            <table class="table table-hover no-footer w-100 text-center" id="section_table">
-              <thead>
-                <tr role="row">
-                  <th>Sr#</th>
-                  <th>Title</th>
-                  <th>Status</th>
-                  <th>Created At</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
+	<div class="card mt-2">
+		<div class="card-body">
+
+			<div class="table-responsive">
+				<table class="table table-hover" id="showRecord">
+					<thead>
+						<tr role="row">
+							<th>Sr #</th>
+							<th>Name</th>
+							<th> Posts </th>
+							<th>Status</th>
+							<th>Created At</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="loading__">
+				<div class="spinner-border text-primary" role="status">
+					<span class="visually-hidden">Loading...</span>
+				</div>
+			</div>
+
+
+		</div>
+
+	</div>
+
+
 </div>
 
 
-<!--section modal -->
-<div class="modal fade stick-up" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modal_title"> </h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form id="addRecord" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="id" id="id">
-          <div class="row">
-            <div class="col-sm-12">
-              <div class="form-group form-group-default">
-                <label> Name</label>
-                <input name="title" id="title" type="text" class="form-control" placeholder="Section Name">
-              </div>
-            </div>
-            <div class="form-check checkbox-circle complete">
-                <input type="checkbox" id="checkcircleColorOpt2" name="status">
-                <label for="checkcircleColorOpt2">
-                is Active
-                </label>
-            </div>
-          </div>
-          <div class="modal-footer pr-0">
-            <button id="add-app" type="submit" class="btn btn-primary  btn-cons"> Save</button>
-            <button aria-label="" type="button" class="btn btn-cons" data-dismiss="modal"> Cancel</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
+
+<!-- add update modal  -->
+<div class="modal fade text-start" id="showModal" tabindex="-1" aria-labelledby="myModalLabel1" style="display: none;" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="modal_title"> </h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="saveForm" method="POST" enctype="multipart/form-data" action="{{route('section.store')}}">
+					<input type="hidden" name="id" id="id">
+
+					<div class="col-sm-12">
+						<label class="fw-bold">Name <span class="text-danger">*</span> </label>
+						<input name="name" id="name" type="text" required="required" class="form-control" placeholder="Section name">
+					</div>
+
+					<div class="col-12 mt-1">
+						<label class="fw-bold">Posts</label>
+						<select class="select2" name="posts[]" id="posts" multiple >
+							@foreach($posts as $post)
+								<option value="{{$post->id}}">{{$post->title}}</option>
+							@endforeach
+						</select>
+					</div>
+
+					<div class="col-md-12 mt-1">
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" id="status" value="1" name="status">
+							<label class="form-check-label" for="status">Active</label>
+						</div>
+					</div>
+
+					<div class="modal-footer border-0 mt-2">
+
+						<button aria-label="" type="button" class="btn btn-danger" data-bs-dismiss="modal"> Cancel</button>
+
+						<button class="btn btn-primary waves-effect loadingBtn" style="display:none"  type="button" disabled="">
+							<span class="spinner-border spinner-border-sm " role="status" aria-hidden="true"></span>
+							<span class="ms-25 align-middle">Saving...</span>
+						</button>
+
+						<button id="save_btn" type="submit" class="btn btn-primary saveBtn"> Save</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- delete Modal -->
+<div class="modal fade text-start" id="deleteModal" tabindex="-1" aria-labelledby="myModalLabel1" style="display: none;" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="modal_title"> Confirmation </h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="delid">
+				<p>Are you sure you want to delete?</p>
+			</div>
+			<div class="modal-footer bg-light">
+				<button data-bs-dismiss="modal" type="button" class="btn btn-secondary btn-cons btn-animated from-top"> Cancel </button>
+
+				<button type="button" id="deleteBtn" class="btn btn-danger waves-effect delBtn">  Delete </button>
+
+				<button class="btn btn-danger waves-effect delLoader" style="display:none" type="button" disabled="">
+					<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+					<span class="ms-25 align-middle">Processing...</span>
+				</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 
 
 @endsection
-@section('scripts')
+@section('js')
 <script>
-  var get_section = "{{url('get_section')}}";
+  var getSections = "{{route('getSections')}}";
+  var section_url = "{{url('section')}}";
 </script>
 <script src="{{asset('admin/js/section.js')}}"></script>
-@show
+@endsection

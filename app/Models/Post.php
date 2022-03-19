@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Category;
+use App\Models\User;
+use App\Models\Tags;
 
 class Post extends Model
 {
@@ -15,14 +18,12 @@ class Post extends Model
         'title',
         'slug',
         'cat_id',
-        'section',
-        'is_active',
+        'author',
+        'tags_id',
+        'status',
         'image',
         'description',
-        'post_img_alt',
         'meta_title',
-        'meta_author_id',
-        'meta_author',
         'meta_tags',
         'meta_description',
         'created_by',
@@ -31,16 +32,24 @@ class Post extends Model
         'view_count',
     ];
 
+    protected $appends = ['tags'];
 
-    public function category() {
-        return $this->hasOne(Category::class, 'id' , 'cat_id');
+
+    public function getTagsAttribute() {
+
+        $tags = explode(',' , $this->tags_id);
+        $tag = Tags::select(['id','name'])->whereIn('id' , $tags)->get();
+        return $this->tags_name = $tag;
     }
 
-    public function user() {
-        return $this->hasOne(User::class, 'id' , 'meta_author_id');
-    }
+    public function scopeWithCategory($query) {
 
-    public function comments() {
-        return $this->hasMany(Comments::class, 'post_id' , 'id');
+        return $query->addSelect([
+
+            'category_name' => Category::select('name')->whereColumn('id' , 'posts.cat_id')->limit(1) , 
+            'created_by_name' => User::select('name')->whereColumn('id' , 'posts.created_by')->limit(1) , 
+        
+        ]);
+
     }
 }

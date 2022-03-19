@@ -1,320 +1,217 @@
 $(document).ready(function() {
+    let posts_arr = [];
     $.ajaxSetup({
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
         }
     });
 
-
-    getAllPosts();
+    posts.get();
+    
 });
 
 
-function getAllPosts() {
-    $("#post_table").DataTable().destroy();
-    $.fn.dataTable.ext.errMode = "none";
-    var tbl =$("#post_table").DataTable({
-        processing: true,
-        serverSide: true,
-        searching: true,
-        pageLength: 10,
-        columnDefs: [
-            {
-                orderable: false,
-                targets: 0
-            }
-        ],
-        ajax: {
-            url: posts
-        },
-        columns: [
-            {
-                data: null,
-                defaultContent: ""
-            },
-            {
-                "render": function(data, type, full, meta) {
-                  let img = `<img src="/images/`+full.image+`" width="80" height="50" class="shadow-sm rounded">`;
-                  return img;
-                }
-              },
-              {
-                  "render": function(data, type, full, meta) {
-                      let link = `<div class="mt-2">
-                          <a style="font-size:1rem" data-toggle="tooltip" data-placement="top" title="`+full.title+`" href="edit_post/`+full.id+`">`+full.title.substr(0,30) + '...' +`</a>
-                              <br> created at: <span class="small text-muted">`+moment(full.created_at).format("DD-MM-YYYY h:m:s")+`</span>
-                          </div>`;
-                      return link;
-                  }
-              },
-              {
-                  "className" : "text-center",
-                  "render": function(data, type, full, meta) {
-                      return full.view_count;
-                  }
-              },
-              {
-                  "className" : "small",
-                  "render": function(data, type, full, meta) {
-                      return `<span class="small">`+full.category.name+`</span>`;
-                  }
-              },
-              {
-                  "data": "section",
-                  "render": function(data, type, full, meta) {
-                      if(full.section == 1) {
-                          return `<span class="small">Header</span>`;
-                      }else if(full.section == 2) {
-                          return `<span class="small">Project</span>`;
-                      }else{
-                          return `<span class="small">Tutorials</span>`;
-                      }
-                  }
-              },
-              {
-                  "className" : "small",
-                  "render": function(data, type, full, meta) {
-                      if(full.user != null && full.user != '') {
-                          let created_by = `<a href="javascript:void(0)" onclick="showUserDetails(`+full.user.id+`)">`+full.user.name +`</a>`
-                          return created_by;
-                      }else{
-                          return `-`;
-                      }
-                      
-                  }
-              },
-              {
-                  "className" : "small text-center",
-                  "render": function(data, type, full, meta) {
-                      if(full.comments.length > 0) {
+const posts = {
 
-                          for(var c = 0; c < full.comments.length; c++) {
-                              return `<a onclick="showComments(`+full.comments[c].id+`,'`+full.title+`')" href="javascript:void(0)">`+full.comments.length+`</a>`;
-                          }
-                      }else{
-                          return full.comments.length;
-                      }
-                      
-                  }
-              },
-              
-              {
-                  "render": function(data, type, full, meta) {
-                    var tag_arr = [];
-                    for(var i=0; i < full.tags.length;i++) {
-                      var tag = `<span class="badge badge-pill mt-1 mr-1 bg-primary text-white">`+full.tags[i].name+`</span>`;
-                      tag_arr.push(tag);
+    get :() => {
+        fetch(get_posts)
+        .then( (response) => response.json() )
+        .then((data) => {
+            $('.loading__').attr('style', 'display: block !important');
+            if(data.status_code == 200) {
+                posts_arr = data.posts;
+                $("#catCount").text(data.posts.length);
+                $('#showRecord').DataTable().destroy();
+                $.fn.dataTable.ext.errMode = 'none';
+                var tbl = $('#showRecord').DataTable({
+                    data: data.posts,
+                    "pageLength": 10,
+                    "bInfo": false,
+                    "paging": true,
+                    "fnCreatedRow": function( nRow, aData, iDataIndex ) {
+                        $(nRow).attr('id', 'row__'+aData.id);
+                    },
+                    'columnDefs': [
+                        {
+                            'targets': 0,
+                            'createdCell':  function (td, cellData, rowData, row, col) {
+                                $(td).attr('id',rowData.id); 
+                            }
+                        }
+                    ],
+                    columns: [
+                        {
+                            "className":'details-control text-left',
+                            "orderable":false,
+                            "data":null,
+                            "defaultContent": ''
+                        },
+                        {
+                            "render": function(data, type, full, meta) {
+                                let img = `<img src="${base_url}/${full.image}" class="rounded" height="50" width="50">`;
+                                return full.image != null ? img : '-';
+                            }
+                          },
+                        {
+                            "render": function(data, type, full, meta) {
+                                return ` <a href="#"> ${full.title} </a> `;
+                            }
+                          },
+                          {
+                              "render": function(data, type, full, meta) {
+                                  return full.hasOwnProperty('category_name') ? (full.category_name != null ? full.category_name : '-')  : '-';
+                              }
+                          },
+                          {
+                              "className" : "small",
+                              "render": function(data, type, full, meta) {
+                                  let name = ``;
+                                  for(let index in full.tags) {
+                                      if(full.tags[index].name != null) name += `<span class="badge bg-light-primary" style="margin:2px"> ${full.tags[index].name} </span>`;
+                                  }
+                                  return name;
+                              }
+                          },
+                          {
+                            "render": function(data, type, full, meta) {
+                                let pending = `<span class="badge bg-light-danger"> Pending </span>`;
+                                let public = `<span class="badge bg-light-success"> Public </span>`;
+                                return full.status == 1 ? public : pending;
+                                
+                            }
+                        },
+                          {
+                            "render": function(data, type, full, meta) {
+                                return full.created_at != null ? full.created_at : '-';
+                                
+                            }
+                        },
+                        {
+                            "render": function(data, type, full, meta) {
+                                return full.hasOwnProperty('created_by_name') ? (full.created_by_name != null ? full.created_by_name : '-')  : '-';                                
+                            }
+                        },
+                          {
+                              "render": function(data, type, full, meta) {
+                                return `<div class="form-check form-switch form-check-primary">
+                                        <input type="checkbox" class="form-check-input" id="customSwitch10" ${full.status == 1 ? 'checked' : ''}>
+                                        <label class="form-check-label" for="customSwitch10">
+                                            <span class="switch-icon-left"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                                            <span class="switch-icon-right"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+                                        </label>
+                                    </div>`;
+                            }
+                          },
+                        {
+                            render: function(data, type, full, meta) {
+                                return `<div class="dropdown-items-wrapper">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical" id="dropdownMenuLink1" role="button" data-bs-toggle="dropdown" aria-expanded="false"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink1" style="">
+
+                                    <a class="dropdown-item" href="${base_url + '/posts'}/${full.id}/edit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2 font-medium-3 me-50"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                                        <span class="align-middle">Edit Post</span>
+                                    </a>
+                                    <a class="dropdown-item" href="${base_url + '/posts'}/${full.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2 font-medium-3 me-50"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                                        <span class="align-middle">View Post</span>
+                                    </a>
+                                    <a class="dropdown-item" onclick="posts.deleteRecord(${full.id})">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash font-medium-3 me-50"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                        <span class="align-middle">Delete Post</span>
+                                    </a>
+                                </div>
+                            </div>`;
+                            }
+                        },
+                    ],
+                });
+
+                // Add event listener for opening and closing details
+                $('#showRecord tbody').on('click', 'td.details-control', function () {
+                    var tr = $(this).closest('tr');
+                    var row = tbl.row( tr );
+                    var id = $(this).attr('id');
+
+                    console.log(id , "id");
+
+                    if ( row.child.isShown() ) {
+                        row.child.hide();
+                        tr.removeClass('shown');
                     }
-                    return tag_arr.join(' ');
-                }
-              },
-              {
-                  "className" : "text-left",
-                  "render": function(data, type, full, meta) {
-                      let check = `<i class="fas fa-check text-success"></i>`;
-                      let cancel = `<i class="fas fa-times text-danger"></i>`;
-                    return `
-                      <ul class="small seo pl-0" style="list-style:none">
-                          <li >`+(full.meta_title !=null ? check + ' Meta Title' : cancel+ ' Meta Title')+`</li>
-                          <li >`+(full.meta_author !=null ? check + ' Meta Author Name ': cancel+ ' Meta Author Name ')+`</li>
-                          <li >`+(full.meta_description !=null ? check + ' Meta Description': cancel+ ' Meta Description')+` </li>
-                          <li >`+(full.meta_tags !=null ? check + ' Meta Tags': cancel + ' Meta Tags')+` </li>
-                      </ul>
-                    `;
-                }
-              },
-              {
-                  "render": function(data, type, full, meta) {
-                    return `
-                    <div class="custom-control custom-switch">
-                      <input onchange="changeStatus(`+full.id+`)" type="checkbox" class="custom-control-input" id="active_post_`+full.id+`"  `+(full.is_active == 1 ? 'checked' : '-')+` >
-                      <label class="custom-control-label" for="active_post_`+full.id+`"></label>
-                    </div>
-                    `;
-                }
+                    else {
+                        row.child( posts.showCompleteDetail(id) ).show();
+                        tr.addClass('shown');
+                    }
+                });
 
-              },
-              {
-                  "render": function(data, type, full, meta) {
-                      let view_btn = `<a data-toggle="tooltip" data-placement="top" title="view post" href="`+view_post+`/`+full.id+`"class="btn btn-info text-white btn_cirlce ml-2">
-                      <i class="far fa-eye"></i></a>`;
-                      let update_btn = ` <a href="edit_post/`+full.id+`" type="button" class="btn btn-primary text-white btn_cirlce ml-2" data-toggle="tooltip" data-placement="top" title="edit post"><i class="fas fa-pen"></i></a>`;
-                      let del_btn = `<button data-toggle="tooltip" data-placement="top" title="delete post" onclick="deleteRecord(`+ full.id + `)" type="button" class="btn btn-danger text-white ml-2 text-white btn_cirlce">
-                      <i class="fas fa-trash"></i></button>`;
-                      
-                      var update = $("#update").text();
-                      var del = $("#delete").text();
-                      
-                      if(update != "" && del != "") {
-                          if(update == 1 && del == 1) {
-                              return view_btn + update_btn + del_btn
-                          } else if(update == 1 && del == 0) {
-                              return view_btn + update_btn;
-                          }else if(update == 0 && del == 1) {
-                              return view_btn + del_btn;
-                          }else{
-                              return view_btn;
-                          }
-                      }
-                  
-                  }
-              },
-        ]
-    });
-    tbl.on("order.dt search.dt", function() {
-        tbl.column(0, {
-            search: "applied",
-            order: "applied"
+            }else{
+                // notyf.error('Something Went Wrong');
+            }
         })
-            .nodes()
-            .each(function(cell, i) {
-                cell.innerHTML = i + 1;
-            });
-    }).draw();
-}
-
-
-
-
-function changeStatus(id) {
-    if( $("#active_post_"+id).is(":checked") ) {
-        $.ajax({
-            type: "GET",
-            url: "active_post/" + id,
-            data: {is_active:1},
-            success: function(data) {
-                if ((data.status == 200) & (data.success == true)) {
-                    notyf.success(data.message);
-                } else {
-                    notyf.error(data.message);
-                }
-            },
-            error: function(e) {
-                console.log(e);
-            }
+        .then( () => {
+            $('.loading__').attr('style', 'display: none !important');
+        })
+        .catch( (error) => {
+            // notyf.error('Something Went Wrong');
         });
-    }else{
-        $.ajax({
-            type: "GET",
-            url: "active_post/" + id,
-            data: {is_active:0},
-            success: function(data) {
-                if ((data.status == 200) & (data.success == true)) {
-                    notyf.success(data.message);
-                } else {
-                    notyf.error(data.message);
-                }
-            },
-            error: function(e) {
-                console.log(e);
+
+    },
+
+
+    showCompleteDetail : (id) => {
+
+        var item = posts_arr.find(item => item.id == parseInt(id));
+        console.log(item)
+        if(item != null && item != "" && item != undefined && item != []) {
+            let name = ``;
+            for(let tags in item.tags) {
+                name += `<span class="badge bg-light-primary" style="margin:2px"> ${item.tags[tags].name} </span>`;
             }
-        });
+            return `
+                <div class="row bg-light p-1">
+                    <div class="col-md-4">
+                        <div>
+                            <span class="small text-mited"> Title </span>
+                            <h6> ${item.title} </h6>
+                        </div>
+                        <div>
+                            <span class="small text-mited"> Category </span>
+                            <h6> ${item.category_name} </h6>
+                        </div>
+                        <div>
+                            <span class="small text-mited"> Created at </span>
+                            <h6> ${item.created_at} </h6>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div>
+                            <span class="small text-mited"> Created by </span>
+                            <h6> ${item.created_by_name} </h6>
+                        </div>
+                        <div>
+                            <span class="small text-mited"> Tags </span>
+                            <h6> ${name} </h6>
+                        </div>
+                        <div>
+                            <span class="small text-mited"> Status </span>
+                            <span class="badge bg-light-${item.status == 1 ? 'success' : 'danger'}"> ${item.status == 1 ? 'Public' : 'Pending'} </span>
+                        </div>
+                    </div>   
+                    <div class="col-md-4">
+                        <div>
+                            <span class="small text-mited"> Feature Image </span> <br>
+                            <img class="rounded" src="${base_url}/${item.image}" alt="avatar" height="100" width="100">
+                        </div>
+                    </div>                   
+                </div>`;
+        }
+    },
+
+    deleteRecord : (id) => {
+        $("#id").val(id);
+        $("#deleteModal").modal('show');
     }
+
 }
 
-function showUserDetails(id) {
-
-    $("#userViewModal").modal('show');
-
-    $.ajax({
-        type: "post",
-        url: user_detail,
-        data: {id:id,page:'post'},
-        beforeSend: function(data) {
-            $("#user_loader").show();
-        },
-        success: function(data) {
-            console.log(data, "a");
-            $("#username").text(data.name);
-            let img = `<img src="/users/`+ data.profile_pic +`" width="120" height="70" class="shadow-sm rounded">`;
-
-            let html = `
-                <table class="table table-hover table-bordered table-sm">
-                    <tr>
-                        <td class="p-1">Name</td>
-                        <td class="p-1">`+(data.name != null ? data.name : '-')+`</td>
-                    </tr>
-                    <tr>
-                        <td class="p-1">Role</td>
-                        <td class="p-1">`+(data.role != null ? data.role.name : '-')+`</td>
-                    </tr>
-                    <tr>
-                        <td class="p-1">Email</td>
-                        <td class="p-1">`+(data.email != null ? data.email : '-')+`</td>
-                    </tr>
-                    <tr>
-                        <td class="p-1">Phone</td>
-                        <td class="p-1">`+(data.phone != null ? data.phone : '-')+`</td>
-                    </tr>
-                    <tr>
-                        <td class="p-1">Address</td>
-                        <td class="p-1">`+(data.address != null ? data.address : '-')+`</td>
-                    </tr>
-                    <tr>
-                        <td class="p-1">Facebook</td>
-                        <td class="p-1">`+(data.facebook != null ? data.facebook : '-')+`</td>
-                    </tr>
-                    <tr>
-                        <td class="p-1">Twitter</td>
-                        <td class="p-1">`+(data.twitter != null ? data.twitter : '-')+`</td>
-                    </tr>
-                    <tr>
-                        <td class="p-1">Linkedin</td>
-                        <td class="p-1">`+(data.linkedin != null ? data.linkedin : '-')+`</td>
-                    </tr>
-                    <tr>
-                        <td class="p-1">Instagram</td>
-                        <td class="p-1">`+(data.instagram != null ? data.instagram : '-')+`</td>
-                    </tr>
-                    <tr>
-                        <td class="p-1">Profile Image</td>
-                        <td class="p-1">`+ ( data.profile_pic != null ? img : '-') +`</td>
-                    </tr>
-                </table>
-            `;
-            $("#user_detail").html(html);
-
-        },
-        complete: function(data) {
-            $("#user_loader").hide();
-        },
-        error: function(e) {
-            console.log(e);
-        }
-    });
-}
-
-function showComments(id , post_title) {
-
-    $("#commentViewModal").modal('show');
-    $("#postname").text(post_title);
-
-    $.ajax({
-        type: "post",
-        url: comment_details,
-        data: {id:id},
-        beforeSend: function(data) {
-            $("#cmt_loader").show();
-        },
-        success: function(data) {
-            console.log(data, "a");
-            let count = 1;
-            let html = ``;
-            for(var i = 0; i < data.length; i++) {
-
-                html +=`
-                    <p> <strong>`+count+`.</strong> `+data[i].comment+`</p>
-                `;
-            }
- 
-            $("#comment_detail").html(html);
-
-        },
-        complete: function(data) {
-            $("#cmt_loader").hide();
-        },
-        error: function(e) {
-            console.log(e);
-        }
-    });
-}

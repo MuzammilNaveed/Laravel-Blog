@@ -105,48 +105,13 @@ class HomeController extends Controller
     
     // for dashboard create user
     public function dashboard() {
-
-        $role = Role::where('id',Auth::user()->role_id)->first();
-
-        $name = strtolower($role->name);
-
-        if( $name == "admin" || $name == "administrator" || $name == "super admin" || $name == "super administrator") {
-
-            $post_count = Post::where('is_deleted',0)->count();
-            $category_count = Category::where('is_deleted',0)->count();
-            $tag_count = Tags::where('is_deleted',0)->count();
-            $user_count = User::where('is_deleted',0)->count();
-            $comment_count = Comments::where('is_deleted',0)->count();
-            $reply_count = CommentReplies::where('is_deleted',0)->count();
-            $active_post = Post::where('is_active', 1)->where('is_deleted',0)->count();
-            $inactive_post = Post::where('is_active', 0)->where('is_deleted',0)->count();
-
-            return view('admin.dashboard.index', compact('post_count','category_count', 'tag_count', 'user_count', 'comment_count', 'reply_count', 'active_post', 'inactive_post','name'));
-
-        }else{
-
-            $posts = Post::where('created_by',Auth::id())->where('is_deleted',0)->get();
-            $category_count = Category::where('created_by',Auth::id())->where('is_deleted',0)->count();
-            $tag_count = Tags::where('created_by',Auth::id())->where('is_deleted',0)->count();
-            $user_count = User::where('created_by',Auth::id())->where('is_deleted',0)->count();
-
-
-            $active_post = Post::where('is_active', 1)->where('created_by',Auth::id())->where('is_deleted',0)->count();
-            $inactive_post = Post::where('is_active', 0)->where('created_by',Auth::id())->where('is_deleted',0)->count();
-
-            $post_count = sizeof($posts);
-
-
-            return view('admin.dashboard.index', compact('category_count', 'tag_count', 'user_count','active_post', 'inactive_post','name'));
-        }
+        return view('home');
     }
 
 
     public function manageUserPage() {
 
-        $roles = Role::all();
-        $permission = DB::table("permissions")->where("created_by",Auth::id())->where('title','user')->first();
-        return view("admin.users.users", compact('roles','permission'));
+        return view("admin.users.users");
     }
 
     public function UserLogin(Request $request) {
@@ -168,40 +133,38 @@ class HomeController extends Controller
                 $credentials = $request->only('email', 'password');
                 if (Auth::attempt($credentials)) {
 
-                    // $request->session()->put('user_id', Auth::user()->id);
+                    // $role_features = DB::table('role_has_permissions')
+                    //     ->join('feature', 'role_has_permissions.feature_id', '=', 'feature.id')
+                    //     ->where('feature.parent_id', '=', 0)
+                    //     ->where("is_active", "=", 1)
+                    //     ->where('role_has_permissions.role_id', Auth::user()->role_id)->get();
 
-                    $role_features = DB::table('role_has_permissions')
-                        ->join('feature', 'role_has_permissions.feature_id', '=', 'feature.id')
-                        ->where('feature.parent_id', '=', 0)
-                        ->where("is_active", "=", 1)
-                        ->where('role_has_permissions.role_id', Auth::user()->role_id)->get();
-
-                    foreach ($role_features as $feature) {
-                        $sub_menus = DB::table("feature")->where('parent_id', '=', $feature->id)->where("is_active", "=", 1)->orderBy("sequence")->get();
-                        $sub_menu = array();
-                        foreach ($sub_menus as $sub) {
-                            $ft_prmt = DB::table('role_has_permissions')
-                                ->where('role_has_permissions.feature_id', $sub->id)
-                                ->where('role_has_permissions.role_id', Auth::user()->role_id)->first();
-                            if ($ft_prmt) {
-                                array_push($sub_menu, $sub);
-                            }
-                        }
-                        $feature->sub_menu = $sub_menu;
-                    }
-                    Session::put('menus', $role_features->sortBy('sequence'));
+                    // foreach ($role_features as $feature) {
+                    //     $sub_menus = DB::table("feature")->where('parent_id', '=', $feature->id)->where("is_active", "=", 1)->orderBy("sequence")->get();
+                    //     $sub_menu = array();
+                    //     foreach ($sub_menus as $sub) {
+                    //         $ft_prmt = DB::table('role_has_permissions')
+                    //             ->where('role_has_permissions.feature_id', $sub->id)
+                    //             ->where('role_has_permissions.role_id', Auth::user()->role_id)->first();
+                    //         if ($ft_prmt) {
+                    //             array_push($sub_menu, $sub);
+                    //         }
+                    //     }
+                    //     $feature->sub_menu = $sub_menu;
+                    // }
+                    // Session::put('menus', $role_features->sortBy('sequence'));
                     
-                    $setting = Settings::where('created_by', Auth::user()->id)->first();
-                    if($setting) {
-                        Session::put('dashboard_logo', $setting->dashboard_logo);
-                    }
+                    // $setting = Settings::where('created_by', auth()->id())->first();
+                    // if($setting) {
+                    //     Session::put('dashboard_logo', $setting->dashboard_logo);
+                    // }
 
-                    $role_name = Role::where('id',Auth::user()->role_id)->select('name')->first();
-                    if($role_name) {
-                        Session::put('role_name', $role_name->name);
-                    }
+                    // $role_name = Role::where('id',Auth::user()->role_id)->select('name')->first();
+                    // if($role_name) {
+                    //     Session::put('role_name', $role_name->name);
+                    // }
 
-                    return redirect()->intended('/dashboard');
+                    return redirect()->route('home');
                 } else {
                     return redirect()->back()->with('deactive', 'Password not matched');
                 }

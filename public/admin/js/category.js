@@ -1,3 +1,4 @@
+let category_arr = [];
 $(document).ready(function() {
     $.ajaxSetup({
         headers: {
@@ -5,276 +6,211 @@ $(document).ready(function() {
         }
     });
 
-    $("#addRecord").validate({
-        rules: {
-            name: {
-                required: true
-            },
-            description: {
-                required: true
-            }
-        },
-        submitHandler: function(form) {
-            $.ajax({
-                type: "POST",
-                url: categories,
-                data: $("#addRecord").serialize(),
-                beforeSend: function(data) {
-                    $("#add_loader").show();
-                },
-                success: function(data) {
-                    console.log(data, "a");
-                    if ((data.status == 200) & (data.success == true)) {
-                        $("#addRecord")[0].reset();
-                        $("#addRecordModal").modal("hide");
-                        let date = new Date();
-                        let from = moment(date)
-                            .startOf("month")
-                            .format("YYYY-MM-DD");
-                        let to = moment(date)
-                            .endOf("month")
-                            .format("YYYY-MM-DD");
 
-                        getAllCategories(from, to);
-                        notyf.success(data.message);
-                    } else {
-                        notyf.error(data.message);
-                    }
-                },
-                complete: function(data) {
-                    $("#add_loader").hide();
-                },
-                error: function(e) {
-                    console.log(e);
-                    $("#add_loader").hide();
-                }
-            });
-        }
+    categories.fetch();
+
+
+    $("#saveCategory").submit(function(e) {
+        e.preventDefault();
+        let action = $(this).attr('action');
+        let method = $(this).attr('method');
+
+        let formData = new FormData(this);
+        const plainFormData = Object.fromEntries(formData.entries());
+
+        categories.saveCategory(action , method , plainFormData);
     });
 
-    $("#updateRecord").validate({
-        rules: {
-            name: {
-                required: true
-            },
-            description: {
-                required: true
-            }
-        },
-        submitHandler: function(form) {
-            var id = $("#id").val();
-            $.ajax({
-                type: "PUT",
-                url: categories + "/" + id,
-                data: $("#updateRecord").serialize(),
-                beforeSend: function(data) {
-                    $("#edit_loader").show();
-                },
-                success: function(data) {
-                    console.log(data, "a");
-                    if (data.status == 200 && data.success == true) {
-                        $("#updateModal").modal("hide");
-                        let date = new Date();
-                        let from = moment(date)
-                            .startOf("month")
-                            .format("YYYY-MM-DD");
-                        let to = moment(date)
-                            .endOf("month")
-                            .format("YYYY-MM-DD");
-
-                        getAllCategories(from, to);
-                        notyf.success(data.message);
-                    } else {
-                        notyf.erro(data.message);
-                    }
-                },
-                complete: function(data) {
-                    $("#edit_loader").hide();
-                },
-                error: function(e) {
-                    console.log(e);
-                    $("#edit_loader").hide();
-                }
-            });
-        }
+    // delete category
+    $("#deleteRecord").click(function() {
+        var id = $("#did").val();
+        categories.deleteCategory(id);
     });
 
-    getAllCategories();
 });
 
+    const categories  = {
 
-function viewRecord(id, name, description, parent_id) {
-    $("#updateModal").modal("show");
-    $("#id").val(id);
-    $("#name").val(name);
-    $("#description").val(description);
-    $("#parent_id")
-        .val(parent_id)
-        .trigger("change");
+        openModal : () => {
+            $("#showModal").modal('show');
+            $("#modal_title").text("Add Category");
+            $("#saveCategory").trigger('reset');
+            $("#id").val("");
+        },
 
-    $("#catname").text(name);
-}
+        saveCategory : (url , method , data) => {
 
-function deleteRecord(id) {
-    Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-    }).then(result => {
-        if (result.isConfirmed) {
-            $.ajax({
-                type: "DELETE",
-                url: categories + "/" + id,
-                success: function(data) {
-                    if (data.status == 200 && data.success == true) {
-                        Swal.fire("Deleted!", data.message, "success");
-                        getAllCategories();
-                    } else {
-                        Swal.fire("Cancelled!", data.message, "error");
-                    }
+            $('.loadingBtn').attr('style' , 'display: block !important');
+            $('.saveBtn').attr('style' , 'display: none !important');
+
+            fetch( url , {
+                method: method,
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json; charset=UTF-8",
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
                 },
-                error: function(e) {
-                    console.log(e);
+            })
+            .then((response) => response.json())
+            .then((data) =>  {
+                if ( data.status == 200 && data.success == true) {
+                    $("#showModal").modal("hide");
+   
+                    categories.fetch();
+                    notyf.success(data.message);
+    
+                } else {
+                    notyf.error(data.message);
                 }
+            }).then( () => {
+                $('.loadingBtn').attr('style' , 'display: none !important');
+                $('.saveBtn').attr('style' , 'display: block !important');
+            })
+            .catch( (error) => {
+                $('.loadingBtn').attr('style' , 'display: none !important');
+                $('.saveBtn').attr('style' , 'display: block !important');
+                notyf.error('Something Went Wrong');
             });
-        }
-    });
-}
-
-function showPosts(id, name) {
-    $("#categoryname").text(name);
-    $("#postViewModal").modal("show");
-
-    $.ajax({
-        type: "POST",
-        url: category_posts,
-        data: { id: id },
-        dataType: "json",
-        beforeSend: function(data) {
-            $("#cat_post_loader").show();
         },
-        success: function(data) {
-            console.log(data);
 
-            let html = ``;
-            let index = 1;
-            for (var i = 0; i < data.length; i++) {
-                html +=
-                    `
-                    <li style="list-style:none"><strong>` +
-                    index +
-                    `. </strong> <a href="` +
-                    view_post +
-                    `/` +
-                    data[i].id +
-                    `">` +
-                    data[i].title +
-                    `</a></li>
-                `;
-                index++;
+        fetch : () => {
+
+            fetch(getCategory)
+            .then( (response) => response.json() )
+            .then((data) => {
+                $('.loading__').attr('style', 'display: block !important');
+                if(data.status_code == 200) {
+
+                    category_arr = data.categories;
+                    $("#catCount").text(data.categories.length);
+                    $('#showRecord').DataTable().destroy();
+                    $.fn.dataTable.ext.errMode = 'none';
+                    var tbl = $('#showRecord').DataTable({
+                        data: data.categories,
+                        "pageLength": 10,
+                        "bInfo": false,
+                        "paging": true,
+                        "fnCreatedRow": function( nRow, aData, iDataIndex ) {
+                            $(nRow).attr('id', 'row__'+aData.id);
+                        },
+                        columns: [
+                            {
+                                data: null,
+                                defaultContent: ""
+                            },
+                            {
+                                render: function(data, type, full, meta) {
+                                    return full.name != null ? full.name : "-";
+                                }
+                            },
+                            {
+                                render: function(data, type, full, meta) {
+                                    return full.description != null ? full.description.substring(0, 30) + "..." : "-";
+                                }
+                            },
+                            {
+                                render: function(data, type, full, meta) {
+                                    return `<span class="badge bg-light-${full.status == 1 ? "success" : "danger"}"> ${full.status == 1 ? "Active" : "Inactive"}</span>`;
+                                }
+                            },
+                            {
+                                render: function(data, type, full, meta) {
+                                    return full.created_at != null ? full.created_at : '-';
+                                }
+                            },
+                            {
+                                render: function(data, type, full, meta) {
+                                    return `
+                                    <div class="d-flex justify-content-start">
+                                        <button onclick="categories.viewCategory(${full.id})" 
+                                            type="button" class="btn btn-icon rounded-circle btn-outline-primary waves-effect" data-toggle="tooltip" data-placement="top" title="Edit">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2 font-medium-3"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                                        </button>
+
+                                        <button onclick="categories.deleteModal(${full.id})" 
+                                            type="button" class="btn btn-icon rounded-circle btn-outline-danger mx-1 waves-effect" data-toggle="tooltip" data-placement="top" title="Delete">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash font-medium-3"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                        </button>
+
+                                    </div>`;
+                                }
+                            },
+                        ],
+                    });
+                    tbl.on("order.dt search.dt", function() {
+                        tbl.column(0, {
+                            search: "applied",
+                            order: "applied"
+                        })
+                            .nodes()
+                            .each(function(cell, i) {
+                                cell.innerHTML = i + 1;
+                            });
+                    }).draw();
+                }else{
+                    notyf.error('Something Went Wrong');
+                }
+            })
+            .then( () => {
+                $('.loading__').attr('style', 'display: none !important');
+            })
+            .catch( (error) => {
+                notyf.error('Something Went Wrong');
+            });
+
+        },
+
+        viewCategory : (id) => {
+
+            let item = category_arr.find(item => item.id === id);
+
+            if(item != null) {
+                $("#id").val(id);
+                $("#name").val(item.name);
+                $("#description").val(item.description);
+
+                item.status == 1 ? $("#status").prop("checked", true) : $("#status").prop("checked", false);
+
+                $("#showModal").modal("show");
+                $("#modal_title").text("Edit Category");
             }
 
-            $("#category_post").html(html);
         },
-        complete: function(data) {
-            $("#cat_post_loader").hide();
+
+        deleteModal : (id) => {
+            $("#deleteModal").modal('show');
+            $("#cid").val(id);
         },
-        error: function(e) {
-            console.log(e);
-        }
-    });
-}
 
-function getAllCategories() {
-    $("#showRecord").DataTable().destroy();
-    $.fn.dataTable.ext.errMode = "none";
-    var tbl =$("#showRecord").DataTable({
-        processing: true,
-        serverSide: true,
-        searching: true,
-        pageLength: 10,
-        columnDefs: [
-            {
-                orderable: false,
-                targets: 0
-            }
-        ],
-        ajax: {
-            url: categories
-        },
-        columns: [
-            {
-                data: null,
-                defaultContent: ""
-            },
-            {
-                render: function(data, type, full, meta) {
-                    return moment(full.created_at).format("DD-MM-YYYY");
-                }
-            },
-            {
-                render: function(data, type, full, meta) {
-                    return full.name != null ? full.name : "-";
-                }
-            },
-            {
-                className: "small text-center",
-                render: function(data, type, full, meta) {
-                    let post_count = full.post_count != null ? full.post_count : "-";
-                    let cat_name = full.name != null ? full.name : "-";
-                    let link = `<a href="#" onclick="showPosts(` + full.id +`,'` + cat_name + `')">` + post_count + `</a>`;
-                    return post_count != 0 ? link : post_count;
-                }
-            },
-            {
-                render: function(data, type, full, meta) {
-                    return full.description != null
-                        ? full.description.substring(0, 30) + "...."
-                        : "-";
-                }
-            },
-            {
-                render: function(data, type, full, meta) {
-                    let update_btn =
-                    `
-                    <button onclick="viewRecord(` + full.id + `, '` + full.name + `','` + full.description + `',` + full.parent_id +`)" 
-                        type="button" class="btn btn-primary text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Edit">
-                        <i class="fas fa-pencil-alt"></i>
-                    </button>`;
+        deleteCategory :(id) => {
+            $('.delLoader').attr('style' , 'display: block !important');
+            $('.delBtn').attr('style' , 'display: none !important');
 
-                    let del_btn =` <button  onclick="deleteRecord(` + full.id + `)" type="button" 
-                            class="btn btn-danger ml-2 text-white btn_cirlce" data-toggle="tooltip" data-placement="top" title="Delete">
-                            <i class="fas fa-trash"></i>
-                        </button>`;
-
-                    var update = $("#update").text();
-                    var del = $("#delete").text();
-
-                    if (update != "" && del != "") {
-                        if (update == 1 && del == 1) {
-                            return update_btn + del_btn;
-                        } else if (update == 1 && del == 0) {
-                            return update_btn;
-                        } else {
-                            return del_btn;
-                        }
-                    }
+            fetch( delCategory +`/${id}` , {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json; charset=UTF-8",
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+                },
+            })
+            .then((response) => response.json())
+            .then((data) =>  {
+                if ( data.status == 200 && data.success == true) {
+                    $("#deleteModal").modal('hide');
+                    $("#row__"+id).remove();
+                    notyf.success(data.message);
+    
+                } else {
+                    notyf.error(data.message);
                 }
-            },
-        ]
-    });
-    tbl.on("order.dt search.dt", function() {
-        tbl.column(0, {
-            search: "applied",
-            order: "applied"
-        })
-            .nodes()
-            .each(function(cell, i) {
-                cell.innerHTML = i + 1;
+            }).then( () => {
+                $('.delLoader').attr('style' , 'display: none !important');
+                $('.delBtn').attr('style' , 'display: block !important');
+            })
+            .catch( (error) => {
+                $('.delLoader').attr('style' , 'display: none !important');
+                $('.delBtn').attr('style' , 'display: block !important');
+                notyf.error('Something Went Wrong');
             });
-    }).draw();
-}
+        }
+    }
